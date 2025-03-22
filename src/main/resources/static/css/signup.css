@@ -1,0 +1,167 @@
+/* Full-page background with blur effect */
+body {
+  position: relative;
+  height: 100vh;
+  margin: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  overflow: hidden;
+  background: url("/images/background.jpg") no-repeat center center fixed;
+  background-size: cover;
+}
+
+/* Background Overlay (Blurring Effect) */
+body::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.3); /* Slightly dark overlay */
+  backdrop-filter: blur(3px);
+  filter: blur(3px);
+  z-index: -1;
+}
+
+/* Center the modal properly */
+.container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+}
+
+/* Login and Signup Wrapper */
+.login-wrapper,
+.signup-wrapper {
+  display: flex;
+  align-items: center;
+  background: rgba(255, 255, 255, 0.95); /* Slight transparency */
+  padding: 30px;
+  border-radius: 12px;
+  box-shadow: 0px 8px 16px rgba(0, 0, 0, 0.3);
+  width: 700px; /* Default login size */
+  height: 400px;
+  position: relative;
+  z-index: 1;
+  overflow: hidden;
+  transition: width 0.5s ease-in-out, height 0.5s ease-in-out;
+}
+
+/* Expanding Modal for Signup */
+.signup-active {
+  width: 700px; /* Expands width */
+  height: 580px; /* Expands height */
+}
+
+/* Logo Container */
+.logo-container {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  transition: transform 0.5s ease-in-out;
+}
+
+/* Logo Size */
+.login-logo,
+.signup-logo {
+  max-width: 220px;
+  height: auto;
+  transition: transform 0.5s ease-in-out;
+}
+
+/* Form Container (Initially Hidden & Shrunk) */
+.form-container {
+  flex: 1;
+  padding: 30px;
+  margin-top: -20px;
+  transform: scale(0.8); /* Start small */
+  opacity: 0;
+  transition: transform 0.5s ease-in-out, opacity 0.5s ease-in-out;
+}
+
+/* Active State: Logo moves further right, Form Pops In */
+.signup-active .logo-container {
+  transform: translateX(120%); /* Pushes logo further right */
+}
+
+.signup-active .form-container {
+  transform: scale(1) translateX(-90%); /* Moves form into the left side */
+  opacity: 1;
+}
+
+/* Reverse Animation for Login */
+.signup-reverse .logo-container {
+  transform: translateX(0);
+}
+
+.signup-reverse .form-container {
+  transform: scale(0.8);
+  opacity: 0;
+}
+
+/* Shrinking Modal for Login */
+.signup-reverse {
+  width: 700px;
+  height: 400px;
+}
+
+/* Ensure all buttons have the same width */
+.btn-login,
+.btn-request,
+.btn-secondary {
+  width: 100%; /* Makes sure all buttons stretch to the same width */
+  max-width: 100%; /* Ensures it doesn't exceed parent container */
+  display: block; /* Ensures consistent block display */
+  text-align: center; /* Centers text properly */
+  background-color: #007bff;
+  color: white;
+  padding: 12px;
+  border: none;
+  border-radius: 8px;
+  font-size: 16px;
+  font-weight: bold;
+  transition: background-color 0.3s ease-in-out, transform 0.2s ease-in-out;
+}
+
+/* Ensure consistent button hover effect */
+.btn-login:hover,
+.btn-request:hover,
+.btn-secondary:hover {
+  transform: scale(1.05);
+}
+
+/* Adjust secondary button styling */
+.btn-secondary {
+  background-color: #6c757d;
+  color: white;
+  margin-top: 10px;
+}
+
+.btn-secondary:hover {
+  background-color: #495057;
+}
+
+/* Password field wrapper */
+.password-container {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+/* Style for the eye icon */
+.toggle-password {
+  position: absolute;
+  right: 10px;
+  top: 8px;
+  cursor: pointer;
+  font-size: 14px;
+  color: grey;
+}
+
+.toggle-password:hover {
+  color: #0056b3;
+}

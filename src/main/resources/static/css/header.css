@@ -1,0 +1,48 @@
+/* Header Styles */
+.navbar {
+  background-color: #ffffff; /* White background */
+  padding: 15px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Light shadow */
+}
+
+.navbar-brand {
+  font-size: 1.5rem;
+  font-weight: bold;
+  color: #007bff; /* Primary color */
+}
+
+.navbar .ms-auto {
+  display: flex;
+  align-items: center;
+}
+
+.navbar .bi-envelope {
+  font-size: 1.5rem;
+  color: #007bff; /* Blue icon */
+  transition: color 0.3s;
+}
+
+.navbar .bi-envelope:hover {
+  color: #0056b3; /* Darker blue on hover */
+}
+
+/* User Info */
+.navbar .user-info {
+  display: flex;
+  align-items: center;
+  margin-left: 15px;
+}
+
+.navbar .user-info span {
+  font-size: 1rem;
+  font-weight: bold;
+  margin-right: 10px;
+  color: #333; /* Dark gray text */
+}
+
+.navbar .user-info img {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  border: 2px solid #007bff;
+}

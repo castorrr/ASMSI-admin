@@ -1,0 +1,27 @@
+<!-- fragments/header.html -->
+<div
+  th:fragment="header(username)"
+  class="navbar navbar-expand-lg navbar-light bg-light shadow-sm px-3"
+>
+  <a class="navbar-brand" href="#">MyApp</a>
+
+  <!-- Right Side (User Avatar & Messages) -->
+  <div class="ms-auto d-flex align-items-center">
+    <!-- Message Icon -->
+    <a href="#" class="me-3 text-dark" title="Messages">
+      <i class="bi bi-envelope fs-4"></i>
+    </a>
+
+    <!-- User Avatar & Name -->
+    <div class="d-flex align-items-center">
+      <span class="me-2 fw-bold" th:text="${username}">John Doe</span>
+      <img
+        src="/images/logo.png"
+        alt="Avatar"
+        class="rounded-circle"
+        width="40"
+        height="40"
+      />
+    </div>
+  </div>
+</div>

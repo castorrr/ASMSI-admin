@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Login | Aloysians Portal</title>
+
+    <!-- Bootstrap CSS -->
+    <link
+      rel="stylesheet"
+      href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"
+    />
+    <link rel="stylesheet" th:href="@{/css/login.css}" />
+  </head>
+  <body>
+    <div class="container">
+      <div class="login-wrapper">
+        <!-- Logo Section -->
+        <div class="logo-container">
+          <img
+            th:src="@{/images/logo.png}"
+            alt="Aloysians Portal Logo"
+            class="login-logo"
+          />
+        </div>
+
+        <!-- Form Section -->
+        <div class="form-container">
+          <div id="login-form">
+            <h3>Welcome Back, Aloysians!</h3>
+            <p>Please log in to continue.</p>
+
+            <!-- Error Message -->
+            <div th:if="${param.error}" class="alert alert-danger">
+              <strong>Login Failed!</strong>
+              <span
+                th:if="${session.SPRING_SECURITY_LAST_EXCEPTION}"
+                th:text="${session.SPRING_SECURITY_LAST_EXCEPTION.message}"
+              ></span>
+            </div>
+
+            <!-- Logout Message -->
+            <div th:if="${param.logout}" class="alert alert-success">
+              You have been logged out successfully.
+            </div>
+
+            <!-- Login Form -->
+            <form th:action="@{/login}" method="post">
+              <div class="form-group">
+                <label for="username">Username</label>
+                <input
+                  type="text"
+                  id="username"
+                  name="username"
+                  class="form-control"
+                  placeholder="Enter your username"
+                  required
+                  autofocus
+                />
+              </div>
+
+              <div class="form-group">
+                <label for="password">Password</label>
+                <div class="password-container">
+                  <input
+                    type="password"
+                    id="password"
+                    name="password"
+                    class="form-control"
+                    placeholder="Enter your password"
+                    required
+                  />
+                  <span class="toggle-password" onclick="togglePassword()">
+                    <i class="glyphicon glyphicon-eye-open"></i>
+                  </span>
+                </div>
+              </div>
+
+              <div class="form-group">
+                <div class="checkbox">
+                  <label>
+                    <input
+                      type="checkbox"
+                      id="remember-me"
+                      name="remember-me"
+                    />
+                    Remember Me
+                  </label>
+                </div>
+              </div>
+
+              <button type="submit" class="btn btn-login">Login</button>
+              <a
+                href="/signup"
+                class="btn btn-secondary"
+                id="request-account-btn"
+                >Request an Account</a
+              >
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Bootstrap & jQuery -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+  </body>
+
+  <script>
+    function togglePassword() {
+      var passwordField = document.getElementById("password");
+      var icon = document.querySelector(".toggle-password i");
+
+      if (passwordField.type === "password") {
+        passwordField.type = "text";
+        icon.classList.remove("glyphicon-eye-open");
+        icon.classList.add("glyphicon-eye-close");
+      } else {
+        passwordField.type = "password";
+        icon.classList.remove("glyphicon-eye-close");
+        icon.classList.add("glyphicon-eye-open");
+      }
+    }
+  </script>
+</html>
