@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Studentmanager
+
+    </title>
+
+    <!-- Bootstrap CSS -->
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
+    />
+    <!-- Bootstrap Icons -->
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css"
+    />
+
+    <!-- Custom CSS -->
+    <link rel="stylesheet" th:href="@{/css/header.css}" />
+    <link rel="stylesheet" th:href="@{/css/sidebar.css}" />
+    <link rel="stylesheet" th:href="@{/css/home.css}" />
+  </head>
+  <body>
+    <!-- Header Section -->
+    <div th:replace="fragments/header :: header(${username})"></div>
+
+    <div class="container-fluid">
+      <div class="row">
+        <!-- Sidebar Section -->
+        <div class="col-md-3 bg-dark text-white vh-100 p-3">
+          <div th:replace="fragments/sidebar :: sidebar"></div>
+        </div>
+
+        <div class="col-md-9 p-4">
+          <h1>Student Information Manager</h1>
+          <p>This is your main content area. Use this space for displaying student records.</p>
+          <div class="d-flex justify-content-end mb-3">
+            <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addStudentModal">
+                Add Student
+            </button>
+        </div>
+        
+          <table class="table table-bordered">
+            <thead class="table-dark">
+              <tr>
+                <th>LRN</th>
+                <th>ID Number</th>
+                <th>Name</th>
+                <th>Birthday</th>
+                <th>Complete Address</th>
+                <th>Place of Birth</th>
+                <th>Elementary School</th>
+                <th>VIA</th>
+                <th>Campus</th>
+                <th>Family Saint</th>
+                <th>Batch Number</th>
+              </tr>
+            </thead>
+            <tbody>
+              <!-- Thymeleaf Loop to Display Students -->
+              <tr th:each="student : ${students}">
+                <td th:text="${student.lrn}"></td>
+                <td th:text="${student.idNumber}"></td>
+                <td th:text="${student.name}"></td>
+                <td th:text="${student.birthday}"></td>
+                <td th:text="${student.address}"></td>
+                <td th:text="${student.placeOfBirth}"></td>
+                <td th:text="${student.elementarySchool}"></td>
+                <td th:text="${student.via}"></td>
+                <td th:text="${student.campus}"></td>
+                <td th:text="${student.familySaint}"></td>
+                <td th:text="${student.batchNumber}"></td>
+              </tr>
+            </tbody>
+          </table>
+          
+      <!-- Add Student Modal -->
+<div class="modal fade" id="addStudentModal" tabindex="-1" aria-labelledby="addStudentModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="addStudentModalLabel">Add Student</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <form th:action="@{/add-student}" th:object="${student}" method="post">
+          <div class="mb-3">
+            <label class="form-label">LRN</label>
+            <input type="text" class="form-control" th:field="*{lrn}" required>
+          </div>
+          <div class="mb-3">
+            <label class="form-label">ID Number</label>
+            <input type="text" class="form-control" th:field="*{idNumber}" required>
+          </div>
+          <div class="mb-3">
+            <label class="form-label">Name</label>
+            <input type="text" class="form-control" th:field="*{name}" required>
+          </div>
+          <div class="mb-3">
+            <label class="form-label">Birthday</label>
+            <input type="date" class="form-control" th:field="*{birthday}" required>
+          </div>
+          <div class="mb-3">
+            <label class="form-label">Complete Address</label>
+            <input type="text" class="form-control" th:field="*{address}" required>
+          </div>
+          <div class="mb-3">
+            <label class="form-label">Place of Birth</label>
+            <input type="text" class="form-control" th:field="*{placeOfBirth}" required>
+          </div>
+          <div class="mb-3">
+            <label class="form-label">Elementary School</label>
+            <input type="text" class="form-control" th:field="*{elementarySchool}" required>
+          </div>
+          <div class="mb-3">
+            <label class="form-label">VIA</label>
+            <input type="text" class="form-control" th:field="*{via}" required>
+          </div>
+          <div class="mb-3">
+            <label class="form-label">Campus</label>
+            <input type="text" class="form-control" th:field="*{campus}" required>
+          </div>
+          <div class="mb-3">
+            <label class="form-label">Family Saint</label>
+            <input type="text" class="form-control" th:field="*{familySaint}" required>
+          </div>
+          <div class="mb-3">
+            <label class="form-label">Batch Number</label>
+            <input type="text" class="form-control" th:field="*{batchNumber}" required>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+            <button type="submit" class="btn btn-success">Save Student</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+  <!-- Bootstrap Bundle with Popper.js -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+</div>
