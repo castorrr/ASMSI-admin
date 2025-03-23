@@ -41,9 +41,13 @@
                 Add Student
             </button>
         </div>
-        <table class="table table-bordered">
+        <div class="mb-3">
+          <input type="text" id="searchBox" class="form-control" placeholder="Search by LRN, ID Number, Name, Family Saint, or Batch Number...">
+      </div>
+      <table class="table table-bordered" id="studentTable">
           <thead class="table-dark">
               <tr>
+                <th>Picture</th> <!-- Move this inside <thead> -->
                   <th>LRN</th>
                   <th>ID Number</th>
                   <th>Name</th>
@@ -55,30 +59,127 @@
                   <th>Campus</th>
                   <th>Family Saint</th>
                   <th>Batch Number</th>
-                  <th>Picture</th> <!-- Move this inside <thead> -->
+                 
+                    <th>Buttons</th> <!-- Move this inside <thead> -->
               </tr>
           </thead>
           <tbody>
-              <!-- Thymeleaf Loop to Display Students -->
-              <tr th:each="student : ${students}">
-                  <td th:text="${student.lrn}"></td>
-                  <td th:text="${student.idNumber}"></td>
-                  <td th:text="${student.name}"></td>
-                  <td th:text="${student.birthday}"></td>
-                  <td th:text="${student.address}"></td>
-                  <td th:text="${student.placeOfBirth}"></td>
-                  <td th:text="${student.elementarySchool}"></td>
-                  <td th:text="${student.via}"></td>
-                  <td th:text="${student.campus}"></td>
-                  <td th:text="${student.familySaint}"></td>
-                  <td th:text="${student.batchNumber}"></td>
-                  <td>
-                      <!-- Image Display with Default Placeholder if No Image -->
-                      <img th:src="${student.imageUrl != null ? student.imageUrl : '/images/default-profile.png'}" 
-                           alt="Student Image" width="50" height="50" class="rounded-circle">
-                  </td>
-              </tr>
-          </tbody>
+            <tr th:each="student : ${students}">
+              <td>
+                <img th:src="${student.imageUrl != null ? student.imageUrl : '/images/default-profile.png'}" 
+                     alt="Student Image" width="50" height="50" class="rounded-circle">
+            </td>
+                <td th:text="${student.lrn}"></td>
+                <td th:text="${student.idNumber}"></td>
+                <td th:text="${student.name}"></td>
+                <td th:text="${student.birthday}"></td>
+                <td th:text="${student.address}"></td>
+                <td th:text="${student.placeOfBirth}"></td>
+                <td th:text="${student.elementarySchool}"></td>
+                <td th:text="${student.via}"></td>
+                <td th:text="${student.campus}"></td>
+                <td th:text="${student.familySaint}"></td>
+                <td th:text="${student.batchNumber}"></td>
+                
+                <td><!-- Edit Button -->
+                  <button class="btn btn-warning btn-sm" 
+                          data-bs-toggle="modal" 
+                          th:data-bs-target="'#editStudentModal' + ${student.id}"
+                          th:data-id="${student.id}"
+                          th:data-lrn="${student.lrn}"
+                          th:data-idNumber="${student.idNumber}"
+                          th:data-name="${student.name}"
+                          th:data-birthday="${student.birthday}"
+                          th:data-address="${student.address}"
+                          th:data-placeOfBirth="${student.placeOfBirth}"
+                          th:data-elementarySchool="${student.elementarySchool}"
+                          th:data-via="${student.via}"
+                          th:data-campus="${student.campus}"
+                          th:data-familySaint="${student.familySaint}"
+                          th:data-batchNumber="${student.batchNumber}">
+                      <i class="bi bi-pencil-square"></i> Edit
+                  </button>
+                  
+                  <!-- Edit Student Modal -->
+                  <div th:each="student : ${students}">
+                      <div class="modal fade" th:id="'editStudentModal' + ${student.id}" tabindex="-1" aria-labelledby="editStudentModalLabel" aria-hidden="true">
+                          <div class="modal-dialog">
+                              <div class="modal-content">
+                                  <div class="modal-header">
+                                      <h5 class="modal-title">Edit Student</h5>
+                                      <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                  </div>
+                                  <div class="modal-body">
+                                      <form th:action="@{/edit-student}" method="post">
+                                          <input type="hidden" name="id" th:value="${student.id}">
+                  
+                                          <div class="mb-3">
+                                              <label class="form-label">LRN</label>
+                                              <input type="text" class="form-control" name="lrn" th:value="${student.lrn}" required>
+                                          </div>
+                                          <div class="mb-3">
+                                              <label class="form-label">ID Number</label>
+                                              <input type="text" class="form-control" name="idNumber" th:value="${student.idNumber}" required>
+                                          </div>
+                                          <div class="mb-3">
+                                              <label class="form-label">Name</label>
+                                              <input type="text" class="form-control" name="name" th:value="${student.name}" required>
+                                          </div>
+                                          <div class="mb-3">
+                                              <label class="form-label">Birthday</label>
+                                              <input type="date" class="form-control" name="birthday" th:value="${student.birthday}" required>
+                                          </div>
+                                          <div class="mb-3">
+                                              <label class="form-label">Complete Address</label>
+                                              <input type="text" class="form-control" name="address" th:value="${student.address}" required>
+                                          </div>
+                                          <div class="mb-3">
+                                              <label class="form-label">Place of Birth</label>
+                                              <input type="text" class="form-control" name="placeOfBirth" th:value="${student.placeOfBirth}" required>
+                                          </div>
+                                          <div class="mb-3">
+                                              <label class="form-label">Elementary School</label>
+                                              <input type="text" class="form-control" name="elementarySchool" th:value="${student.elementarySchool}" required>
+                                          </div>
+                                          <div class="mb-3">
+                                              <label class="form-label">VIA</label>
+                                              <input type="text" class="form-control" name="via" th:value="${student.via}" required>
+                                          </div>
+                                          <div class="mb-3">
+                                              <label class="form-label">Campus</label>
+                                              <input type="text" class="form-control" name="campus" th:value="${student.campus}" required>
+                                          </div>
+                                          <div class="mb-3">
+                                              <label class="form-label">Family Saint</label>
+                                              <input type="text" class="form-control" name="familySaint" th:value="${student.familySaint}" required>
+                                          </div>
+                                          <div class="mb-3">
+                                              <label class="form-label">Batch Number</label>
+                                              <input type="text" class="form-control" name="batchNumber" th:value="${student.batchNumber}" required>
+                                          </div>
+                  
+                                          <div class="modal-footer">
+                                              <button type="submit" class="btn btn-primary">Update Student</button>
+                                          </div>
+                                      </form>
+                                  </div>
+                              </div>
+                          </div>
+                      </div>
+                  </div>
+                  
+        
+                    <!-- Delete Button -->
+                    <form th:action="@{/delete-student}" method="post" class="d-inline">
+                        <input type="hidden" name="id" th:value="${student.id}">
+                        <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('Are you sure you want to delete this student?');">
+                            <i class="bi bi-trash"></i> Delete
+                        </button>
+                    </form>
+                </td>
+            </tr>
+        </tbody>
+        
       </table>
           
      <!-- Add Student Modal -->
@@ -163,5 +264,25 @@
 
   <!-- Bootstrap Bundle with Popper.js -->
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+  document.getElementById("searchBox").addEventListener("input", function () {
+      let searchValue = this.value.toLowerCase().trim();
+      let tableRows = document.querySelectorAll("tbody tr"); // Select all student rows
+
+      tableRows.forEach(row => {
+          let found = false;
+          row.querySelectorAll("td").forEach(cell => { // Select all columns
+              let text = cell.textContent.trim().toLowerCase();
+              if (text.includes(searchValue)) {
+                  found = true;
+              }
+          });
+          row.style.display = found ? "" : "none"; // Show or hide row based on match
+      });
+  });
+</script>
+
+
+
 
 </div>

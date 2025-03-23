@@ -46,4 +46,16 @@ public class StudentController {
         studentRepository.save(student);
         return "redirect:/student-info"; // Corrected redirect path
     }
+    @PostMapping("/edit-student")
+public String editStudent(@ModelAttribute Student student) {
+    studentRepository.save(student);
+    return "redirect:/student-info";
+}
+
+@PostMapping("/delete-student")
+public String deleteStudent(@RequestParam("id") Long id) {
+    studentRepository.deleteById(id);
+    return "redirect:/student-info";
+}
+
 }
