@@ -41,42 +41,47 @@
                 Add Student
             </button>
         </div>
-        
-          <table class="table table-bordered">
-            <thead class="table-dark">
+        <table class="table table-bordered">
+          <thead class="table-dark">
               <tr>
-                <th>LRN</th>
-                <th>ID Number</th>
-                <th>Name</th>
-                <th>Birthday</th>
-                <th>Complete Address</th>
-                <th>Place of Birth</th>
-                <th>Elementary School</th>
-                <th>VIA</th>
-                <th>Campus</th>
-                <th>Family Saint</th>
-                <th>Batch Number</th>
+                  <th>LRN</th>
+                  <th>ID Number</th>
+                  <th>Name</th>
+                  <th>Birthday</th>
+                  <th>Complete Address</th>
+                  <th>Place of Birth</th>
+                  <th>Elementary School</th>
+                  <th>VIA</th>
+                  <th>Campus</th>
+                  <th>Family Saint</th>
+                  <th>Batch Number</th>
+                  <th>Picture</th> <!-- Move this inside <thead> -->
               </tr>
-            </thead>
-            <tbody>
+          </thead>
+          <tbody>
               <!-- Thymeleaf Loop to Display Students -->
               <tr th:each="student : ${students}">
-                <td th:text="${student.lrn}"></td>
-                <td th:text="${student.idNumber}"></td>
-                <td th:text="${student.name}"></td>
-                <td th:text="${student.birthday}"></td>
-                <td th:text="${student.address}"></td>
-                <td th:text="${student.placeOfBirth}"></td>
-                <td th:text="${student.elementarySchool}"></td>
-                <td th:text="${student.via}"></td>
-                <td th:text="${student.campus}"></td>
-                <td th:text="${student.familySaint}"></td>
-                <td th:text="${student.batchNumber}"></td>
+                  <td th:text="${student.lrn}"></td>
+                  <td th:text="${student.idNumber}"></td>
+                  <td th:text="${student.name}"></td>
+                  <td th:text="${student.birthday}"></td>
+                  <td th:text="${student.address}"></td>
+                  <td th:text="${student.placeOfBirth}"></td>
+                  <td th:text="${student.elementarySchool}"></td>
+                  <td th:text="${student.via}"></td>
+                  <td th:text="${student.campus}"></td>
+                  <td th:text="${student.familySaint}"></td>
+                  <td th:text="${student.batchNumber}"></td>
+                  <td>
+                      <!-- Image Display with Default Placeholder if No Image -->
+                      <img th:src="${student.imageUrl != null ? student.imageUrl : '/images/default-profile.png'}" 
+                           alt="Student Image" width="50" height="50" class="rounded-circle">
+                  </td>
               </tr>
-            </tbody>
-          </table>
+          </tbody>
+      </table>
           
-      <!-- Add Student Modal -->
+     <!-- Add Student Modal -->
 <div class="modal fade" id="addStudentModal" tabindex="-1" aria-labelledby="addStudentModalLabel" aria-hidden="true">
   <div class="modal-dialog">
     <div class="modal-content">
@@ -84,8 +89,16 @@
         <h5 class="modal-title" id="addStudentModalLabel">Add Student</h5>
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
+      
       <div class="modal-body">
-        <form th:action="@{/add-student}" th:object="${student}" method="post">
+        <form th:action="@{/add-student}" th:object="${student}" method="post" enctype="multipart/form-data">
+          
+          <div class="mb-3">
+            <label class="form-label">Student Image</label>
+            <input type="file" class="form-control" name="imageFile" accept="image/*">
+
+          </div>
+
           <div class="mb-3">
             <label class="form-label">LRN</label>
             <input type="text" class="form-control" th:field="*{lrn}" required>
@@ -130,10 +143,18 @@
             <label class="form-label">Batch Number</label>
             <input type="text" class="form-control" th:field="*{batchNumber}" required>
           </div>
+
           <div class="modal-footer">
-            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-            <button type="submit" class="btn btn-success">Save Student</button>
+            <button type="submit" class="btn btn-primary">Save Student</button>
           </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+          
+        
         </form>
       </div>
     </div>
