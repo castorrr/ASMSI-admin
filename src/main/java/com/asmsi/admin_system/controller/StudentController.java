@@ -5,7 +5,6 @@ import com.asmsi.admin_system.repository.StudentRepository;
 import com.asmsi.admin_system.service.CloudinaryService;
 
 import java.io.IOException;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -17,7 +16,6 @@ public class StudentController {
     private final StudentRepository studentRepository;
     private final CloudinaryService cloudinaryService;
 
-    @Autowired
     public StudentController(StudentRepository studentRepository, CloudinaryService cloudinaryService) {
         this.studentRepository = studentRepository;
         this.cloudinaryService = cloudinaryService;
