@@ -1,0 +1,7 @@
+target/
+*.iml
+.idea/
+*.log
+*.jar
+.mvn/
+docker-compose.yml
