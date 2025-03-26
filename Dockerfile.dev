@@ -1,17 +1,13 @@
-# Dockerfile.dev
 FROM maven:3.9.6-eclipse-temurin-21
-
 WORKDIR /app
 
 # Preload dependencies
 COPY pom.xml .
 RUN mvn dependency:go-offline
 
-# Copy source files (will be overridden by volume mount)
+# Copy source (will be overridden by volume)
 COPY . .
 
-# Expose app port
 EXPOSE 8080
 
-# Start with spring-boot:run
 CMD ["mvn", "spring-boot:run"]
