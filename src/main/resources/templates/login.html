@@ -33,10 +33,32 @@
             <!-- Error Message -->
             <div th:if="${param.error}" class="alert alert-danger">
               <strong>Login Failed!</strong>
-              <span
-                th:if="${session.SPRING_SECURITY_LAST_EXCEPTION}"
-                th:text="${session.SPRING_SECURITY_LAST_EXCEPTION.message}"
-              ></span>
+              <p
+                th:if="${session['SPRING_SECURITY_LAST_EXCEPTION'].message.contains('disabled')}"
+              >
+                Your account is still pending approval. Please wait for admin
+                verification.
+              </p>
+              <p
+                th:if="${session['SPRING_SECURITY_LAST_EXCEPTION'].message.contains('not found')}"
+              >
+                No account found with that username.
+              </p>
+              <p
+                th:if="${session['SPRING_SECURITY_LAST_EXCEPTION'].message.contains('Bad credentials')}"
+              >
+                Incorrect password. Please try again.
+              </p>
+              <p
+                th:unless="
+                  ${session['SPRING_SECURITY_LAST_EXCEPTION'].message.contains('disabled')} or
+                  ${session['SPRING_SECURITY_LAST_EXCEPTION'].message.contains('not found')} or
+                  ${session['SPRING_SECURITY_LAST_EXCEPTION'].message.contains('Bad credentials')}"
+              >
+                <span
+                  th:text="${session['SPRING_SECURITY_LAST_EXCEPTION'].message}"
+                ></span>
+              </p>
             </div>
 
             <!-- Logout Message -->
