@@ -51,6 +51,10 @@ public class UserService implements UserDetailsService {
         return userRepository.findByIsApprovedFalse();
     }
 
+    public List<User> getApprovedUsers() {
+        return userRepository.findByIsApprovedTrue();
+    }
+
     public void approveUser(Long userId, Long adminId) {
         Optional<User> userOptional = userRepository.findById(userId);
         if (userOptional.isPresent()) {
@@ -60,4 +64,22 @@ public class UserService implements UserDetailsService {
             userRepository.save(user);
         }
     }
+
+    public User getUserById(Long id) {
+        return userRepository.findById(id).orElseThrow();
+    }
+    
+    public void deleteUser(Long id) {
+        userRepository.deleteById(id);
+    }
+    
+    public void updateUser(Long id, User updated) {
+        User existing = userRepository.findById(id).orElseThrow();
+        existing.setName(updated.getName());
+        existing.setEmail(updated.getEmail());
+        existing.setUsername(updated.getUsername());
+        existing.setRole(updated.getRole());
+        userRepository.save(existing);
+    }
+    
 }
