@@ -1,6 +1,6 @@
 <!-- Sidebar Fragment: fragments/sidebar.html -->
 <div
-  th:fragment="sidebar"
+  th:fragment="sidebar(role)"
   class="d-flex flex-column flex-shrink-0 p-3 bg-dark text-white"
   style="width: 250px; height: 100vh"
 >
@@ -22,7 +22,6 @@
         <i class="bi bi-person-lines-fill"></i> Student Information
       </a>
     </li>
-    <li></li>
     <li>
       <a th:href="@{/admission}" class="nav-link text-white">
         <i class="bi bi-person-lines-fill"></i> Admission
@@ -46,6 +45,13 @@
     <li>
       <a th:href="@{/tvl-shop}" class="nav-link text-white">
         <i class="bi bi-cart"></i> TVL Shop
+      </a>
+    </li>
+
+    <!-- ✅ Admin-only tab -->
+    <li th:if="${role == 'admin'}">
+      <a th:href="@{/admin-tools}" class="nav-link text-white">
+        <i class="bi bi-person-lines-fill"></i> Users
       </a>
     </li>
   </ul>
