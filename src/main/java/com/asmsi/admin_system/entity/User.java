@@ -5,7 +5,7 @@ import lombok.*;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 import java.util.Collection;
 import java.util.List;
 
@@ -42,9 +42,9 @@ public class User implements UserDetails {
     @Builder.Default
     private boolean isApproved = false; // Default false, admin will approve
 
-    private Long adminID; // ID of the admin who approved the user
+    private Long adminId; // ID of the admin who approved the user
 
-    private LocalDateTime dateApproved; // When the admin approved the user
+    private LocalDate dateApproved; // When the admin approved the user
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
