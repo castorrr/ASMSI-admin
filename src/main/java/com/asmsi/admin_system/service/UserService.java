@@ -10,6 +10,7 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.Optional;
+import java.time.LocalDate;
 
 @Service
 @RequiredArgsConstructor
@@ -17,6 +18,8 @@ public class UserService implements UserDetailsService {
 
     private final UserRepository userRepository;
     private final BCryptPasswordEncoder passwordEncoder; // ✅ Injected from AppConfig
+    private final EmailService emailService;
+
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
@@ -60,7 +63,9 @@ public class UserService implements UserDetailsService {
         if (userOptional.isPresent()) {
             User user = userOptional.get();
             user.setApproved(true);
-            user.setAdminID(adminId);
+            user.setAdminId(adminId);
+            user.setDateApproved(LocalDate.now()); // Set the date of approval
+            emailService.sendApprovalEmail(user.getEmail(), user.getName()); // Send approval email
             userRepository.save(user);
         }
     }

@@ -1,14 +1,13 @@
 package com.asmsi.admin_system.controller;
 
 import com.asmsi.admin_system.entity.User;
+import com.asmsi.admin_system.service.AuthUtil;
 import com.asmsi.admin_system.service.UserService;
 import lombok.RequiredArgsConstructor;
 
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.security.core.Authentication;
 
 
 @Controller
@@ -17,28 +16,26 @@ import org.springframework.security.core.Authentication;
 public class UserController {
 
     private final UserService userService;
+    private final AuthUtil authUtil;
 
     // Show both approved and unapproved users
     @GetMapping
-public String viewUsers(Model model) {
-    Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-    User currentUser = (User) auth.getPrincipal();
+    public String viewUsers(Model model) {
+        model.addAttribute("username", authUtil.getCurrentUser().getUsername());
+        model.addAttribute("role", authUtil.getCurrentUser().getRole());
 
-    model.addAttribute("username", currentUser.getUsername());
-    model.addAttribute("role", currentUser.getRole());
+        model.addAttribute("approvedUsers", userService.getApprovedUsers());
+        model.addAttribute("unapprovedUsers", userService.getUnapprovedUsers());
 
-    model.addAttribute("approvedUsers", userService.getApprovedUsers());
-    model.addAttribute("unapprovedUsers", userService.getUnapprovedUsers());
-
-    return "user-management";
-}
+        return "user-management";
+    }
 
 
     // Approve user
     @GetMapping("/approve/{id}")
     public String approveUser(@PathVariable Long id) {
         // Assuming you store current admin ID via session or auth context
-        Long adminId = 1L; // Replace with actual admin ID fetching logic
+        Long adminId = authUtil.getCurrentUser().getId(); // Replace with actual admin ID fetching logic
         userService.approveUser(id, adminId);
         return "redirect:/users";
     }
