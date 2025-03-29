@@ -14,6 +14,11 @@
 
   <!-- Right Side (User Avatar & Messages) -->
   <div class="ms-auto d-flex align-items-center">
+    <form th:action="@{/logout}" method="post">
+      <input type="hidden" name="_csrf" th:value="${_csrf.token}" />
+      <button type="submit">Logout</button>
+    </form>
+
     <!-- Message Icon -->
     <a href="#" class="me-3 text-dark" title="Messages">
       <i class="bi bi-envelope fs-4"></i>

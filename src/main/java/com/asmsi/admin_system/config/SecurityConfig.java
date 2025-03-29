@@ -9,10 +9,12 @@ import org.springframework.security.config.annotation.authentication.configurati
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 
 import com.asmsi.admin_system.service.UserService;
 
 @Configuration
+@EnableMethodSecurity
 public class SecurityConfig {
 
     private final UserService userService;
@@ -29,7 +31,7 @@ public class SecurityConfig {
             .authorizeHttpRequests(auth -> auth
                 .requestMatchers("/login", "/css/**", "/images/background.jpg", "/images/logo.png", "/signup", "/request-account", "/js/**").permitAll()
                 .anyRequest().authenticated()
-            )
+            )  
             .formLogin(form -> form
                 .loginPage("/login")
                 .defaultSuccessUrl("/home", true)
