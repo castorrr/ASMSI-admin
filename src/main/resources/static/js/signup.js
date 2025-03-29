@@ -44,6 +44,9 @@ document.addEventListener("DOMContentLoaded", function () {
 
           // Reset the form after submission
           requestAccountForm.reset();
+          setTimeout(() => {
+            window.location.href = "/login";
+          }, 3000);
         })
         .catch((error) => {
           console.error("Error:", error);

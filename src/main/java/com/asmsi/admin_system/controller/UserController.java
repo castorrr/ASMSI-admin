@@ -29,20 +29,18 @@ public class UserController {
 
         return "user-management";
     }
-
-
-    // Approve user
-    @GetMapping("/approve/{id}")
-    public String approveUser(@PathVariable Long id) {
-        // Assuming you store current admin ID via session or auth context
-        Long adminId = authUtil.getCurrentUser().getId(); // Replace with actual admin ID fetching logic
+    
+    @PostMapping("/approve")
+    public String approveUser(@RequestParam("id") Long id) {
+        Long adminId = authUtil.getCurrentUser().getId();
         userService.approveUser(id, adminId);
         return "redirect:/users";
     }
 
+
     // Reject or delete unapproved user
-    @GetMapping("/reject/{id}")
-    public String rejectUser(@PathVariable Long id) {
+    @PostMapping("/reject")
+    public String rejectUser(@RequestParam("id") Long id) {
         userService.deleteUser(id);
         return "redirect:/users";
     }
@@ -55,12 +53,26 @@ public class UserController {
     }
 
     // Show edit form
-    @GetMapping("/edit/{id}")
-    public String showEditForm(@PathVariable Long id, Model model) {
-        User user = userService.getUserById(id);
-        model.addAttribute("user", user);
-        return "user-edit"; // user-edit.html
+    @PostMapping("/edit")
+    public String updateUserFromModal(
+            @RequestParam("id") Long id,
+            @RequestParam("name") String name,
+            @RequestParam("email") String email,
+            @RequestParam("username") String username,
+            @RequestParam("role") String role
+    ) {
+        User updatedUser = new User();
+        updatedUser.setId(id); // not necessary for the update logic, but okay
+        updatedUser.setName(name);
+        updatedUser.setEmail(email);
+        updatedUser.setUsername(username);
+        updatedUser.setRole(role);
+    
+        userService.updateUser(id, updatedUser);    
+        return "redirect:/users";
     }
+    
+
 
     // Handle edit submission
     @PostMapping("/edit/{id}")

@@ -26,7 +26,12 @@ public class UserService implements UserDetailsService {
         User user = userRepository.findByUsername(username)
                 .orElseThrow(() -> new UsernameNotFoundException("User not found"));
 
-        return user;
+        
+        System.out.println("🔐 Logging in: " + user.getUsername());
+        System.out.println("📛 Role from DB: " + user.getRole());
+        System.out.println("✅ Authority returned: ROLE_" + user.getRole().toUpperCase());
+
+        return user; 
     }
 
     public String requestAccount(String name, String username, String email, String password, String role) {
