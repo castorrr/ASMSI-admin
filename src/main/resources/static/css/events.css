@@ -1,0 +1,37 @@
+/* Styling for School Year label */
+#schoolYearLabel {
+    color: #002fff; /* Light Blue */
+    font-weight: bold;
+}
+
+/* Styling for the events table header */
+.table-header th {
+    color: #002fff; /* Blue text */
+    font-weight: bold;
+    text-align: center;
+}
+
+/* Styling for table rows */
+.table-row td {
+    color: #002fff; /* Blue text for content */
+    text-align: center;
+}
+
+/* Button styling for action buttons */
+.btn-warning {
+    background-color: #ffc107;
+    border-color: #ffc107;
+    color: #000;
+}
+
+.btn-danger {
+    background-color: #dc3545;
+    border-color: #dc3545;
+    color: #fff;
+}
+
+.btn-info {
+    background-color: #17a2b8;
+    border-color: #17a2b8;
+    color: #fff;
+}
