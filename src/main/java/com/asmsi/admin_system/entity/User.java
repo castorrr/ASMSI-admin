@@ -48,8 +48,9 @@ public class User implements UserDetails {
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return List.of(new SimpleGrantedAuthority("ROLE_" + role));
-    }    
+        return List.of(new SimpleGrantedAuthority("ROLE_" + role.toUpperCase()));
+    }
+  
 
     @Override
     public boolean isAccountNonExpired() { return true; }
@@ -61,5 +62,7 @@ public class User implements UserDetails {
     public boolean isCredentialsNonExpired() { return true; }
 
     @Override
-    public boolean isEnabled() { return isApproved; } // Only enable approved users
+    public boolean isEnabled() { 
+        return isApproved;
+    } // Only enable approved users
 }
