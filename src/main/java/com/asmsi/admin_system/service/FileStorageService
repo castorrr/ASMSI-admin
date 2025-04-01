@@ -1,0 +1,47 @@
+@Service
+public class FileStorageService {
+    
+    private final Path fileStorageLocation;
+    
+    @Autowired
+    public FileStorageService(FileStorageProperties fileStorageProperties) {
+        this.fileStorageLocation = Paths.get(fileStorageProperties.getUploadDir())
+                                      .toAbsolutePath().normalize();
+        
+        try {
+            Files.createDirectories(this.fileStorageLocation);
+        } catch (Exception ex) {
+            throw new RuntimeException("Could not create upload directory", ex);
+        }
+    }
+    
+    public String storeFile(MultipartFile file) {
+        String fileName = StringUtils.cleanPath(file.getOriginalFilename());
+        
+        try {
+            // Check for invalid characters
+            if(fileName.contains("..")) {
+                throw new RuntimeException("Filename contains invalid path sequence " + fileName);
+            }
+            
+            // Generate unique filename
+            String newFileName = UUID.randomUUID().toString() + "_" + fileName;
+            Path targetLocation = this.fileStorageLocation.resolve(newFileName);
+            Files.copy(file.getInputStream(), targetLocation, StandardCopyOption.REPLACE_EXISTING);
+            
+            return "/uploads/" + newFileName; // Return the path where file is stored
+        } catch (IOException ex) {
+            throw new RuntimeException("Could not store file " + fileName, ex);
+        }
+    }
+    
+    public void deleteFile(String fileUrl) {
+        try {
+            String fileName = fileUrl.substring(fileUrl.lastIndexOf('/') + 1);
+            Path filePath = this.fileStorageLocation.resolve(fileName).normalize();
+            Files.deleteIfExists(filePath);
+        } catch (IOException ex) {
+            throw new RuntimeException("Could not delete file", ex);
+        }
+    }
+}
