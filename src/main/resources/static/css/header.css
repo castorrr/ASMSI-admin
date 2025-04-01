@@ -1,48 +1,131 @@
-/* Header Styles */
+/* Global Font */
+body {
+  font-family: 'Inter', sans-serif;
+}
+
+/* Navbar Styles */
 .navbar {
-  background-color: #ffffff; /* White background */
+  background-color: #001f8d; /* Deep blue */
   padding: 15px;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Light shadow */
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 }
 
+/* Logo & Title */
 .navbar-brand {
-  font-size: 1.5rem;
-  font-weight: bold;
-  color: #007bff; /* Primary color */
+  display: flex;
+  margin-left: 20px;
+  align-items: center;
+  text-decoration: none;
+}
+.line {
+  width: 5px; /* Adjust width as needed */
+  margin-left: 15px;
+  height: 100px; /* Adjust height as desired */
+  background-color: white; /* Choose color */
 }
 
+
+.navbar-brand img {
+  height: 70px;
+  margin-right: 10px;
+}
+
+.navbar-brand div {
+  display: flex;
+  flex-direction: column;
+  line-height: 1.2;
+}
+
+.navbar-brand span:first-child {
+  font-size: 20px;
+  margin-left: 20px;
+  font-weight: 500;
+  color: #ffffff; /* Ensure text is visible */
+}
+
+.navbar-brand span:last-child {
+  font-size: 18px;
+  margin-left: 20px;
+  font-weight: 700;
+  color: #fdfdfd; /* Yellow to pop out */
+}
+.navbar .fw-bold {
+  font-size: 25px;
+  margin-left: 20px;
+  font-weight: 700;
+  color: white !important;
+}
+
+/* Right Section: Messages, User Info */
 .navbar .ms-auto {
   display: flex;
   align-items: center;
+  gap: 15px; /* Adds spacing */
 }
 
+/* Message Icon */
 .navbar .bi-envelope {
-  font-size: 1.5rem;
-  color: #007bff; /* Blue icon */
+  font-size: 1.3rem;
+  color: white;
   transition: color 0.3s;
 }
 
 .navbar .bi-envelope:hover {
-  color: #0056b3; /* Darker blue on hover */
+  color: #ffdd00; /* Yellow on hover */
 }
 
 /* User Info */
 .navbar .user-info {
   display: flex;
   align-items: center;
-  margin-left: 15px;
+  gap: 10px;
 }
 
+/* Username */
 .navbar .user-info span {
   font-size: 1rem;
   font-weight: bold;
-  margin-right: 10px;
-  color: #333; /* Dark gray text */
+  color: #ffffff;
 }
 
+/* Square Avatar */
 .navbar .user-info img {
-  width: 40px;
-  height: 40px;
-  border-radius: 50%;
-  border: 2px solid #007bff;
+  width: 45px;
+  height: 45px;
+  margin-right: 10PX;
+  border-radius: 5px;
+  border: 2px solid white;
+}
+
+/* Logout Button */
+.navbar .logout-btn {
+  background-color: #003cff;
+  color: white;
+  border: none;
+  padding: 5px 15px;
+  font-size: 0.9rem;
+  font-weight: bold;
+  border-radius: 5px;
+  transition: background 0.3s;
+}
+
+.navbar .logout-btn:hover {
+  background-color: #bb2d3b;
+}
+
+/* Responsive Fixes */
+@media (max-width: 768px) {
+  .navbar {
+    flex-direction: column;
+    align-items: start;
+  }
+  
+  .ms-auto {
+    width: 100%;
+    justify-content: space-between;
+  }
 }
