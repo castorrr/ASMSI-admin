@@ -1,44 +1,49 @@
-/* Sidebar Styles */
-.sidebar {
-  background-color: #343a40; /* Dark sidebar */
-  height: 100vh;
-  padding: 20px;
-  color: white;
-}
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap');
 
-/* Sidebar Navigation */
-.sidebar .nav {
-  padding: 0;
+
+.sidebar {
+  width: 250px;
+  height: 100vh;
+  top: 0;
+  left: 0;
+  background-color: whitesmoke;
+  color: #001f8d;
+  padding: 15px;
+  border-radius: 5px;
+  font-family: 'Inter', sans-serif;
+  box-shadow: 5px 0 10px rgba(0, 31, 141, 0.2); /* Right side shadow */
 }
 
 .sidebar .nav-item {
-  list-style: none;
+  margin-bottom: 10px; /* Adds space between each menu item */
 }
 
 .sidebar .nav-link {
-  color: #ffffff;
-  font-size: 1.1rem;
-  padding: 12px;
-  display: flex;
-  align-items: center;
-  text-decoration: none;
-  transition: background 0.3s, padding-left 0.3s;
-}
-
-.sidebar .nav-link i {
-  margin-right: 10px;
-  font-size: 1.3rem;
+  color: #001f8d;
+ 
+    padding: 10px 20px;
+    border-radius: 5px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    transition: background 0.3s ease-in-out;
 }
 
 .sidebar .nav-link:hover {
-  background-color: #007bff;
-  border-radius: 5px;
-  padding-left: 18px;
+  background-color: #001f8d;
+  color: #ffffff;
+  transition: 0.3s;
 }
 
-/* Active Link */
-.sidebar .nav-link.active {
-  background-color: #0056b3;
-  font-weight: bold;
-  border-radius: 5px;
+.sidebar .nav-item i {
+  font-size: 1.2rem;
+}
+
+.sidebar hr {
+  border-color: rgba(255, 255, 255, 0.3);
+}
+
+.main-content {
+  margin-left: 250px;
+  padding: 20px;
 }
