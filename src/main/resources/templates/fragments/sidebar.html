@@ -1,58 +1,17 @@
-<!-- Sidebar Fragment: fragments/sidebar.html -->
-<div
-  th:fragment="sidebar(role)"
-  class="d-flex flex-column flex-shrink-0 p-3 bg-dark text-white"
-  style="width: 250px; height: 100vh"
->
-  <a
-    href="#"
-    class="d-flex align-items-center mb-3 mb-md-0 me-md-auto text-white text-decoration-none"
-  >
-    <span class="fs-4">Dashboard</span>
-  </a>
+<div th:fragment="sidebar(role)" class="sidebar">
+  <h4 class="mb-3">Dashboard</h4>
   <hr />
-  <ul class="nav nav-pills flex-column mb-auto">
-    <li class="nav-item">
-      <a th:href="@{/home}" class="nav-link text-white">
-        <i class="bi bi-house-door"></i> Home
-      </a>
-    </li>
-    <li>
-      <a th:href="@{/student-info}" class="nav-link text-white">
-        <i class="bi bi-person-lines-fill"></i> Student Information
-      </a>
-    </li>
-    <li>
-      <a th:href="@{/admission}" class="nav-link text-white">
-          <i class="bi bi-person-lines-fill"></i> Admission
-      </a>
-  </li>  
-    <li>
-      <a th:href="@{/attendance}" class="nav-link text-white">
-        <i class="bi bi-calendar-check"></i> Attendance
-      </a>
-    </li>
-    <li>
-      <a th:href="@{/events}" class="nav-link text-white">
-        <i class="bi bi-calendar-event"></i> Events
-      </a>
-    </li>
-    <li>
-      <a th:href="@{/e-library}" class="nav-link text-white">
-        <i class="bi bi-book"></i> E-Library
-      </a>
-    </li>
-    <li>
-      <a th:href="@{/tvl-shop}" class="nav-link text-white">
-        <i class="bi bi-cart"></i> TVL Shop
-      </a>
-    </li>
 
-    <!-- ✅ Admin-only tab -->
-    <li th:if="${role == 'admin'}">
-      <a th:href="@{/users}" class="nav-link text-white">
-        <i class="bi bi-person-lines-fill"></i> Users
-      </a>
-    </li>
+
+      <!-- Admin-only section -->
+      <li th:if="${role == 'admin'}" class="nav-item">
+          <a th:href="@{/users}" class="nav-link">
+              <i class="bi bi-people"></i> Users
+          </a>
+      </li>
   </ul>
+</div>
+
+<div class="main-content">
+  <!-- Your main content goes here -->
 </div>
