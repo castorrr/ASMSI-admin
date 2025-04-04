@@ -81,27 +81,28 @@
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
-                    <form>
+                    <form th:action="@{/events/create}" method="post">
                         <div class="mb-3">
                             <label for="eventName" class="form-label">Event Name</label>
-                            <input type="text" class="form-control" id="eventName" required>
+                            <input type="text" class="form-control" id="eventName" name="name" required>
                         </div>
                         <div class="mb-3">
                             <label for="eventSpeaker" class="form-label">Speaker</label>
-                            <input type="text" class="form-control" id="eventSpeaker" required>
+                            <input type="text" class="form-control" id="eventSpeaker" name="speaker" required>
                         </div>
                         <div class="mb-3">
                             <label for="eventDateTime" class="form-label">Date & Time</label>
-                            <input type="datetime-local" class="form-control" id="eventDateTime" required>
+                            <input type="datetime-local" class="form-control" id="eventDateTime" name="dateTime" required>
                         </div>
                         <div class="mb-3">
                             <label for="eventVenue" class="form-label">Venue</label>
-                            <input type="text" class="form-control" id="eventVenue" required>
+                            <input type="text" class="form-control" id="eventVenue" name="venue" required>
                         </div>
                         <div class="modal-footer">
-                          <button type="submit" class="btn btn-success">Create Event</button>
-                      </div>
+                            <button type="submit" class="btn btn-success">Create Event</button>
+                        </div>
                     </form>
+                    
                 </div>
             </div>
         </div>
