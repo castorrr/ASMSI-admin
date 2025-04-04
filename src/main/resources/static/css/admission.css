@@ -6,7 +6,7 @@ body {
 .navbar {
     display: flex;
     justify-content: space-around;
-    background: #0033cc;
+    background: linear-gradient(to right, #0033cc, #6699ff);;
     padding: 10px;
     color: white;
 }
@@ -14,15 +14,17 @@ body {
 .navbar a {
     color: white;
     text-decoration: none;
+    font-weight: bold;
 }
 .container {
     margin-top: 15px;
     margin-right: 500px;
     width: 80%;
-    background: rgb(255, 255, 255);
+    background: rgb(210, 219, 252);
     padding: 15px;
     border-radius: 10px;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+    margin-bottom: 50px;
 }
 
 .studInfo-container {
@@ -46,7 +48,7 @@ body {
     border-bottom: 1px solid white;
 }
 .name-group {
-    margin-top: 30px;
+    margin-top: 35px;
     display: flex;               /* Enables Flexbox */
     flex-wrap: wrap;             /* Allows wrapping if necessary */
     gap: 10px;                   /* Adds space between items */
@@ -62,8 +64,8 @@ body {
   
   /* Style for the input fields */
   .name-group input {
-    margin-left: -75px;
-    margin-right: 45px;
+    margin-left: -70px;
+    margin-right: 5px;
     width: 100%;                 /* Make the input fields take up available space */
     padding: 5px;
     font-size: 14px;
@@ -76,10 +78,382 @@ body {
   
   /* Optional: Limit input width for better alignment */
   .name-group input {
-    max-width: 175px;            /* Limit the width of input fields */
+    max-width: 150px;            /* Limit the width of input fields */
   }
-  
 
   
+  .address-group {
+    margin-top: 55px;
+    margin-left: 0px;
+    display: flex;               /* Enables Flexbox */
+    flex-wrap: wrap;             /* Allows wrapping if necessary */
+    gap: 10px;                   /* Adds space between items */
+  }
+  .address-group h3{
+    position: absolute;
+    margin-top: -45px;
+    font-size: 15px;
+    font-weight: bold;
+    color: #ff0000;
+  }
+  /* Style for the labels */
+  .address-group label {
+    margin-top: -25px;
+    font-size: 12px;
+    color: #91413D;
+    width: 75px;                /* Set a fixed width for labels */
+  }
   
+  /* Style for the input fields */
+  .address-group input {
+    margin-left: -70px;
+    margin-right: 5px;
+    width: 100%;                 /* Make the input fields take up available space */
+    padding: 5px;
+    font-size: 14px;
+    background-color: #f2f2f2;   /* Light gray background */
+    border: none;                /* Remove the border */
+    outline: none;               /* Remove the focus outline */
+    border-radius: 8px;          /* Rounded corners */
+    box-sizing: border-box;      /* Include padding and border in width */
+  }
   
+  /* Optional: Limit input width for better alignment */
+  .address-group input {
+    max-width: 199px;            /* Limit the width of input fields */
+  }
+
+  .birthday-group {
+    margin-top: 55px;
+    margin-left: 0px;
+    display: flex;               /* Enables Flexbox */
+    flex-wrap: wrap;             /* Allows wrapping if necessary */
+    gap: 10px;                   /* Adds space between items */
+  }
+  .birthday-group h3{
+    position: absolute;
+    margin-top: -45px;
+    font-size: 15px;
+    font-weight: bold;
+    color: #ff0000;
+  }
+  /* Style for the labels */
+  .birthday-group label {
+    margin-top: -25px;
+    font-size: 12px;
+    color: #91413D;
+    width: 75px;                /* Set a fixed width for labels */
+  }
+  
+  /* Style for the input fields */
+  .birthday-group input {
+    margin-left: -70px;
+    margin-right: 5px;
+    width: 100%;                 /* Make the input fields take up available space */
+    padding: 5px;
+    font-size: 14px;
+    background-color: #f2f2f2;   /* Light gray background */
+    border: none;                /* Remove the border */
+    outline: none;               /* Remove the focus outline */
+    border-radius: 8px;          /* Rounded corners */
+    box-sizing: border-box;      /* Include padding and border in width */
+  }
+  
+  /* Optional: Limit input width for better alignment */
+  .birthday-group input {
+    max-width: 199px;            /* Limit the width of input fields */
+  }
+
+  .otherInfo-group {
+    margin-top: 55px;
+    margin-left: 0px;
+    display: flex;               /* Enables Flexbox */
+    flex-wrap: wrap;             /* Allows wrapping if necessary */
+    gap: 10px;                   /* Adds space between items */
+  }
+  .otherInfo-group h3{
+    position: absolute;
+    margin-top: -45px;
+    font-size: 15px;
+    font-weight: bold;
+    color: #ff0000;
+  }
+  /* Style for the labels */
+  .otherInfo-group label {
+    margin-top: -25px;
+    font-size: 12px;
+    color: #91413D;
+    width: 75px;                /* Set a fixed width for labels */
+  }
+  
+  /* Style for the input fields */
+  .otherInfo-group input {
+    margin-left: -70px;
+    margin-right: 5px;
+    width: 100%;                 /* Make the input fields take up available space */
+    padding: 5px;
+    font-size: 14px;
+    background-color: #f2f2f2;   /* Light gray background */
+    border: none;                /* Remove the border */
+    outline: none;               /* Remove the focus outline */
+    border-radius: 8px;          /* Rounded corners */
+    box-sizing: border-box;      /* Include padding and border in width */
+  }
+  
+  /* Optional: Limit input width for better alignment */
+  .otherInfo-group input {
+    max-width: 199px;            /* Limit the width of input fields */
+  }
+  
+  .studBackground-container {
+    background: linear-gradient(to right, #0033cc, #6699ff);
+    color: white;
+    padding: 15px;
+    border-radius: 10px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.studBackground-container span {
+    font-weight: bold;
+    font-size: 20px;
+}
+
+.studentInfo-group {
+    margin-top: 40px;
+    margin-left: 0px;
+    display: flex;               /* Enables Flexbox */
+    flex-wrap: wrap;             /* Allows wrapping if necessary */
+    gap: 10px;                   /* Adds space between items */
+  }
+  .studentInfo-group h3{
+    position: absolute;
+    margin-top: -45px;
+    font-size: 15px;
+    font-weight: bold;
+    color: #ff0000;
+  }
+  /* Style for the labels */
+  .studentInfo-group label {
+    margin-top: -25px;
+    font-size: 12px;
+    color: #91413D;
+    width: 75px;                /* Set a fixed width for labels */
+  }
+  
+  /* Style for the input fields */
+  .studentInfo-group input {
+    margin-left: -70px;
+    margin-right: 5px;
+    width: 100%;                 /* Make the input fields take up available space */
+    padding: 5px;
+    font-size: 14px;
+    background-color: #f2f2f2;   /* Light gray background */
+    border: none;                /* Remove the border */
+    outline: none;               /* Remove the focus outline */
+    border-radius: 8px;          /* Rounded corners */
+    box-sizing: border-box;      /* Include padding and border in width */
+  }
+  
+  /* Optional: Limit input width for better alignment */
+  .studentInfo-group input {
+    max-width: 199px;            /* Limit the width of input fields */
+  }
+
+  .elementary-group {
+    margin-top: 40px;
+    margin-left: 0px;
+    display: flex;               /* Enables Flexbox */
+    flex-wrap: wrap;             /* Allows wrapping if necessary */
+    gap: 10px;                   /* Adds space between items */
+  }
+  .elementary-group h3{
+    position: absolute;
+    margin-top: -45px;
+    font-size: 15px;
+    font-weight: bold;
+    color: #ff0000;
+  }
+  /* Style for the labels */
+  .elementary-group label {
+    margin-top: -25px;
+    font-size: 12px;
+    color: #91413D;
+    width: 75px;                /* Set a fixed width for labels */
+  }
+  
+  /* Style for the input fields */
+  .elementary-group input {
+    margin-left: -70px;
+    margin-right: 5px;
+    width: 100%;                 /* Make the input fields take up available space */
+    padding: 5px;
+    font-size: 14px;
+    background-color: #f2f2f2;   /* Light gray background */
+    border: none;                /* Remove the border */
+    outline: none;               /* Remove the focus outline */
+    border-radius: 8px;          /* Rounded corners */
+    box-sizing: border-box;      /* Include padding and border in width */
+  }
+  
+  /* Optional: Limit input width for better alignment */
+  .elementary-group input {
+    max-width: 199px;            /* Limit the width of input fields */
+  }
+
+  .parentInfo-group {
+    margin-top: 55px;
+    margin-left: 0px;
+    display: flex;               /* Enables Flexbox */
+    flex-wrap: wrap;             /* Allows wrapping if necessary */
+    gap: 10px;                   /* Adds space between items */
+  }
+  .parentInfo-group h3{
+    position: absolute;
+    margin-top: -45px;
+    font-size: 15px;
+    font-weight: bold;
+    color: #ff0000;
+  }
+  /* Style for the labels */
+  .parentInfo-group label {
+    margin-top: -25px;
+    font-size: 12px;
+    color: #91413D;
+    width: 75px;                /* Set a fixed width for labels */
+  }
+  
+  /* Style for the input fields */
+  .parentInfo-group input {
+    margin-left: -70px;
+    margin-right: 5px;
+    width: 100%;                 /* Make the input fields take up available space */
+    padding: 5px;
+    font-size: 14px;
+    background-color: #f2f2f2;   /* Light gray background */
+    border: none;                /* Remove the border */
+    outline: none;               /* Remove the focus outline */
+    border-radius: 8px;          /* Rounded corners */
+    box-sizing: border-box;      /* Include padding and border in width */
+  }
+  
+  /* Optional: Limit input width for better alignment */
+  .parentInfo-group input {
+    max-width: 199px;            /* Limit the width of input fields */
+  }
+
+  .parentInfo2-group {
+    margin-top: 30px;
+    margin-left: 0px;
+    display: flex;               /* Enables Flexbox */
+    flex-wrap: wrap;             /* Allows wrapping if necessary */
+    gap: 10px;                   /* Adds space between items */
+  }
+  .parentInfo2-group h3{
+    position: absolute;
+    margin-top: -45px;
+    font-size: 15px;
+    font-weight: bold;
+    color: #ff0000;
+  }
+  /* Style for the labels */
+  .parentInfo2-group label {
+    margin-top: -25px;
+    font-size: 12px;
+    color: #91413D;
+    width: 75px;                /* Set a fixed width for labels */
+  }
+  
+  /* Style for the input fields */
+  .parentInfo2-group input {
+    margin-left: -70px;
+    margin-right: 5px;
+    width: 100%;                 /* Make the input fields take up available space */
+    padding: 5px;
+    font-size: 14px;
+    background-color: #f2f2f2;   /* Light gray background */
+    border: none;                /* Remove the border */
+    outline: none;               /* Remove the focus outline */
+    border-radius: 8px;          /* Rounded corners */
+    box-sizing: border-box;      /* Include padding and border in width */
+  }
+  
+  /* Optional: Limit input width for better alignment */
+  .parentInfo2-group input {
+    max-width: 199px;            /* Limit the width of input fields */
+  }
+
+  .guardian-group {
+    margin-top: 30px;
+    margin-left: 0px;
+    display: flex;               /* Enables Flexbox */
+    flex-wrap: wrap;             /* Allows wrapping if necessary */
+    gap: 10px;                   /* Adds space between items */
+  }
+  .guardian-group h3{
+    position: absolute;
+    margin-top: -45px;
+    font-size: 15px;
+    font-weight: bold;
+    color: #ff0000;
+  }
+  /* Style for the labels */
+  .guardian-group label {
+    margin-top: -25px;
+    font-size: 12px;
+    color: #91413D;
+    width: 75px;                /* Set a fixed width for labels */
+  }
+  
+  /* Style for the input fields */
+  .guardian-group input {
+    margin-left: -70px;
+    margin-right: 5px;
+    width: 100%;                 /* Make the input fields take up available space */
+    padding: 5px;
+    font-size: 14px;
+    background-color: #f2f2f2;   /* Light gray background */
+    border: none;                /* Remove the border */
+    outline: none;               /* Remove the focus outline */
+    border-radius: 8px;          /* Rounded corners */
+    box-sizing: border-box;      /* Include padding and border in width */
+  }
+  
+  /* Optional: Limit input width for better alignment */
+  .guardian-group input {
+    max-width: 150px;            /* Limit the width of input fields */
+  }
+
+  .pic-container {
+    width: 250px;
+    padding: 15px;
+    background-color: #f8f8f8;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    position: absolute;
+    top: 325px;
+    right: 30px;
+}
+
+.photo-placeholder {
+    width: 200px;
+    height: 200px;
+    border: 2px dashed #aaa;
+    background-color: #e9ecef;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 14px;
+    color: #888;
+    border-radius: 8px;
+}
+
+.student-name {
+    margin-top: 10px;
+    font-weight: bold;
+    text-align: center;
+}
