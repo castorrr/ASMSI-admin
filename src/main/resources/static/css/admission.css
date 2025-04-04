@@ -78,7 +78,7 @@ body {
   
   /* Optional: Limit input width for better alignment */
   .name-group input {
-    max-width: 150px;            /* Limit the width of input fields */
+    max-width: 20%;            /* Limit the width of input fields */
   }
 
   
@@ -120,7 +120,7 @@ body {
   
   /* Optional: Limit input width for better alignment */
   .address-group input {
-    max-width: 199px;            /* Limit the width of input fields */
+    max-width: 28%;            /* Limit the width of input fields */
   }
 
   .birthday-group {
@@ -161,7 +161,7 @@ body {
   
   /* Optional: Limit input width for better alignment */
   .birthday-group input {
-    max-width: 199px;            /* Limit the width of input fields */
+    max-width: 28%;            /* Limit the width of input fields */
   }
 
   .otherInfo-group {
@@ -202,7 +202,7 @@ body {
   
   /* Optional: Limit input width for better alignment */
   .otherInfo-group input {
-    max-width: 199px;            /* Limit the width of input fields */
+    max-width: 28%;            /* Limit the width of input fields */
   }
   
   .studBackground-container {
@@ -258,7 +258,7 @@ body {
   
   /* Optional: Limit input width for better alignment */
   .studentInfo-group input {
-    max-width: 199px;            /* Limit the width of input fields */
+    max-width: 28%;            /* Limit the width of input fields */
   }
 
   .elementary-group {
@@ -299,7 +299,7 @@ body {
   
   /* Optional: Limit input width for better alignment */
   .elementary-group input {
-    max-width: 199px;            /* Limit the width of input fields */
+    max-width: 28%;            /* Limit the width of input fields */
   }
 
   .parentInfo-group {
@@ -340,7 +340,7 @@ body {
   
   /* Optional: Limit input width for better alignment */
   .parentInfo-group input {
-    max-width: 199px;            /* Limit the width of input fields */
+    max-width: 28%            /* Limit the width of input fields */
   }
 
   .parentInfo2-group {
@@ -381,7 +381,7 @@ body {
   
   /* Optional: Limit input width for better alignment */
   .parentInfo2-group input {
-    max-width: 199px;            /* Limit the width of input fields */
+    max-width: 28%;            /* Limit the width of input fields */
   }
 
   .guardian-group {
@@ -422,13 +422,13 @@ body {
   
   /* Optional: Limit input width for better alignment */
   .guardian-group input {
-    max-width: 150px;            /* Limit the width of input fields */
+    max-width: 20%;            /* Limit the width of input fields */
   }
 
   .pic-container {
-    width: 250px;
+    width: 20%;
     padding: 15px;
-    background-color: #f8f8f8;
+    background-color: #6db2f3;
     border: 1px solid #ccc;
     border-radius: 8px;
     display: flex;
@@ -437,6 +437,7 @@ body {
     position: absolute;
     top: 325px;
     right: 30px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
 }
 
 .photo-placeholder {
