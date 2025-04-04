@@ -31,9 +31,9 @@
         <div th:replace="fragments/sidebar :: sidebar(role=${role})"></div>
         
         <div class="col-md-9 p-4">
+          <h1>Welcome to the Admission Page</h1>
           <!--MAIN CONTENT HERE-->
           <div class="navbar">
-            <a href="#">School Year</a>
             <a href="#">Database Upload</a>
             <a href="#">Add Family Saint</a>
             <a href="#">Reports</a>
@@ -60,13 +60,146 @@
               
               <label class="suffix">Suffix:</label>
               <input type="text" class="suffix-input">
-          </div>
-      
+            </div>
+
+            <hr>
+
+            <div class="address-group">
+
+              <h3>Complete Address</h3>
+
+              <label class="barangay">Brgy./St./Purok/:</label>
+              <input type="text" class ="barangay-input">
+
+              <label class="municipality">Municipality:</label>
+              <input type="text" class ="municipality-input">
+
+              <label class="province">Province:</label>
+              <input type="text" class ="province-input">
+            </div>
+
+            <hr>
             
+            <div class="birthday-group">
+
+              <h3>Birth Information</h3>
+
+              <label class="birthdate">Date of Birth:</label>
+              <input type="date" class="birthdate-input">
+
+              <label class="birthPlace">Place of Birth:</label>
+              <input type="text" class ="birthPlace-input">
+
+              <label class="age">Age:</label>
+              <input type="text" class ="age-input">
+
+            </div>
+
+            <hr>
+
+            <div class="otherInfo-group">
+
+              <h3>Other Information</h3>
+
+              <label class="examPlace">Exam Place:</label>
+              <input type="text" class ="examPlace-input">
+
+              <label class="idNum">ID Number:</label>
+              <input type="text" class ="idNum-input">
+
+              <label class="lrn">LRN:</label>
+              <input type="text" class ="LRN-input">
+
+            </div>
+
           </div>
-          <div class="pic-container">
+
+          <div class="container">
+            <div class="studBackground-container">
+              <span>STUDENT BACKGROUND</span>
+            </div>
+
+            <div class="studentInfo-group">  
+              <label class="religion">Religion:</label>
+              <input type="text" class="religion-input">
+              
+              <label class="gender">Gender:</label>
+              <input type="text" class="gender-input">
+              
+              <label class="citizenship">Citizenship:</label>
+              <input type="text" class="citizenship-input">
+              
+            </div>
+
+            <div class="elementary-group">  
+
+              <label class="elementary">Elem School:</label>
+              <input type="text" class="elementary-input">
+              
+              <label class="elemAddress">Address:</label>
+              <input type="text" class="elemAddress-input">
+                            
+            </div>
+
+            <hr>
+
+            <div class="parentInfo-group">  
+
+              <h3>Guardian Information</h3>
+
+              <label class="father">Father:</label>
+              <input type="text" class="father-input">
+              
+              <label class="occupation">Occupation:</label>
+              <input type="text" class="occupation-input">
+
+              <label class="contact">Contact Num:</label>
+              <input type="text" class="contact-input">
+                            
+            </div>
+
+            <div class="parentInfo2-group">  
+
+              <label class="mother">Mother:</label>
+              <input type="text" class="mother-input">
+              
+              <label class="occupation">Occupation:</label>
+              <input type="text" class="occupation-input">
+
+              <label class="contact">Contact Num:</label>
+              <input type="text" class="contact-input">
+                            
+            </div>
+
+            <div class="guardian-group">  
+
+              <label class="guardian">Guardian:</label>
+              <input type="text" class="mother-input">
+
+              <label class="guardrel">Relationship:</label>
+              <input type="text" class="guardrel-input">
+              
+              <label class="occupation">Occupation:</label>
+              <input type="text" class="occupation-input">
+
+              <label class="contact">Contact Num:</label>
+              <input type="text" class="contact-input">
+                            
+            </div>
+
+          </div>
+
             <!--PUT PICTURE AT THE RIGHT SIDE OF INFORMATION-->
+          <div class="pic-container text-center">
+            <div class="photo-placeholder">
+              <span>Photo Placeholder</span>
+            </div>
+            <p class="student-name">Student Name</p>
+            <input type="file" id="upload-photo" class="d-none" accept="image/*">
+            <button class="btn btn-primary btn-sm mt-2" onclick="document.getElementById('upload-photo').click();">Add Photo </button>
+            <button class="btn btn-danger btn-sm mt-2">Remove Photo</button>
           </div>
+
         </div>
       </div>
     </div>
