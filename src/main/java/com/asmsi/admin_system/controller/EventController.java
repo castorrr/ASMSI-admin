@@ -7,6 +7,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -67,5 +68,36 @@ public class EventController {
         eventService.deleteEvent(id);
         redirectAttributes.addFlashAttribute("success", "Event deleted successfully!");
         return "redirect:/events";
+    }
+
+    @GetMapping("/edit/{id}")
+    @ResponseBody
+    public Event getEventForEdit(@PathVariable Long id) {
+        return eventService.getEventById(id);
+    }
+
+    @PostMapping("/update/{id}")
+    public String updateEvent(@PathVariable Long id,
+            @RequestParam String name,
+            @RequestParam String speaker,
+            @RequestParam LocalDateTime dateTime,
+            @RequestParam String venue,
+            @RequestParam(name = "audience", required = false) String[] audiences,
+            RedirectAttributes redirectAttributes) {
+
+        String audienceStr = processAudience(audiences);
+        eventService.updateEvent(id, name, speaker, dateTime, venue, audienceStr);
+        redirectAttributes.addFlashAttribute("success", "Event updated successfully!");
+        return "redirect:/events";
+    }
+
+    private String processAudience(String[] audiences) {
+        if (audiences == null || audiences.length == 0) {
+            return "None";
+        } else if (Arrays.asList(audiences).contains("all")) {
+            return "All Levels";
+        } else {
+            return String.join(",", audiences);
+        }
     }
 }
