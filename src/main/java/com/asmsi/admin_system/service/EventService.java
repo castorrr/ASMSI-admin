@@ -26,4 +26,8 @@ public class EventService {
     public List<Event> getEventsByYear(int year) {
         return eventRepository.findByYear(year);
     }
+
+    public void deleteEvent(Long id) {
+        eventRepository.deleteById(id);
+    }
 }

@@ -10,6 +10,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+
 import java.util.List;
 import java.time.LocalDateTime;
 import java.util.Arrays;
@@ -56,6 +58,14 @@ public class EventController {
 
         eventService.createEvent(name, speaker, dateTime, venue, audienceStr);
         redirectAttributes.addFlashAttribute("success", "Event created successfully!");
+        return "redirect:/events";
+    }
+
+    @PostMapping("/delete/{id}")
+    public String deleteEvent(@PathVariable Long id,
+            RedirectAttributes redirectAttributes) {
+        eventService.deleteEvent(id);
+        redirectAttributes.addFlashAttribute("success", "Event deleted successfully!");
         return "redirect:/events";
     }
 }
