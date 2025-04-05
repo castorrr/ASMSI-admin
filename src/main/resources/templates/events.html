@@ -21,14 +21,12 @@
     <div class="container-fluid">
         <div class="row">
             <!-- Sidebar Section -->
-          
-                <div th:replace="fragments/sidebar :: sidebar(role=${role})"></div>
-           
+            <div th:replace="fragments/sidebar :: sidebar(role=${role})"></div>
 
             <!-- Main Content Section -->
             <div class="col-md-9 p-4">
                 <h1>Welcome to the Event Page</h1>
-                <div class="d-flex justify-content-between align-items-center mb-3">
+                <div class="d-flex justify-content-between align-items-center mb-4">
                     <div>
                         <label for="schoolYear" id="schoolYearLabel" class="form-label me-2">School Year:</label>
                         <select id="schoolYear" class="form-select d-inline w-auto">
@@ -38,46 +36,83 @@
                         </select>
                     </div>
                     <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#eventModal">
-                        Create Event
+                        <i class="bi bi-plus-circle"></i> Create Event
                     </button>
                 </div>
                 
-                <!-- Events Table -->
-                <table class="table table-bordered">
-                    <thead class="table-header">
-                        <tr>
-                            <th>Event</th>
-                            <th>Speaker</th>
-                            <th>Date & Time</th>
-                            <th>Venue</th>
-                            <th>Action</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <!-- Dynamic Rows here using Thymeleaf -->
-                        <tr th:each="event : ${events}" class="table-row">
-                            <td th:text="${event.name}"></td>
-                            <td th:text="${event.speaker}"></td>
-                            <td th:text="${event.dateTime}"></td>
-                            <td th:text="${event.venue}"></td>
-                            <td>
-                                <button class="btn btn-warning btn-sm">Edit</button>
-                                <button class="btn btn-danger btn-sm">Delete</button>
-                                <button class="btn btn-info btn-sm">Play</button>
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
+                <!-- Events Cards Grid -->
+                <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
+                    <!-- Event Card (repeats for each event) -->
+                    <div th:each="event : ${events}" class="col">
+                        <div class="card event-card h-100">
+                            <div class="card-body">
+                                <div class="event-header d-flex justify-content-between">
+                                    <h5 class="card-title mb-0" th:text="${event.name}"></h5>
+                                    <span class="event-date" th:text="${#temporals.format(event.dateTime, 'MMM dd')}"></span>
+                                </div>
+                                
+                                <div class="my-2">
+                                    <small class="text-muted">Speaker:</small>
+                                    <p class="mb-1 fw-bold" th:text="${event.speaker}"></p>
+                                </div>
+                                
+                                <div class="my-2">
+                                    <small class="text-muted">Time:</small>
+                                    <p class="mb-1" th:text="${#temporals.format(event.dateTime, 'h:mm a')}"></p>
+                                </div>
+                                
+                                <div class="my-2">
+                                    <small class="text-muted">Venue:</small>
+                                    <p class="mb-1" th:text="${event.venue}"></p>
+                                </div>
+                                
+                                <div class="my-3">
+                                    <small class="text-muted">Audience:</small>
+                                    <div>
+                                        <span th:if="${event.audience == 'All Levels'}" 
+                                              class="badge audience-badge">All Levels</span>
+                                        <span th:if="${event.audience == 'None'}" 
+                                              class="badge audience-badge">Not specified</span>
+                                        <th:block th:if="${event.audience != 'All Levels' and event.audience != 'None'}">
+                                            <span th:each="grade : ${#strings.arraySplit(event.audience, ',')}" 
+                                                  class="badge audience-badge">
+                                                Grade <span th:text="${grade.trim()}"></span>
+                                            </span>
+                                        </th:block>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="card-footer bg-transparent border-top-0">
+                                <div class="d-flex justify-content-end">
+                                    <button class="btn btn-outline-warning btn-sm me-2">
+                                        <i class="bi bi-pencil"></i> Edit
+                                    </button>
+                                    <button class="btn btn-outline-danger btn-sm me-2">
+                                        <i class="bi bi-trash"></i> Delete
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Empty State -->
+                    <div th:if="${events.empty}" class="col-12">
+                        <div class="alert alert-info text-center">
+                            No events found. Click "Create Event" to get started!
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
 
-    <!-- Event Modal -->
+    <!-- Event Creation Modal -->
     <div class="modal fade" id="eventModal" tabindex="-1" aria-labelledby="eventModalLabel" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="eventModalLabel">Create Event</h5>
+                    <h5 class="modal-title" id="eventModalLabel">Create New Event</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
@@ -98,11 +133,42 @@
                             <label for="eventVenue" class="form-label">Venue</label>
                             <input type="text" class="form-control" id="eventVenue" name="venue" required>
                         </div>
+                        <div class="mb-3">
+                            <label class="form-label">Audience</label>
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" id="allLevels" name="audience" value="all">
+                                <label class="form-check-label" for="allLevels">All Levels</label>
+                            </div>
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" id="grade7" name="audience" value="7">
+                                <label class="form-check-label" for="grade7">Grade 7</label>
+                            </div>
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" id="grade8" name="audience" value="8">
+                                <label class="form-check-label" for="grade8">Grade 8</label>
+                            </div>
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" id="grade9" name="audience" value="9">
+                                <label class="form-check-label" for="grade9">Grade 9</label>
+                            </div>
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" id="grade10" name="audience" value="10">
+                                <label class="form-check-label" for="grade10">Grade 10</label>
+                            </div>
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" id="grade11" name="audience" value="11">
+                                <label class="form-check-label" for="grade11">Grade 11</label>
+                            </div>
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" id="grade12" name="audience" value="12">
+                                <label class="form-check-label" for="grade12">Grade 12</label>
+                            </div>
+                        </div>
                         <div class="modal-footer">
-                            <button type="submit" class="btn btn-success">Create Event</button>
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                            <button type="submit" class="btn btn-primary">Create Event</button>
                         </div>
                     </form>
-                    
                 </div>
             </div>
         </div>
@@ -110,5 +176,30 @@
 
     <!-- Bootstrap JS -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    
+    <!-- Custom JavaScript for Audience Selection -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Handle "All Levels" checkbox behavior
+            const allLevelsCheckbox = document.getElementById('allLevels');
+            const gradeCheckboxes = document.querySelectorAll('input[name="audience"]:not(#allLevels)');
+            
+            allLevelsCheckbox.addEventListener('change', function() {
+                gradeCheckboxes.forEach(checkbox => {
+                    checkbox.checked = false;
+                    checkbox.disabled = this.checked;
+                });
+            });
+            
+            // Disable "All Levels" if any grade is selected
+            gradeCheckboxes.forEach(checkbox => {
+                checkbox.addEventListener('change', function() {
+                    if (this.checked) {
+                        allLevelsCheckbox.checked = false;
+                    }
+                });
+            });
+        });
+    </script>
 </body>
 </html>

@@ -32,9 +32,9 @@ public class HomeController {
         return "home";
     }
 
-    @GetMapping("/events")
-    public String showEventPage() {
-        return "events";
-    }
+    // @GetMapping("/events")
+    // public String showEventPage() {
+    // return "events";
+    // }
 
 }
