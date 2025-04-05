@@ -116,3 +116,22 @@ input.form-control {
   margin-top: 10px;
   font-size: 14px;
 }
+
+.password-container {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.toggle-password {
+  position: absolute;
+  right: 10px;
+  top: 8px;
+  cursor: pointer;
+  font-size: 14px;
+  color: grey;
+}
+
+.toggle-password:hover {
+  color: #0056b3;
+}
