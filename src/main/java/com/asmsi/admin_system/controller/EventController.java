@@ -22,10 +22,18 @@ public class EventController {
     private EventService eventService;
 
     @GetMapping
-    public String showEvents(Model model) {
-        List<Event> events = eventService.getAllEvents();
+    public String showEvents(
+            @RequestParam(required = false) Integer schoolYear,
+            Model model) {
+
+        List<Event> events;
+        if (schoolYear != null) {
+            events = eventService.getEventsByYear(schoolYear);
+        } else {
+            events = eventService.getAllEvents();
+        }
         model.addAttribute("events", events);
-        return "events"; // This should match your Thymeleaf template name (events.html)
+        return "events";
     }
 
     @PostMapping("/create")

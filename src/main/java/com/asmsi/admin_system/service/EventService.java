@@ -22,4 +22,8 @@ public class EventService {
     public List<Event> getAllEvents() {
         return eventRepository.findAll();
     }
+
+    public List<Event> getEventsByYear(int year) {
+        return eventRepository.findByYear(year);
+    }
 }
