@@ -23,15 +23,19 @@ public class Event {
     @Column(nullable = false)
     private String venue;
 
+    @Column(nullable = false)
+    private String audience;
+
     // Constructors
     public Event() {
     }
 
-    public Event(String name, String speaker, LocalDateTime dateTime, String venue) {
+    public Event(String name, String speaker, LocalDateTime dateTime, String venue, String audience) {
         this.name = name;
         this.speaker = speaker;
         this.dateTime = dateTime;
         this.venue = venue;
+        this.audience = audience;
     }
 
     // Getters and Setters
@@ -73,5 +77,13 @@ public class Event {
 
     public void setVenue(String venue) {
         this.venue = venue;
+    }
+
+    public String getAudience() {
+        return audience;
+    }
+
+    public void setAudience(String audience) {
+        this.audience = audience;
     }
 }

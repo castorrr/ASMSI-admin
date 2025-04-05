@@ -9,12 +9,13 @@ import java.util.List;
 
 @Service
 public class EventService {
-
     @Autowired
     private EventRepository eventRepository;
 
-    public Event createEvent(String name, String speaker, LocalDateTime dateTime, String venue) {
-        Event event = new Event(name, speaker, dateTime, venue);
+    // Change parameter from String[] to String
+    public Event createEvent(String name, String speaker, LocalDateTime dateTime,
+            String venue, String audience) {
+        Event event = new Event(name, speaker, dateTime, venue, audience);
         return eventRepository.save(event);
     }
 

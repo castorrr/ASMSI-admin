@@ -1,37 +1,111 @@
-/* Styling for School Year label */
+/* School Year label styling */
 #schoolYearLabel {
     color: #002fff; /* Light Blue */
     font-weight: bold;
 }
 
-/* Styling for the events table header */
-.table-header th {
-    color: #002fff; /* Blue text */
+/* Event Cards Styling */
+.event-card {
+    transition: transform 0.2s;
+    margin-bottom: 20px;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    border: 1px solid rgba(0, 47, 255, 0.1);
+}
+
+.event-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 6px 12px rgba(0, 47, 255, 0.15);
+}
+
+.event-header {
+    border-bottom: 1px solid rgba(0, 47, 255, 0.1);
+    padding-bottom: 10px;
+    margin-bottom: 10px;
+}
+
+.event-date {
+    background-color: rgba(0, 47, 255, 0.05);
+    border-radius: 5px;
+    padding: 5px 10px;
     font-weight: bold;
-    text-align: center;
+    color: #002fff;
 }
 
-/* Styling for table rows */
-.table-row td {
-    color: #002fff; /* Blue text for content */
-    text-align: center;
+/* Audience badges */
+.audience-badge {
+    background-color: rgba(0, 47, 255, 0.1);
+    color: #002fff;
+    margin-right: 5px;
+    margin-bottom: 5px;
+    font-weight: 500;
 }
 
-/* Button styling for action buttons */
-.btn-warning {
-    background-color: #ffc107;
+/* Card text colors */
+.card-title {
+    color: #002fff;
+}
+
+.text-muted {
+    color: #6c757d !important;
+}
+
+.fw-bold {
+    color: #002fff;
+}
+
+/* Action buttons - keeping your existing button styles */
+.btn-outline-warning {
+    color: #ffc107;
     border-color: #ffc107;
+}
+
+.btn-outline-warning:hover {
+    background-color: #ffc107;
     color: #000;
 }
 
-.btn-danger {
-    background-color: #dc3545;
+.btn-outline-danger {
+    color: #dc3545;
     border-color: #dc3545;
+}
+
+.btn-outline-danger:hover {
+    background-color: #dc3545;
     color: #fff;
 }
 
-.btn-info {
-    background-color: #17a2b8;
+.btn-outline-info {
+    color: #17a2b8;
     border-color: #17a2b8;
+}
+
+.btn-outline-info:hover {
+    background-color: #17a2b8;
     color: #fff;
+}
+
+/* Empty state styling */
+.alert-info {
+    background-color: rgba(0, 47, 255, 0.1);
+    border-color: rgba(0, 47, 255, 0.2);
+    color: #002fff;
+}
+
+/* Create Event button */
+.btn-primary {
+    background-color: #002fff;
+    border-color: #002fff;
+}
+
+.btn-primary:hover {
+    background-color: #0022cc;
+    border-color: #0022cc;
+}
+
+/* Responsive grid adjustments */
+@media (max-width: 768px) {
+    .event-card {
+        margin-bottom: 15px;
+    }
 }

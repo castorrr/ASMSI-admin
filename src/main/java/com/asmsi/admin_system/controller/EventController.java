@@ -8,8 +8,11 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
-
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.GetMapping;
+import java.util.List;
 import java.time.LocalDateTime;
+import java.util.Arrays;
 
 @Controller
 @RequestMapping("/events")
@@ -18,22 +21,33 @@ public class EventController {
     @Autowired
     private EventService eventService;
 
+    @GetMapping
+    public String showEvents(Model model) {
+        List<Event> events = eventService.getAllEvents();
+        model.addAttribute("events", events);
+        return "events"; // This should match your Thymeleaf template name (events.html)
+    }
+
     @PostMapping("/create")
     public String createEvent(
             @RequestParam String name,
             @RequestParam String speaker,
             @RequestParam LocalDateTime dateTime,
             @RequestParam String venue,
+            @RequestParam(name = "audience", required = false) String[] audiences,
             RedirectAttributes redirectAttributes) {
 
-        // Create and save the event (the returned Event object is used)
-        Event savedEvent = eventService.createEvent(name, speaker, dateTime, venue);
+        String audienceStr;
+        if (audiences == null || audiences.length == 0) {
+            audienceStr = "None";
+        } else if (Arrays.asList(audiences).contains("all")) {
+            audienceStr = "All Levels"; // Store as exact string "All Levels"
+        } else {
+            audienceStr = String.join(",", audiences);
+        }
 
-        // Add the saved event details to flash attributes if you want to display them
+        eventService.createEvent(name, speaker, dateTime, venue, audienceStr);
         redirectAttributes.addFlashAttribute("success", "Event created successfully!");
-        redirectAttributes.addFlashAttribute("eventName", savedEvent.getName());
-        redirectAttributes.addFlashAttribute("eventSpeaker", savedEvent.getSpeaker());
-
-        return "redirect:/events"; // Redirect to events listing page
+        return "redirect:/events";
     }
 }
