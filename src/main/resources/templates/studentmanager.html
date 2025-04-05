@@ -119,15 +119,16 @@
             <!-- Image Upload with Preview -->
             <div class="row mb-3">
               <div class="col-md-4">
-                <label class="form-label">UpdateImage</label>
-                <input type="file" class="form-control" name="imageFile" accept="image/*" id="imageFile" onchange="previewImage(event)">
-              </div>
-              <div class="col-md-4">
-                <label class="form-label">Current Image</label>
+                
                 <!-- Preview Image -->
                 <img id="imagePreview" th:src="${student.imageUrl != null ? student.imageUrl : '/images/default-profile.png'}" 
                      alt="Preview Image" width="100" height="100"       class="rounded-circle">
+              </div></br>
+              <div class="col-md-4">
+                <label class="form-label">UpdateImage</label>
+                <input type="file" class="form-control" name="imageFile" accept="image/*" id="imageFile" onchange="previewImage(event)">
               </div>
+             
             </div>
 
             <!-- Student Details (Two Columns) -->
