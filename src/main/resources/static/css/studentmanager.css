@@ -1,0 +1,134 @@
+/* studentmanager.css - Blue Theme */
+
+/* Page Title */
+h1 {
+    font-weight: 600;
+    margin-bottom: 30px;
+    color: #001f8d;/* Bootstrap Primary Blue */
+}
+
+/* Table Styles */
+#studentTable {
+    background-color: #ffffff;
+    border-radius: 10px;
+    overflow-x: auto;
+    box-shadow: 0 2px 10px rgba(255, 255, 255, 0.1);
+}
+
+#studentTable th {
+    background-color: #e7f0ff;
+    color: #0d6efd;
+    font-weight: 600;
+    text-align: center;
+    vertical-align: middle;
+}
+
+#studentTable td {
+    vertical-align: middle;
+    text-align: center;
+    font-size: 0.95rem;
+}
+
+/* Row hover effect */
+#studentTable tbody tr:hover {
+    background-color: #f0f8ff;
+}
+
+/* Rounded profile images */
+#studentTable img {
+    object-fit: cover;
+    border: 2px solid #cfe2ff;
+}
+
+/* Buttons */
+.btn {
+    transition: all 0.3s ease;
+}
+
+.btn-sm {
+    padding: 4px 10px;
+    font-size: 0.8rem;
+}
+
+.btn-warning {
+    background-color: #577bff;;
+    color: white;
+    border: none;
+}
+
+.btn-warning:hover {
+    background-color: #1741db;;
+    color: white;
+}
+
+.btn-danger {
+    background-color: #dc3545;
+    border: none;
+}
+
+.btn-danger:hover {
+    background-color: #bb2d3b;
+}
+
+.btn-primary {
+    background-color: #0d6efd;
+    border: none;
+}
+
+.btn-primary:hover {
+    background-color: #0b5ed7;
+}
+
+/* Modal Styling */
+.modal-content {
+    border-radius: 10px;
+    border: 1px solid #cfe2ff;
+}
+
+.modal-header {
+    background-color: #e7f0ff;
+    border-bottom: 1px solid #cfe2ff;
+}
+
+.modal-title {
+    font-weight: 600;
+    color: #0d6efd;
+}
+
+.modal-footer {
+    background-color: #f8f9fa;
+    border-top: 1px solid #dee2e6;
+}
+
+/* Search Box */
+#searchBox {
+    border-radius: 8px;
+    padding: 10px;
+    font-size: 0.95rem;
+    border: 1px solid #cfe2ff;
+    transition: border-color 0.3s ease;
+}
+
+#searchBox:focus {
+    border-color: #0d6efd;
+    outline: none;
+    box-shadow: 0 0 0 0.15rem rgba(13, 110, 253, 0.25);
+}
+
+/* Responsive tweaks */
+@media (max-width: 768px) {
+    #studentTable th,
+    #studentTable td {
+        font-size: 0.8rem;
+        padding: 6px;
+    }
+
+    .btn-sm {
+        font-size: 0.75rem;
+        padding: 3px 8px;
+    }
+
+    .modal-dialog {
+        max-width: 90%;
+    }
+}
