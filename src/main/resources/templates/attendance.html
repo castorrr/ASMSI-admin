@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Attendance</title>
+
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css"
+    />
+
+    <link rel="stylesheet" th:href="@{/css/header.css}" />
+    <link rel="stylesheet" th:href="@{/css/sidebar.css}" />
+    <link rel="stylesheet" href="/css/admission.css" />
+  </head>
+
+  <!DOCTYPE html>
+  <html lang="en">
+    <head>
+      <meta charset="UTF-8" />
+      <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+      <title>Attendance Form</title>
+      <link
+        rel="stylesheet"
+        href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
+      />
+    </head>
+    <body>
+      <div th:replace="fragments/header :: header(${username})"></div>
+
+      <div class="container-fluid">
+        <div class="row">
+          <div th:replace="fragments/sidebar :: sidebar(role=${role})"></div>
+
+          <div class="col-md-9 p-4">
+            <h1>Attendance Form</h1>
+            <!-- Main Content for Attendance Form -->
+            <div class="navbar">
+              <a href="#">Mark Attendance</a>
+              <a href="#">Attendance Reports</a>
+            </div>
+
+            <div class="container">
+              <div class="attendance-info-container">
+                <span>Attendance Information</span>
+
+                <div class="row">
+                  <div class="col-md-4">
+                    <label class="student-id">Student ID:</label>
+                    <input
+                      type="text"
+                      class="form-control student-id-input"
+                      placeholder="Enter Student ID"
+                    />
+                  </div>
+
+                  <div class="col-md-4">
+                    <label class="student-name">Student Name:</label>
+                    <input
+                      type="text"
+                      class="form-control student-name-input"
+                      placeholder="Enter Student Name"
+                    />
+                  </div>
+
+                  <div class="col-md-4">
+                    <label class="batch-number">Batch Number:</label>
+                    <input
+                      type="text"
+                      class="form-control batch-number-input"
+                      placeholder="Enter Batch Number"
+                    />
+                  </div>
+                </div>
+              </div>
+
+              <hr />
+
+              <div class="attendance-status-group">
+                <h3>Attendance Details</h3>
+                <div class="row">
+                  <div class="col-md-4">
+                    <label class="attendance-date">Date:</label>
+                    <input
+                      type="date"
+                      class="form-control attendance-date-input"
+                    />
+                  </div>
+
+                  <div class="col-md-4">
+                    <label class="status">Attendance Status:</label>
+                    <select class="form-select attendance-status-input">
+                      <option value="present">Present</option>
+                      <option value="absent">Absent</option>
+                      <option value="late">Late</option>
+                      <option value="excused">Excused</option>
+                    </select>
+                  </div>
+
+                  <div class="col-md-4">
+                    <label class="remarks">Remarks:</label>
+                    <textarea
+                      class="form-control remarks-input"
+                      rows="3"
+                      placeholder="Enter any remarks..."
+                    ></textarea>
+                  </div>
+                </div>
+              </div>
+
+              <hr />
+
+              <div class="submit-group text-center">
+                <button class="btn btn-primary mt-3">Submit Attendance</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Bootstrap JS -->
+      <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+      <script th:src="@{/js/attendance-form.js}"></script>
+    </body>
+  </html>
+</html>
