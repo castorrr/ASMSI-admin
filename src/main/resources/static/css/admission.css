@@ -3,7 +3,7 @@ body {
     margin: 0;
     padding: 0;
 }
-.navbar {
+.navbar2 {
     display: flex;
     justify-content: space-around;
     background: linear-gradient(to right, #0033cc, #6699ff);;
@@ -11,7 +11,7 @@ body {
     color: white;
 }
 
-.navbar a {
+.navbar2 a {
     color: white;
     text-decoration: none;
     font-weight: bold;
