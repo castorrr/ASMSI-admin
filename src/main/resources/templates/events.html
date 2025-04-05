@@ -54,7 +54,9 @@
                 <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
                     <!-- Event Card (repeats for each event) -->
                     <div th:each="event : ${events}" class="col">
-                        <div class="card event-card h-100">
+                        <div class="card event-card h-100 clickable-card" 
+                            th:data-id="${event.id}"
+                            th:data-name="${event.name}">
                             <div class="card-body">
                                 <div class="event-header d-flex justify-content-between">
                                     <h5 class="card-title mb-0" th:text="${event.name}"></h5>
@@ -168,6 +170,50 @@
                         <div class="modal-footer">
                             <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
                             <button type="submit" class="btn btn-primary">Save Changes</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Attendance Modal -->
+    <div class="modal fade" id="attendanceModal" tabindex="-1" aria-labelledby="attendanceModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="attendanceModalLabel">Event Attendance</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="attendanceForm">
+                        <div class="mb-3">
+                            <label for="completeName" class="form-label">Complete Name</label>
+                            <input type="text" class="form-control" id="completeName" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="batch" class="form-label">Batch</label>
+                            <input type="text" class="form-control" id="batch" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="familySaint" class="form-label">Family Saint</label>
+                            <input type="text" class="form-control" id="familySaint" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="idNumber" class="form-label">ID Number</label>
+                            <input type="text" class="form-control" id="idNumber" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="picture" class="form-label">Picture</label>
+                            <input type="file" class="form-control" id="picture" accept="image/*" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="timeIn" class="form-label">Time In</label>
+                            <input type="datetime-local" class="form-control" id="timeIn" required>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                            <button type="submit" class="btn btn-primary">Submit Attendance</button>
                         </div>
                     </form>
                 </div>
@@ -316,5 +362,63 @@
         });
     });
     </script>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const attendanceModal = new bootstrap.Modal(document.getElementById('attendanceModal'));
+        
+        // Handle card clicks
+        document.querySelectorAll('.clickable-card').forEach(card => {
+            card.addEventListener('click', function(e) {
+                // Don't trigger if clicking on buttons inside the card
+                if (e.target.closest('button, a, [data-bs-toggle]')) {
+                    return;
+                }
+                
+                const eventId = this.getAttribute('data-id');
+                const eventName = this.getAttribute('data-name');
+                
+                // Set the modal title with event name
+                document.getElementById('attendanceModalLabel').textContent = 
+                    `Attendance for ${eventName}`;
+                
+                // Set current time for time-in
+                const now = new Date();
+                document.getElementById('timeIn').value = 
+                    now.toISOString().slice(0, 16).replace('T', ' ');
+                
+                // Show the modal
+                attendanceModal.show();
+            });
+        });
+        
+        // Handle attendance form submission
+        document.getElementById('attendanceForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            // Collect form data
+            const formData = {
+                eventId: document.querySelector('.clickable-card.active')?.getAttribute('data-id'),
+                completeName: document.getElementById('completeName').value,
+                batch: document.getElementById('batch').value,
+                familySaint: document.getElementById('familySaint').value,
+                idNumber: document.getElementById('idNumber').value,
+                picture: document.getElementById('picture').files[0],
+                timeIn: document.getElementById('timeIn').value
+            };
+            
+            // Here you would typically send the data to your backend
+            console.log('Attendance data to submit:', formData);
+            // Example: fetch('/api/attendance', { method: 'POST', body: formData })
+            
+            // Show success message and close modal
+            attendanceModal.hide();
+            alert('Attendance submitted successfully!');
+            
+            // Reset form
+            this.reset();
+        });
+    });
+</script>
 </body>
 </html>

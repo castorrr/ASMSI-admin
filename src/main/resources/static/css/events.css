@@ -109,3 +109,13 @@
         margin-bottom: 15px;
     }
 }
+
+.clickable-card {
+    cursor: pointer;
+    transition: transform 0.2s;
+}
+
+.clickable-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 4px 8px rgba(0, 47, 255, 0.2);
+}
