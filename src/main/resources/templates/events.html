@@ -95,8 +95,9 @@
                             
                             <div class="card-footer bg-transparent border-top-0">
                                 <div class="d-flex justify-content-end">
-                                    <button class="btn btn-outline-warning btn-sm me-2">
-                                        <i class="bi bi-pencil"></i> Edit
+                                    <button class="btn btn-outline-warning btn-sm me-2 edit-btn" 
+                                            th:data-id="${event.id}">
+                                            <i class="bi bi-pencil"></i> Edit
                                     </button>
                                     <!-- Updated Delete Button -->
                                     <form th:action="@{/events/delete/{id}(id=${event.id})}" method="post" class="d-inline">
@@ -127,11 +128,12 @@
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="eventModalLabel">Create New Event</h5>
+                    <h5 class="modal-title" id="modalTitle">Create Event</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
-                    <form th:action="@{/events/create}" method="post">
+                    <form id="eventForm" th:action="@{/events/create}" method="post">
+                        <input type="hidden" id="eventId" name="id" value="">
                         <div class="mb-3">
                             <label for="eventName" class="form-label">Event Name</label>
                             <input type="text" class="form-control" id="eventName" name="name" required>
@@ -154,34 +156,18 @@
                                 <input class="form-check-input" type="checkbox" id="allLevels" name="audience" value="all">
                                 <label class="form-check-label" for="allLevels">All Levels</label>
                             </div>
-                            <div class="form-check">
-                                <input class="form-check-input" type="checkbox" id="grade7" name="audience" value="7">
-                                <label class="form-check-label" for="grade7">Grade 7</label>
-                            </div>
-                            <div class="form-check">
-                                <input class="form-check-input" type="checkbox" id="grade8" name="audience" value="8">
-                                <label class="form-check-label" for="grade8">Grade 8</label>
-                            </div>
-                            <div class="form-check">
-                                <input class="form-check-input" type="checkbox" id="grade9" name="audience" value="9">
-                                <label class="form-check-label" for="grade9">Grade 9</label>
-                            </div>
-                            <div class="form-check">
-                                <input class="form-check-input" type="checkbox" id="grade10" name="audience" value="10">
-                                <label class="form-check-label" for="grade10">Grade 10</label>
-                            </div>
-                            <div class="form-check">
-                                <input class="form-check-input" type="checkbox" id="grade11" name="audience" value="11">
-                                <label class="form-check-label" for="grade11">Grade 11</label>
-                            </div>
-                            <div class="form-check">
-                                <input class="form-check-input" type="checkbox" id="grade12" name="audience" value="12">
-                                <label class="form-check-label" for="grade12">Grade 12</label>
+                            <div th:each="grade : ${#numbers.sequence(7, 12)}">
+                                <div class="form-check">
+                                    <input class="form-check-input grade-checkbox" type="checkbox" 
+                                           th:id="'grade' + ${grade}" name="audience" th:value="${grade}">
+                                    <label class="form-check-label" th:for="'grade' + ${grade}" 
+                                           th:text="'Grade ' + ${grade}"></label>
+                                </div>
                             </div>
                         </div>
                         <div class="modal-footer">
                             <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-                            <button type="submit" class="btn btn-primary">Create Event</button>
+                            <button type="submit" class="btn btn-primary">Save Changes</button>
                         </div>
                     </form>
                 </div>
@@ -238,5 +224,97 @@
         }
     });
 </script>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const eventModal = new bootstrap.Modal(document.getElementById('eventModal'));
+        const eventForm = document.getElementById('eventForm');
+        const modalTitle = document.getElementById('modalTitle');
+        
+        // Handle edit buttons
+        document.querySelectorAll('.edit-btn').forEach(btn => {
+            btn.addEventListener('click', function() {
+                const eventId = this.getAttribute('data-id');
+                
+                // Fetch event data
+                fetch(`/events/edit/${eventId}`)
+                    .then(response => response.json())
+                    .then(event => {
+                        // Update modal title
+                        modalTitle.textContent = 'Edit Event';
+                        
+                        // Set form action for update
+                        eventForm.action = `/events/update/${eventId}`;
+                        
+                        // Fill form with event data
+                        document.getElementById('eventId').value = eventId;
+                        document.getElementById('eventName').value = event.name;
+                        document.getElementById('eventSpeaker').value = event.speaker;
+                        document.getElementById('eventDateTime').value = formatDateTimeForInput(event.dateTime);
+                        document.getElementById('eventVenue').value = event.venue;
+                        
+                        // Handle audience checkboxes
+                        resetAudienceCheckboxes();
+                        if (event.audience === 'All Levels') {
+                            document.getElementById('allLevels').checked = true;
+                            disableGradeCheckboxes();
+                        } else if (event.audience !== 'None') {
+                            event.audience.split(',').forEach(grade => {
+                                const checkbox = document.querySelector(`.grade-checkbox[value="${grade.trim()}"]`);
+                                if (checkbox) checkbox.checked = true;
+                            });
+                        }
+                        
+                        // Show modal
+                        eventModal.show();
+                    });
+            });
+        });
+        
+        // Handle create button
+        document.querySelector('[data-bs-target="#eventModal"]').addEventListener('click', function() {
+            // Update modal title
+            modalTitle.textContent = 'Create Event';
+            
+            // Reset form for create
+            eventForm.action = '/events/create';
+            eventForm.reset();
+            document.getElementById('eventId').value = '';
+            resetAudienceCheckboxes();
+        });
+        
+        // Helper functions
+        function formatDateTimeForInput(dateTimeString) {
+            const date = new Date(dateTimeString);
+            return date.toISOString().slice(0, 16);
+        }
+        
+        function resetAudienceCheckboxes() {
+            document.getElementById('allLevels').checked = false;
+            document.querySelectorAll('.grade-checkbox').forEach(cb => {
+                cb.checked = false;
+                cb.disabled = false;
+            });
+        }
+        
+        function disableGradeCheckboxes() {
+            document.querySelectorAll('.grade-checkbox').forEach(cb => {
+                cb.checked = false;
+                cb.disabled = true;
+            });
+        }
+        
+        // Handle "All Levels" checkbox behavior
+        document.getElementById('allLevels').addEventListener('change', function() {
+            if (this.checked) {
+                disableGradeCheckboxes();
+            } else {
+                document.querySelectorAll('.grade-checkbox').forEach(cb => {
+                    cb.disabled = false;
+                });
+            }
+        });
+    });
+    </script>
 </body>
 </html>

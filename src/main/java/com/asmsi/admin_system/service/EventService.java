@@ -30,4 +30,25 @@ public class EventService {
     public void deleteEvent(Long id) {
         eventRepository.deleteById(id);
     }
+
+    public void updateEvent(Long id, String name, String speaker,
+            LocalDateTime dateTime, String venue,
+            String audience) {
+        Event event = eventRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Event not found with id: " + id));
+
+        event.setName(name);
+        event.setSpeaker(speaker);
+        event.setDateTime(dateTime);
+        event.setVenue(venue);
+        event.setAudience(audience);
+
+        eventRepository.save(event);
+    }
+
+    public Event getEventById(Long id) {
+        return eventRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Event not found with id: " + id));
+    }
+
 }
