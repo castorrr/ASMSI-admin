@@ -2,6 +2,7 @@ package com.asmsi.admin_system.controller;
 
 import com.asmsi.admin_system.entity.Student;
 import com.asmsi.admin_system.repository.StudentRepository;
+import com.asmsi.admin_system.repository.ViaDropdownRepository;
 import com.asmsi.admin_system.service.CloudinaryService;
 
 import java.io.BufferedReader;
@@ -22,9 +23,11 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import com.opencsv.CSVReader;
 
+import java.util.List;
+
 import java.io.Reader;
 
-import java.util.List;
+
 
 
 
@@ -39,14 +42,17 @@ public class StudentController {
         this.studentRepository = studentRepository;
         this.cloudinaryService = cloudinaryService;
     }
-
+    @Autowired
+    private ViaDropdownRepository viaDropdownRepository;
+    
     @GetMapping("/student-info")
-    public String showStudentManager(Model model) {
-        model.addAttribute("students", studentRepository.findAll());
-        model.addAttribute("student", new Student()); // Bind empty student for modal form
-        return "studentmanager";
-    }
-
+public String showStudentPage(Model model) {
+    List<String> vias = viaDropdownRepository.findAllUniqueVia();
+    model.addAttribute("vias", vias);
+    model.addAttribute("students", studentRepository.findAll());
+    model.addAttribute("student", new Student()); // Bind empty student for modal form
+    return "studentmanager";
+}
     @PostMapping("/add-student")
     public String addStudent(@ModelAttribute Student student,
             @RequestParam("imageFile") MultipartFile imageFile) {
@@ -63,7 +69,7 @@ public class StudentController {
         studentRepository.save(student);
         return "redirect:/student-info"; // Corrected redirect path
     }
-
+   
     @PostMapping("/edit-student")
     public String editStudent(
             @ModelAttribute Student student,
@@ -142,16 +148,10 @@ public class StudentController {
         return "redirect:/students"; // or wherever your view is
     }
     @GetMapping("/students")
-    public String studentsPage(Model model) {
-        List<Student> students = studentRepository.findAll();
-        List<String> vias = studentRepository.findDistinctVias(); // ✅ get unique VIA values
-    
-        model.addAttribute("students", students); // ✅ clean one
-        model.addAttribute("vias", vias);         // ✅ for dropdown
-    
-        return "studentmanager";
-    }
-    
+public String studentsPage(Model model) {
+    model.addAttribute("students", studentRepository.findAll());
+    return "studentmanager"; // or whatever template you're using
+}
 
     
 
