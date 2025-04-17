@@ -28,13 +28,19 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
+        
+
             .authorizeHttpRequests(auth -> auth
-                .requestMatchers("/login", "/css/**", "/images/background.jpg", "/images/logo.png", "/signup", "/request-account", "/js/**", "/forget-password","/forgot-password", "reset-password").permitAll()
+            
+            .requestMatchers(
+                "/login", "/signup", "/request-account", "/forget-password", "/forgot-password", "/reset-password",
+                "/css/**", "/js/**", "/images/**", "/upload-csv", "/home", "/"
+            ).permitAll()
                 .anyRequest().authenticated()
             )  
             .formLogin(form -> form
                 .loginPage("/login")
-                .defaultSuccessUrl("/home", true)
+                .defaultSuccessUrl( "/home", true)
                 .permitAll()
             )
             .logout(logout -> logout
@@ -58,4 +64,5 @@ public class SecurityConfig {
     public AuthenticationManager authenticationManager(AuthenticationConfiguration authenticationConfiguration) throws Exception {
         return authenticationConfiguration.getAuthenticationManager();
     }
+    
 }
