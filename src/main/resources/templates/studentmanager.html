@@ -2,9 +2,7 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
   <head>
     <meta charset="UTF-8" />
-    <title>Studentmanager
-
-    </title>
+    <title>Student Manager</title>
 
     <!-- Bootstrap CSS -->
     <link
@@ -22,14 +20,13 @@
     <link rel="stylesheet" th:href="@{/css/sidebar.css}" />
     <link rel="stylesheet" th:href="@{/css/home.css}" />
     <link rel="stylesheet" th:href="@{/css/studentmanager.css}" />
+
     <!-- DataTables CSS -->
-<link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/jquery.dataTables.min.css">
-<!-- jQuery -->
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-<!-- DataTables JS -->
-<script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
-
-
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/jquery.dataTables.min.css">
+    <!-- jQuery -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <!-- DataTables JS -->
+    <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
   </head>
   <body>
     <!-- Header Section -->
@@ -37,34 +34,25 @@
 
     <div class="container-fluid">
       <div class="row">
-        <!-- Sidebar Section -->
-       
-          <div th:replace="fragments/sidebar :: sidebar(role=${role})"></div>
-      
+        <!-- Sidebar -->
+        <div th:replace="fragments/sidebar :: sidebar(role=${role})"></div>
 
+        <!-- Main Content -->
         <div class="col-md-9 p-4">
           <h1>Student Information Manager</h1>
-          
+
           <div class="d-flex justify-content-end mb-3">
-            <button type="button" class="btn btn-primary me-2" data-bs-toggle="modal" data-bs-target="#addStudentModal">
-                Add Student
-            </button>
+            <button type="button" class="btn btn-primary me-2" data-bs-toggle="modal" data-bs-target="#addStudentModal">Add Student</button>
             <form method="POST" action="/upload-csv" enctype="multipart/form-data" id="csvUploadForm">
               <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
-          
               <input type="file" name="file" id="csvFileInput" accept=".csv" required class="d-none" onchange="document.getElementById('csvUploadForm').submit()" />
-          
               <button type="button" class="btn btn-primary" onclick="document.getElementById('csvFileInput').click()">Upload CSV</button>
-          </form>
-          
-          
-          
-        </div>
-       
-        
-      <table class="table table-bordered" id="studentTable">
-        <thead>
-            <tr>
+            </form>
+          </div>
+
+          <table class="table table-bordered" id="studentTable">
+            <thead>
+              <tr>
                 <th>Picture</th>
                 <th>LRN</th>
                 <th>ID Number</th>
@@ -78,14 +66,11 @@
                 <th>Family Saint</th>
                 <th>Batch Number</th>
                 <th>Buttons</th>
-            </tr>
-        </thead>
-        <tbody>
-            <tr th:each="student : ${students}">
-                <td>
-                    <img th:src="${student.imageUrl != null ? student.imageUrl : '/images/default-profile.png'}"
-                         alt="Student Image" width="50" height="50" class="rounded-circle">
-                </td>
+              </tr>
+            </thead>
+            <tbody>
+              <tr th:each="student : ${students}">
+                <td><img th:src="${student.imageUrl != null ? student.imageUrl : '/images/default-profile.png'}" alt="Student Image" width="50" height="50" class="rounded-circle"></td>
                 <td th:text="${student.lrn}"></td>
                 <td th:text="${student.idNumber}"></td>
                 <td th:text="${student.name}"></td>
@@ -97,262 +82,190 @@
                 <td th:text="${student.campus}"></td>
                 <td th:text="${student.familySaint}"></td>
                 <td th:text="${student.batchNumber}"></td>
-                
-                <td><!-- Edit Button -->
-                  <button class="btn btn-warning btn-sm" 
-                          data-bs-toggle="modal" 
-                          th:data-bs-target="'#editStudentModal' + ${student.id}"
-                          th:data-id="${student.id}"
-                          th:data-lrn="${student.lrn}"
-                          th:data-idNumber="${student.idNumber}"
-                          th:data-name="${student.name}"
-                          th:data-birthday="${student.birthday}"
-                          th:data-address="${student.address}"
-                          th:data-placeOfBirth="${student.placeOfBirth}"
-                          th:data-elementarySchool="${student.elementarySchool}"
-                          th:data-via="${student.via}"
-                          th:data-campus="${student.campus}"
-                          th:data-familySaint="${student.familySaint}"
-                          th:data-batchNumber="${student.batchNumber}">
-                      <i class="bi bi-pencil-square"></i> 
+                <td>
+                  <button class="btn btn-warning btn-sm edit-btn"
+                    data-bs-toggle="modal"
+                    data-bs-target="#editStudentModal"
+                    th:data-id="${student.id}"
+                    th:data-lrn="${student.lrn}"
+                    th:data-idnumber="${student.idNumber}"
+                    th:data-name="${student.name}"
+                    th:data-birthday="${student.birthday}"
+                    th:data-address="${student.address}"
+                    th:data-placeofbirth="${student.placeOfBirth}"
+                    th:data-elementaryschool="${student.elementarySchool}"
+                    th:data-via="${student.via}"
+
+                    th:data-campus="${student.campus}"
+                    th:data-familysaint="${student.familySaint}"
+                    th:data-batchnumber="${student.batchNumber}"
+                    th:data-imageurl="${student.imageUrl}">
+                    <i class="bi bi-pencil-square"></i>
                   </button>
-                  
-                  <!-- Edit Student Modal -->
-                 <!-- Edit Student Modal -->
-<div th:each="student : ${students}">
-  <div class="modal fade" th:id="'editStudentModal' + ${student.id}" tabindex="-1" aria-labelledby="editStudentModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
-      <div class="modal-content">
+                  <form th:action="@{/delete-student}" method="post" class="d-inline">
+                    <input type="hidden" name="id" th:value="${student.id}">
+                    <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('Are you sure you want to delete this student?');">
+                      <i class="bi bi-trash"></i>
+                    </button>
+                  </form>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+
+          <!-- Reusable Edit Modal -->
+<div class="modal fade" id="editStudentModal" tabindex="-1" aria-labelledby="editStudentModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <form id="editStudentForm" th:action="@{/edit-student}" method="post" enctype="multipart/form-data">
         <div class="modal-header">
           <h5 class="modal-title">Edit Student</h5>
           <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
         <div class="modal-body">
-          <form th:action="@{/edit-student}" method="post" enctype="multipart/form-data">
-            <input type="hidden" name="id" th:value="${student.id}">
-
-            <!-- Image Upload with Preview -->
-            <div class="row mb-3">
-              <div class="col-md-4">
-                
-                <!-- Preview Image -->
-                <img id="imagePreview" th:src="${student.imageUrl != null ? student.imageUrl : '/images/default-profile.png'}" 
-                     alt="Preview Image" width="100" height="100"       class="rounded-circle">
-              </div></br>
-              <div class="col-md-4">
-                <label class="form-label">UpdateImage</label>
-                <input type="file" class="form-control" name="imageFile" accept="image/*" id="imageFile" onchange="previewImage(event)">
-              </div>
-             
+          <input type="hidden" name="id" id="edit-id">
+          <div class="row mb-3">
+            <div class="col-md-4">
+              <img id="edit-imagePreview" src="/images/default-profile.png" width="100" height="100" class="rounded-circle" />
             </div>
+            <div class="col-md-4">
+              <label class="form-label">Update Image</label>
+              <input type="file" class="form-control" name="imageFile" accept="image/*" id="edit-imageFile">
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-md-6 mb-3"><label>LRN</label><input type="text" name="lrn" id="edit-lrn" class="form-control" required></div>
+            <div class="col-md-6 mb-3"><label>ID Number</label><input type="text" name="idNumber" id="edit-idNumber" class="form-control" required></div>
+            <div class="col-md-6 mb-3"><label>Name</label><input type="text" name="name" id="edit-name" class="form-control" required></div>
+            <div class="col-md-6 mb-3"><label>Birthday</label><input type="date" name="birthday" id="edit-birthday" class="form-control" required></div>
+            <div class="col-md-6 mb-3"><label>Address</label><input type="text" name="address" id="edit-address" class="form-control" required></div>
+            <div class="col-md-6 mb-3"><label>Place of Birth</label><input type="text" name="placeOfBirth" id="edit-placeOfBirth" class="form-control" required></div>
+            <div class="col-md-6 mb-3"><label>Elementary School</label><input type="text" name="elementarySchool" id="edit-elementarySchool" class="form-control" required></div>
+            <div class="col-md-6 mb-3">
+              <label>Via</label>
+              <select name="via" id="edit-via" class="form-select" required>
+                <option value="" disabled>Select VIA</option>
+                <option th:each="v : ${vias}" th:value="${v}" th:text="${v}"></option>
+              </select>
+              
+            </div>
+            <div class="col-md-6 mb-3"><label>Campus</label><input type="text" name="campus" id="edit-campus" class="form-control" required></div>
+            <div class="col-md-6 mb-3"><label>Family Saint</label><input type="text" name="familySaint" id="edit-familySaint" class="form-control" required></div>
+            <div class="col-md-6 mb-3"><label>Batch Number</label><input type="text" name="batchNumber" id="edit-batchNumber" class="form-control" required></div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="submit" class="btn btn-primary">Update Student</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
 
-            <!-- Student Details (Two Columns) -->
-            <div class="row">
-              <!-- Column 1 -->
-              <div class="col-md-6 mb-3">
-                <label class="form-label">LRN</label>
-                <input type="text" class="form-control" name="lrn" th:value="${student.lrn}" required>
-              </div>
-              <div class="col-md-6 mb-3">
-                <label class="form-label">ID Number</label>
-                <input type="text" class="form-control" name="idNumber" th:value="${student.idNumber}" required>
-              </div>
-
-              <div class="col-md-6 mb-3">
-                <label class="form-label">Name</label>
-                <input type="text" class="form-control" name="name" th:value="${student.name}" required>
-              </div>
-              <div class="col-md-6 mb-3">
-                <label class="form-label">Birthday</label>
-                <input type="date" class="form-control" name="birthday" th:value="${student.birthday}" required>
-              </div>
-
-              <div class="col-md-6 mb-3">
-                <label class="form-label">Complete Address</label>
-                <input type="text" class="form-control" name="address" th:value="${student.address}" required>
-              </div>
-              <div class="col-md-6 mb-3">
-                <label class="form-label">Place of Birth</label>
-                <input type="text" class="form-control" name="placeOfBirth" th:value="${student.placeOfBirth}" required>
-              </div>
-
-              <div class="col-md-6 mb-3">
-                <label class="form-label">Elementary School</label>
-                <input type="text" class="form-control" name="elementarySchool" th:value="${student.elementarySchool}" required>
-              </div>
-              <div class="col-md-6 mb-3">
-                <label class="form-label">VIA</label>
-                <select class="form-select" name="via" required>
-                  <option value="" disabled>Select VIA</option>
-                  <option th:each="v : ${vias}"
-                          th:value="${v}"
-                          th:text="${v}"
-                          th:selected="${student.via == v}">
-                  </option>
-                </select>
-              </div>
-
-              <div class="col-md-6 mb-3">
-                <label class="form-label">Campus</label>
-                <input type="text" class="form-control" name="campus" th:value="${student.campus}" required>
-              </div>
-              <div class="col-md-6 mb-3">
-                <label class="form-label">Family Saint</label>
-                <input type="text" class="form-control" name="familySaint" th:value="${student.familySaint}" required>
-              </div>
-              <div class="col-md-6 mb-3">
-                <label class="form-label">Batch Number</label>
-                <input type="text" class="form-control" name="batchNumber" th:value="${student.batchNumber}" required>
+          <!-- Add Student Modal -->
+          <div class="modal fade" id="addStudentModal" tabindex="-1" aria-labelledby="addStudentModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <h5 class="modal-title" id="addStudentModalLabel">Add Student</h5>
+                  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                  <form th:action="@{/add-student}" th:object="${student}" method="post" 
+                    enctype="multipart/form-data">
+                    <div class="row">
+                      <div class="col-md-12 mb-3">
+                        <label class="form-label">Student Image</label>
+                        <input type="file" class="form-control" name="imageFile" accept="image/*">
+                      </div>
+                      <div class="col-md-6 mb-3"><label class="form-label">LRN</label><input type="text" class="form-control" th:field="*{lrn}" required></div>
+                      <div class="col-md-6 mb-3"><label class="form-label">ID Number</label><input type="text" class="form-control" th:field="*{idNumber}" required></div>
+                      <div class="col-md-6 mb-3"><label class="form-label">Name</label><input type="text" class="form-control" th:field="*{name}" required></div>
+                      <div class="col-md-6 mb-3"><label class="form-label">Birthday</label><input type="date" class="form-control" th:field="*{birthday}" required></div>
+                      <div class="col-md-6 mb-3"><label class="form-label">Complete Address</label><input type="text" class="form-control" th:field="*{address}" required></div>
+                      <div class="col-md-6 mb-3"><label class="form-label">Place of Birth</label><input type="text" class="form-control" th:field="*{placeOfBirth}" required></div>
+                      <div class="col-md-6 mb-3"><label class="form-label">Elementary School</label><input type="text" class="form-control" th:field="*{elementarySchool}" required></div>
+                      <div class="col-md-6 mb-3">
+                        <div class="mb-3">
+                          <label for="via" class="form-label">VIA</label>
+<select id="via" class="form-select" th:field="*{via}" required>
+  <option value="" enabled>Select VIA</option>
+  <option th:each="v : ${vias}" th:value="${v}" th:text="${v}"></option>
+</select>
+                        </div>                       
+                      </div>
+                      <div class="col-md-6 mb-3"><label class="form-label">Campus</label><input type="text" class="form-control" th:field="*{campus}" required></div>
+                      <div class="col-md-6 mb-3"><label class="form-label">Family Saint</label><input type="text" class="form-control" th:field="*{familySaint}" required></div>
+                      <div class="col-md-6 mb-3"><label class="form-label">Batch Number</label><input type="text" class="form-control" th:field="*{batchNumber}" required></div>
+                    </div>
+                    <div class="modal-footer">
+                      <button type="submit" class="btn btn-primary">Save Student</button>
+                    </div>
+                  </form>
+                </div>
               </div>
             </div>
+          </div>
 
-            <!-- Modal Footer with Save Button -->
-            <div class="modal-footer">
-              <button type="submit" class="btn btn-primary">Update Student</button>
-            </div>
-          </form>
+          <!-- Reusable Edit Modal -->
+          <!-- (already included) -->
+
         </div>
       </div>
     </div>
-  </div>
-</div>
 
-<script>
-  $(document).ready(function () {
-    if (!$.fn.DataTable.isDataTable('#studentTable')) {
-      $('#studentTable').DataTable({
-        pageLength: 10
+    <!-- Bootstrap Bundle -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+    <!-- DataTable Initialization -->
+    <script>
+      $(document).ready(function () {
+        if (!$.fn.DataTable.isDataTable('#studentTable')) {
+          $('#studentTable').DataTable({
+            pageLength: 10,
+            lengthChange: false,
+            language: { search: "Filter:", paginate: { previous: "Previous", next: "Next" } }
+          });
+        }
       });
-    }
-  });
-</script>
+    </script>
 
-
-
-<!-- JavaScript to Preview Image -->
-<script>
-  function previewImage(event) {
-    const reader = new FileReader();
-    reader.onload = function () {
-      const preview = document.getElementById('imagePreview');
-      preview.src = reader.result;
-    };
-    reader.readAsDataURL(event.target.files[0]);
-  }
-</script>
-
-                  
-        
-                    <!-- Delete Button -->
-                    <form th:action="@{/delete-student}" method="post" class="d-inline">
-                        <input type="hidden" name="id" th:value="${student.id}">
-                        <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('Are you sure you want to delete this student?');">
-                            <i class="bi bi-trash"></i> 
-                        </button>
-                    </form>
-                </td>
-            </tr>
-        </tbody>
-        
-      </table>
-          
-     <!-- Add Student Modal -->
-<div class="modal fade" id="addStudentModal" tabindex="-1" aria-labelledby="addStudentModalLabel" aria-hidden="true">
-  <div class="modal-dialog">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title" id="addStudentModalLabel">Add Student</h5>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-      </div>
-      
-      <div class="modal-body">
-        <form th:action="@{/add-student}" th:object="${student}" method="post" enctype="multipart/form-data">
-          <div class="row">
-            <div class="col-md-12 mb-3">
-              <label class="form-label">Student Image</label>
-              <input type="file" class="form-control" name="imageFile" accept="image/*">
-            </div>
-        
-            <div class="col-md-6 mb-3">
-              <label class="form-label">LRN</label>
-              <input type="text" class="form-control" th:field="*{lrn}" required>
-            </div>
-        
-            <div class="col-md-6 mb-3">
-              <label class="form-label">ID Number</label>
-              <input type="text" class="form-control" th:field="*{idNumber}" required>
-            </div>
-        
-            <div class="col-md-6 mb-3">
-              <label class="form-label">Name</label>
-              <input type="text" class="form-control" th:field="*{name}" required>
-            </div>
-        
-            <div class="col-md-6 mb-3">
-              <label class="form-label">Birthday</label>
-              <input type="date" class="form-control" th:field="*{birthday}" required>
-            </div>
-        
-            <div class="col-md-6 mb-3">
-              <label class="form-label">Complete Address</label>
-              <input type="text" class="form-control" th:field="*{address}" required>
-            </div>
-        
-            <div class="col-md-6 mb-3">
-              <label class="form-label">Place of Birth</label>
-              <input type="text" class="form-control" th:field="*{placeOfBirth}" required>
-            </div>
-        
-            <div class="col-md-6 mb-3">
-              <label class="form-label">Elementary School</label>
-              <input type="text" class="form-control" th:field="*{elementarySchool}" required>
-            </div>
-            <div class="col-md-6 mb-3">
-              <label class="form-label">VIA</label>
-              <select class="form-select" th:field="*{via}" required>
-                <option value="" disabled selected>Select VIA</option>
-                <option th:each="v : ${vias}" th:value="${v}" th:text="${v}"></option>
-              </select>
-            </div>
-            <div class="col-md-6 mb-3">
-              <label class="form-label">Campus</label>
-              <input type="text" class="form-control" th:field="*{campus}" required>
-            </div>
-        
-            <div class="col-md-6 mb-3">
-              <label class="form-label">Family Saint</label>
-              <input type="text" class="form-control" th:field="*{familySaint}" required>
-            </div>
-        
-            <div class="col-md-6 mb-3">
-              <label class="form-label">Batch Number</label>
-              <input type="text" class="form-control" th:field="*{batchNumber}" required>
-            </div>
-          </div>
-        
-          <div class="modal-footer">
-            <button type="submit" class="btn btn-primary">Save Student</button>
-          </div>
-        </form>
-        
-      </div>
-    </div>
-  </div>
-</div>
-
-          
-        
-        </form>
-      </div>
-    </div>
-  </div>
-</div>
-
-  <!-- Bootstrap Bundle with Popper.js -->
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-
-
-
-
-
-</div>
+    <!-- Dynamic Edit Modal Fill -->
+    <script>
+      document.querySelectorAll('.edit-btn').forEach(button => {
+        button.addEventListener('click', function () {
+          // Fill all fields
+          document.getElementById('edit-id').value = this.dataset.id;
+          document.getElementById('edit-lrn').value = this.dataset.lrn;
+          document.getElementById('edit-idNumber').value = this.dataset.idnumber;
+          document.getElementById('edit-name').value = this.dataset.name;
+          document.getElementById('edit-birthday').value = this.dataset.birthday;
+          document.getElementById('edit-address').value = this.dataset.address;
+          document.getElementById('edit-placeOfBirth').value = this.dataset.placeofbirth;
+          document.getElementById('edit-elementarySchool').value = this.dataset.elementaryschool;
+    
+          // ✅ Set VIA dropdown correctly
+          const viaValue = this.dataset.via?.trim(); // Remove trailing spaces
+          const viaSelect = document.getElementById('edit-via');
+    
+          if (viaSelect && viaValue) {
+            const match = Array.from(viaSelect.options).find(opt => opt.value.trim() === viaValue);
+            if (match) {
+              match.selected = true;
+            } else {
+              // Optionally, log or alert if VIA doesn't match any dropdown option
+              console.warn(`VIA "${viaValue}" not found in dropdown options`);
+            }
+          }
+    
+          // Other fields
+          document.getElementById('edit-campus').value = this.dataset.campus;
+          document.getElementById('edit-familySaint').value = this.dataset.familysaint;
+          document.getElementById('edit-batchNumber').value = this.dataset.batchnumber;
+          document.getElementById('edit-imagePreview').src = this.dataset.imageurl || '/images/default-profile.png';
+        });
+      });
+    </script>
+    
+  </body>
+</html>
