@@ -11,4 +11,5 @@ public class AttendanceController {
         // Return the name of the HTML page to render
         return "attendance"; // This will render attendance.html
     }
+    
 }
