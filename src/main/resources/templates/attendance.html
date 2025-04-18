@@ -1,96 +1,212 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
-    <meta charset="UTF-8">
-    <title>Attendance</title>
+  <meta charset="UTF-8" />
+  <title>Attendance</title>
 
-    <!-- Bootstrap CSS -->
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css">
+  <!-- Bootstrap CSS -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" />
 
-    <!-- Custom CSS -->
-    <link rel="stylesheet" th:href="@{/css/header.css}">
-    <link rel="stylesheet" th:href="@{/css/sidebar.css}">
-    <link rel="stylesheet" th:href="@{/css/home.css}">
-    <link rel="stylesheet" th:href="@{/css/attendance.css}">
+  <!-- Custom CSS -->
+  <link rel="stylesheet" th:href="@{/css/header.css}" />
+  <link rel="stylesheet" th:href="@{/css/sidebar.css}" />
+  <link rel="stylesheet" th:href="@{/css/home.css}" />
+  <link rel="stylesheet" th:href="@{/css/attendance.css}" />
 </head>
 <body>
-    <!-- Header Section -->
-    <div th:replace="fragments/header :: header(${username})"></div>
+  <!-- Header -->
+  <div th:replace="fragments/header :: header(${username})"></div>
 
-    <div class="container-fluid">
-        <div class="row">
-            <!-- Sidebar Section -->
-            <div th:replace="fragments/sidebar :: sidebar(role=${role})"></div>
+  <div class="container-fluid">
+    <div class="row">
+      <!-- Sidebar -->
+      <div th:replace="fragments/sidebar :: sidebar(role=${role})"></div>
 
-            <div class="col-md-9 p-4">
-                <h1>Attendance Form</h1>
+      <!-- Main Content -->
+      <div class="col-md-9 p-4">
+        <h1>Student School Attendance</h1>
 
-                <!-- Search Box -->
-                <div class="mb-3">
-                    <label for="search-id">Search by ID:</label>
-                    <div class="input-group">
-                        <input type="text" class="form-control" id="search-id" placeholder="Enter ID Number" />
-                        <button class="btn btn-outline-secondary" type="button" onclick="searchStudent()">Search</button>
-                    </div>
-                </div>
-
-                <!-- Student Info Card -->
-                <div id="student-info-card" class="card d-none">
-                    <div class="card-body">
-                        <div class="row">
-                            <div class="col-md-3">
-                                <img id="student-photo" src="" class="img-fluid rounded" />
-                            </div>
-                            <div class="col-md-9">
-                                <p><strong>LRN:</strong> <span id="lrn"></span></p>
-                                <p><strong>ID Number:</strong> <span id="id-number"></span></p>
-                                <p><strong>Name:</strong> <span id="name"></span></p>
-                                <p><strong>Campus:</strong> <span id="campus"></span></p>
-                                <p><strong>Family Saint:</strong> <span id="family-saint"></span></p>
-                                <p><strong>Batch Number:</strong> <span id="batch-number"></span></p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <hr />
-
-                <!-- Attendance Inputs -->
-                <div class="attendance-status-group">
-                    <h3>Attendance Details</h3>
-                    <div class="row">
-                        <div class="col-md-4">
-                            <label>Date:</label>
-                            <input type="date" class="form-control attendance-date-input" />
-                        </div>
-                        <div class="col-md-4">
-                            <label>Status:</label>
-                            <select class="form-select attendance-status-input">
-                                <option value="present">Present</option>
-                                <option value="absent">Absent</option>
-                                <option value="late">Late</option>
-                                <option value="excused">Excused</option>
-                            </select>
-                        </div>
-                        <div class="col-md-4">
-                            <label>Remarks:</label>
-                            <textarea class="form-control remarks-input" rows="3" placeholder="Enter any remarks..."></textarea>
-                        </div>
-                    </div>
-                </div>
-
-                <hr />
-
-                <div class="submit-group text-center">
-                    <button class="btn btn-primary mt-3" onclick="submitAttendance()">Submit Attendance</button>
-                </div>
-            </div>
+        <!-- 🕒 Real-time Clock & Date -->
+        <div class="mb-4 d-flex justify-content-between align-items-center">
+          <div>
+            <span class="fw-bold">📅 Date:</span>
+            <span id="current-date"></span>
+          </div>
+          <div>
+            <span class="fw-bold">⏰ Time:</span>
+            <span id="current-time"></span>
+          </div>
         </div>
-    </div>
 
-    <!-- Bootstrap JS + Custom JS -->
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-    <script th:src="@{/js/attendance.js}"></script>
+        <!-- Hidden current user -->
+        <input type="hidden" id="current-user" th:value="${username}" />
+
+        <!-- Search Section -->
+        <div class="mb-4">
+          <label for="search-id" class="form-label">Search by ID Number</label>
+          <div class="input-group">
+            <input type="text" class="form-control" id="search-id" placeholder="e.g. TAL2022-005" />
+            <button class="btn btn-primary" type="button" onclick="searchStudent()">Search</button>
+          </div>
+        </div>
+
+        <div class="row mb-4" id="student-info-row">
+          <!-- Student Info Card -->
+          <div class="col-md-5 mb-3" id="student-info-card">
+            <div class="card shadow-sm h-100 text-center">
+              <div class="card-body">
+                <img id="student-photo"
+                     src="/images/default-profile.png"
+                     alt="Student Photo"
+                     class="rounded mb-3"
+                     style="width: 400px; height: 400px; object-fit: cover;" />
+                <p><strong>LRN:</strong> <span id="lrn">-</span></p>
+                <p><strong>ID Number:</strong> <span id="id-number">-</span></p>
+                <p><strong>Name:</strong> <span id="name">-</span></p>
+                <p><strong>Campus:</strong> <span id="campus">-</span></p>
+                <p><strong>Family Saint:</strong> <span id="family-saint">-</span></p>
+                <p><strong>Batch Number:</strong> <span id="batch-number">-</span></p>
+              </div>
+            </div>
+          </div>
+
+          <!-- Attendance Logs Card -->
+          <div class="col-md-7 mb-3">
+            <div class="card shadow-sm h-100">
+              <div class="card-body">
+                <h5 class="fw-bold mb-3">
+                  <i class="bi bi-journal-text me-2"></i>Attendance Logs
+                </h5>
+
+                <div id="attendance-logs">
+                  <!-- Example Log -->
+                  <div class="card mb-3 p-3">
+                    <div class="d-flex align-items-start">
+                      <img src="/images/default-profile.png"
+                           alt="Student Photo"
+                           class="border shadow-sm me-3"
+                           style="width: 100px; height: 100px; object-fit: cover;" />
+
+                      <div class="flex-grow-1">
+                        <p class="mb-1"><strong>Name:</strong> Charisse Buhay Abero</p>
+                        <p class="mb-1"><strong>ID Number:</strong> TAL2022-003</p>
+                        <p class="mb-1"><strong>Date:</strong> April 18, 2025</p>
+                        <p class="mb-1"><strong>Status:</strong> Present</p>
+                        <p class="mb-0"><strong>Remarks:</strong> On time</p>
+                      </div>
+                    </div>
+                  </div>
+                  <!-- <p class="text-muted fst-italic">No logs yet...</p> -->
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Submit Button -->
+        <div class="text-center">
+          <button class="btn btn-success px-5" onclick="submitAttendance()">Submit Attendance</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Bootstrap JS -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+  <!-- JS Logic -->
+  <script th:inline="javascript">
+    const currentUser = /*[[${username}]]*/ "admin";
+  </script>
+  
+
+  <script>
+    let currentStudent = null;
+
+    async function searchStudent() {
+      const id = document.getElementById("search-id").value.trim();
+      if (!id) return alert("Please enter an ID number.");
+
+      try {
+        const res = await fetch(`/api/attendance/student/${id}`);
+        if (!res.ok) throw new Error("Student not found.");
+
+        const student = await res.json();
+        currentStudent = student;
+
+        document.getElementById("lrn").innerText = student.lrn;
+        document.getElementById("id-number").innerText = student.idNumber;
+        document.getElementById("name").innerText = student.name;
+        document.getElementById("campus").innerText = student.campus;
+        document.getElementById("family-saint").innerText = student.familySaint;
+        document.getElementById("batch-number").innerText = student.batchNumber;
+        document.getElementById("student-photo").src = student.imageUrl || "/images/default-profile.png";
+
+        document.getElementById("student-info-card").style.display = "block";
+      } catch (err) {
+        alert(err.message);
+        document.getElementById("student-info-card").style.display = "none";
+        currentStudent = null;
+      }
+    }
+
+    async function submitAttendance() {
+      if (!currentStudent) return alert("Search and select a student first.");
+
+      const now = new Date();
+      const date = now.toISOString().split("T")[0];
+      const timeIn = now.toLocaleTimeString('en-US', { hour12: false });
+      const account = currentUser;
+
+      const attendance = {
+        idNumber: currentStudent.idNumber,
+        lrn: currentStudent.lrn,
+        name: currentStudent.name,
+        campus: currentStudent.campus,
+        familySaint: currentStudent.familySaint,
+        batchNumber: currentStudent.batchNumber,
+        imageUrl: currentStudent.imageUrl,
+        date,
+        timeIn,
+        timeOut: null,
+        status: "present",
+        remarks: "",
+        account
+      };
+
+      try {
+        const res = await fetch("/api/attendance/submit", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(attendance)
+        });
+
+        if (res.ok) {
+          alert("✅ Attendance recorded!");
+        } else {
+          throw new Error();
+        }
+      } catch (error) {
+        alert("❌ Failed to submit attendance.");
+      }
+    }
+
+    function updateClock() {
+      const now = new Date();
+      const date = now.toLocaleDateString('en-US', {
+        weekday: 'long',
+        year: 'numeric',
+        month: 'long',
+        day: 'numeric'
+      });
+      const time = now.toLocaleTimeString('en-US');
+      document.getElementById('current-date').textContent = date;
+      document.getElementById('current-time').textContent = time;
+    }
+
+    setInterval(updateClock, 1000);
+    updateClock();
+  </script>
 </body>
 </html>
