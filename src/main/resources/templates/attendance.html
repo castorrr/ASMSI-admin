@@ -2,6 +2,10 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
   <meta charset="UTF-8" />
+  
+  <meta name="_csrf" th:content="${_csrf.token}" />
+<meta name="_csrf_header" th:content="${_csrf.headerName}" />
+
   <title>Attendance</title>
 
   <!-- Bootstrap CSS -->
@@ -12,7 +16,7 @@
   <link rel="stylesheet" th:href="@{/css/header.css}" />
   <link rel="stylesheet" th:href="@{/css/sidebar.css}" />
   <link rel="stylesheet" th:href="@{/css/home.css}" />
-  <link rel="stylesheet" th:href="@{/css/attendance.css}" />
+  
 </head>
 <body>
   <!-- Header -->
@@ -25,7 +29,10 @@
 
       <!-- Main Content -->
       <div class="col-md-9 p-4">
-        <h1>Student School Attendance</h1>
+        <h1>Welcome, <span th:text="${username}">User</span> to School Attendance</h1>
+
+
+     
 
         <!-- 🕒 Real-time Clock & Date -->
         <div class="mb-4 d-flex justify-content-between align-items-center">
@@ -176,11 +183,18 @@
       };
 
       try {
-        const res = await fetch("/api/attendance/submit", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify(attendance)
-        });
+        const token = document.querySelector('meta[name="_csrf"]').getAttribute("content");
+const header = document.querySelector('meta[name="_csrf_header"]').getAttribute("content");
+
+const res = await fetch("/api/attendance/submit", {
+  method: "POST",
+  headers: {
+    "Content-Type": "application/json",
+    [header]: token  // ✅ Include CSRF token properly
+  },
+  body: JSON.stringify(attendance)
+});
+
 
         if (res.ok) {
           alert("✅ Attendance recorded!");
