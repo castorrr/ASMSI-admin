@@ -2,6 +2,8 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
   <meta charset="UTF-8" />
+ 
+
   
   <meta name="_csrf" th:content="${_csrf.token}" />
 <meta name="_csrf_header" th:content="${_csrf.headerName}" />
@@ -18,9 +20,14 @@
   <link rel="stylesheet" th:href="@{/css/home.css}" />
   
 </head>
+
+
 <body>
   <!-- Header -->
   <div th:replace="fragments/header :: header(${username})"></div>
+
+
+
 
   <div class="container-fluid">
     <div class="row">
@@ -28,8 +35,10 @@
       <div th:replace="fragments/sidebar :: sidebar(role=${role})"></div>
 
       <!-- Main Content -->
+       
       <div class="col-md-9 p-4">
         <h1>Welcome, <span th:text="${username}">User</span> to School Attendance</h1>
+        
 
 
      

@@ -34,7 +34,7 @@ public class SecurityConfig {
             
             .requestMatchers(
                 "/login", "/signup", "/request-account", "/forget-password", "/forgot-password", "/reset-password",
-                "/css/**", "/js/**", "/images/**", "/upload-csv", "/home", "/api/attendance/**"
+                "/css/**", "/js/**", "/images/**", "/upload-csv", "/home", "/api/attendance/attendance","/api/attendance/**"
             ).permitAll()
                 .anyRequest().authenticated()
             )  

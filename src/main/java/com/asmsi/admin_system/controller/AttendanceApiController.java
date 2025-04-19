@@ -4,21 +4,18 @@ import com.asmsi.admin_system.entity.AttendanceLog;
 import com.asmsi.admin_system.entity.Student;
 import com.asmsi.admin_system.repository.AttendanceLogRepository;
 import com.asmsi.admin_system.repository.StudentRepository;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.security.core.userdetails.User;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.List;
 import java.util.Optional;
-import org.springframework.ui.Model;
-
-
 
 @Controller
 @RequestMapping("/api/attendance")
@@ -26,9 +23,9 @@ public class AttendanceApiController {
 
     @Autowired
     private AttendanceLogRepository attendanceLogRepository;
-    @Autowired
-private StudentRepository studentRepository;
 
+    @Autowired
+    private StudentRepository studentRepository;
 
     @PostMapping("/submit")
     public ResponseEntity<String> submitAttendance(@RequestBody AttendanceLog log) {
@@ -48,15 +45,32 @@ private StudentRepository studentRepository;
         return attendanceLogRepository.findByIdNumber(idNumber);
     }
 
-   @GetMapping("/student/{idNumber}")
-public ResponseEntity<Student> fetchStudentData(@PathVariable String idNumber) {
-    Optional<Student> student = studentRepository.findByIdNumber(idNumber);
-    return student.map(ResponseEntity::ok)
-                  .orElse(ResponseEntity.notFound().build());
+    @GetMapping("/student/{idNumber}")
+    public ResponseEntity<Student> fetchStudentData(@PathVariable String idNumber) {
+        Optional<Student> student = studentRepository.findByIdNumber(idNumber);
+        return student.map(ResponseEntity::ok)
+                      .orElse(ResponseEntity.notFound().build());
+    }
+
+    @GetMapping("/attendance")
+public String attendancePage(Model model) {
+    Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+
+    if (auth != null && auth.isAuthenticated()) {
+        String username = auth.getName();
+        String role = auth.getAuthorities().stream()
+                          .findFirst()
+                          .map(Object::toString)
+                          .orElse("ROLE_USER");
+
+        model.addAttribute("username", username); // ✅ REQUIRED!
+        model.addAttribute("role", role);         // ✅ Optional if used
+    } else {
+        model.addAttribute("username", "Guest");
+        model.addAttribute("role", "Unknown");
+    }
+
+    return "attendance"; // Must match your attendance.html filename
 }
-@GetMapping("/attendance")
-public String attendancePage(@AuthenticationPrincipal User user, Model model) {
-    model.addAttribute("username", user.getUsername()); // ✅ This is the line
-    return "attendance"; // the name of your attendance.html file (without .html)
-}
+
 }
