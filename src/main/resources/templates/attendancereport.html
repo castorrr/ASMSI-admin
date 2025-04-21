@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8" />
+  <title>Attendance</title>
+
+  <!-- CSRF Tokens -->
+  <meta name="_csrf" th:content="${_csrf.token}" />
+  <meta name="_csrf_header" th:content="${_csrf.headerName}" />
+
+  <!-- Bootstrap CSS -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" />
+
+  <!-- SweetAlert2 CSS -->
+  <link href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css" rel="stylesheet" />
+
+  <!-- DataTables CSS -->
+  <link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/jquery.dataTables.min.css" />
+  <link rel="stylesheet" href="https://cdn.datatables.net/buttons/2.4.1/css/buttons.dataTables.min.css" />
+
+  <!-- Custom CSS -->
+  <link rel="stylesheet" th:href="@{/css/header.css}" />
+  <link rel="stylesheet" th:href="@{/css/sidebar.css}" />
+  <link rel="stylesheet" th:href="@{/css/home.css}" />
+</head>
+
+<body>
+  <!-- Header -->
+  <div th:replace="fragments/header :: header(${username})"></div>
+
+  <div class="container-fluid">
+    <div class="row">
+      <!-- Sidebar -->
+      <div th:replace="fragments/sidebar :: sidebar(role=${role})"></div>
+
+      <!-- Main Content -->
+      <div class="col-md-9 p-4">
+        <h1>Attendance Logs</h1>
+
+        <div class="container mt-4">
+      
+
+          <table id="attendanceTable" class="table table-bordered table-striped display nowrap" style="width:100%">
+            <thead>
+              <tr>
+                <th>Photo</th>
+                <th>Name</th>
+                <th>ID Number</th>
+                <th>Date</th>
+                <th>Time In</th>
+                <th>Time Out</th>
+                <th>Recorded By</th>
+              </tr>
+            </thead>
+            <tbody id="logs-table-body">
+              <!-- Logs will be inserted here -->
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Scripts -->
+  <!-- Bootstrap JS -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+  <!-- SweetAlert2 -->
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+  <!-- jQuery -->
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <!-- DataTables JS -->
+  <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
+  <!-- DataTables Buttons + File export support -->
+  <script src="https://cdn.datatables.net/buttons/2.4.1/js/dataTables.buttons.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.7/pdfmake.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.7/vfs_fonts.js"></script>
+  <script src="https://cdn.datatables.net/buttons/2.4.1/js/buttons.html5.min.js"></script>
+  <script src="https://cdn.datatables.net/buttons/2.4.1/js/buttons.print.min.js"></script>
+
+  <script>
+    async function loadAttendanceLogs() {
+      try {
+        const res = await fetch("/api/attendance/logs");
+        if (!res.ok) throw new Error("Failed to load logs");
+
+        const logs = await res.json();
+        const tbody = document.getElementById("logs-table-body");
+        tbody.innerHTML = "";
+
+        logs.forEach(log => {
+          const row = document.createElement("tr");
+          row.innerHTML = `
+            <td><img src="${log.imageUrl || '/images/default-profile.png'}" style="width: 60px; height: 60px; object-fit: cover;" class="rounded" /></td>
+            <td>${log.name || '-'}</td>
+            <td>${log.idNumber || '-'}</td>
+            <td>${log.date || '-'}</td>
+            <td>${log.timeIn || '-'}</td>
+            <td>${log.timeOut || '-'}</td>
+            <td>${log.account || '-'}</td>
+          `;
+          tbody.appendChild(row);
+        });
+
+        // Initialize DataTable with Buttons
+        $('#attendanceTable').DataTable({
+          dom: 'Bfrtip',
+          buttons: [
+            'copyHtml5',
+            'excelHtml5',
+            'pdfHtml5',
+            'print'
+          ],
+          responsive: true
+        });
+      } catch (err) {
+        console.error(err);
+        Swal.fire({
+          icon: 'error',
+          title: 'Oops...',
+          text: 'Error loading attendance logs.',
+        });
+      }
+    }
+
+    // Load logs on page load
+    loadAttendanceLogs();
+  </script>
+</body>
+</html>
