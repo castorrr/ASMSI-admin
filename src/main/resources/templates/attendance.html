@@ -95,26 +95,24 @@
                   <i class="bi bi-journal-text me-2"></i>Attendance Logs
                 </h5>
 
-                <div id="attendance-logs">
-                  <!-- Example Log -->
-                  <div class="card mb-3 p-3">
-                    <div class="d-flex align-items-start">
-                      <img src="/images/default-profile.png"
-                           alt="Student Photo"
-                           class="border shadow-sm me-3"
-                           style="width: 100px; height: 100px; object-fit: cover;" />
-
-                      <div class="flex-grow-1">
-                        <p class="mb-1"><strong>Name:</strong> Charisse Buhay Abero</p>
-                        <p class="mb-1"><strong>ID Number:</strong> TAL2022-003</p>
-                        <p class="mb-1"><strong>Date:</strong> April 18, 2025</p>
-                        <p class="mb-1"><strong>Status:</strong> Present</p>
-                        <p class="mb-0"><strong>Remarks:</strong> On time</p>
-                      </div>
-                    </div>
-                  </div>
-                  <!-- <p class="text-muted fst-italic">No logs yet...</p> -->
-                </div>
+                <table class="table table-bordered table-striped">
+                  <thead>
+                    <tr>
+                      <th>Photo</th>
+                      <th>Name</th>
+                      <th>ID Number</th>
+                      <th>Date</th>
+                      <th>Time In</th>
+                      <th>Time Out</th>
+                                  
+                      <th>Recorded By</th>
+                    </tr>
+                  </thead>
+                  <tbody id="logs-table-body">
+                    <!-- Logs will be inserted here -->
+                  </tbody>
+                </table>
+                
               </div>
             </div>
           </div>
@@ -168,52 +166,55 @@
     }
 
     async function submitAttendance() {
-      if (!currentStudent) return alert("Search and select a student first.");
+  if (!currentStudent) return alert("Search and select a student first.");
 
-      const now = new Date();
-      const date = now.toISOString().split("T")[0];
-      const timeIn = now.toLocaleTimeString('en-US', { hour12: false });
-      const account = currentUser;
+  const now = new Date();
+  const date = now.toISOString().split("T")[0];
+  const timeIn = now.toLocaleTimeString('en-US', { hour12: false });
+  const account = currentUser;
 
-      const attendance = {
-        idNumber: currentStudent.idNumber,
-        lrn: currentStudent.lrn,
-        name: currentStudent.name,
-        campus: currentStudent.campus,
-        familySaint: currentStudent.familySaint,
-        batchNumber: currentStudent.batchNumber,
-        imageUrl: currentStudent.imageUrl,
-        date,
-        timeIn,
-        timeOut: null,
-        status: "present",
-        remarks: "",
-        account
-      };
+  const attendance = {
+    idNumber: currentStudent.idNumber,
+    lrn: currentStudent.lrn,
+    name: currentStudent.name,
+    campus: currentStudent.campus,
+    familySaint: currentStudent.familySaint,
+    batchNumber: currentStudent.batchNumber,
+    imageUrl: currentStudent.imageUrl,
+    date,
+    timeIn,
+    timeOut: null,
+    status: "present",
+    remarks: "",
+    account
+  };
 
-      try {
-        const token = document.querySelector('meta[name="_csrf"]').getAttribute("content");
-const header = document.querySelector('meta[name="_csrf_header"]').getAttribute("content");
+  try {
+    const token = document.querySelector('meta[name="_csrf"]').getAttribute("content");
+    const header = document.querySelector('meta[name="_csrf_header"]').getAttribute("content");
 
-const res = await fetch("/api/attendance/submit", {
-  method: "POST",
-  headers: {
-    "Content-Type": "application/json",
-    [header]: token  // ✅ Include CSRF token properly
-  },
-  body: JSON.stringify(attendance)
-});
+    const res = await fetch("/api/attendance/submit", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        [header]: token
+      },
+      body: JSON.stringify(attendance)
+    });
 
+    if (res.ok) {
+      const message = await res.text(); // get the "Time In recorded." or "Time Out recorded."
+      alert("✅ " + message);
 
-        if (res.ok) {
-          alert("✅ Attendance recorded!");
-        } else {
-          throw new Error();
-        }
-      } catch (error) {
-        alert("❌ Failed to submit attendance.");
-      }
+      // ✅ Refresh the logs display
+      loadAttendanceLogs();
+    } else {
+      throw new Error();
     }
+  } catch (error) {
+    alert("❌ Failed to submit attendance.");
+  }
+}
 
     function updateClock() {
       const now = new Date();
@@ -230,6 +231,48 @@ const res = await fetch("/api/attendance/submit", {
 
     setInterval(updateClock, 1000);
     updateClock();
+
+    async function loadAttendanceLogs() {
+  try {
+    const res = await fetch("/api/attendance/logs");
+    if (!res.ok) throw new Error("Failed to load logs");
+
+    const logs = await res.json();
+    const tbody = document.getElementById("logs-table-body");
+    tbody.innerHTML = "";
+
+    // ✅ Only take the first 5 logs
+    const latestTenLogs = logs.slice(0, 10);
+
+    latestTenLogs.forEach(log => {
+      const row = document.createElement("tr");
+      row.innerHTML = `
+        <td><img src="${log.imageUrl || '/images/default-profile.png'}" style="width: 60px; height: 60px; object-fit: cover;" class="rounded" /></td>
+        <td>${log.name || '-'}</td>
+        <td>${log.idNumber || '-'}</td>
+        <td>${log.date || '-'}</td>
+        <td>${log.timeIn || '-'}</td>
+        <td>${log.timeOut || '-'}</td>
+     
+      
+        <td>${log.account || '-'}</td>
+      `;
+      tbody.appendChild(row);
+    });
+  } catch (err) {
+    console.error(err);
+    alert("Error loading attendance logs.");
+  }
+}
+
+
+setInterval(updateClock, 1000);
+updateClock();
+loadAttendanceLogs(); // 👈 Add this line to fetch logs on load
+
+
   </script>
+
+  
 </body>
 </html>
