@@ -13,6 +13,11 @@
   <!-- Bootstrap CSS -->
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" />
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" />
+  <!-- SweetAlert2 CSS -->
+<link href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css" rel="stylesheet">
+<!-- SweetAlert2 JS -->
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
 
   <!-- Custom CSS -->
   <link rel="stylesheet" th:href="@{/css/header.css}" />
@@ -63,7 +68,8 @@
           <label for="search-id" class="form-label">Search by ID Number</label>
           <div class="input-group">
             <input type="text" class="form-control" id="search-id" placeholder="e.g. TAL2022-005" />
-            <button class="btn btn-primary" type="button" onclick="searchStudent()">Search</button>
+            <button class="btn btn-primary d-none" type="button">Search</button>
+
           </div>
         </div>
 
@@ -120,7 +126,7 @@
 
         <!-- Submit Button -->
         <div class="text-center">
-          <button class="btn btn-success px-5" onclick="submitAttendance()">Submit Attendance</button>
+          <button class="btn btn-success px-5 d-none" onclick="submitAttendance()">Submit Attendance</button>
         </div>
       </div>
     </div>
@@ -203,9 +209,28 @@
     });
 
     if (res.ok) {
-      const message = await res.text(); // get the "Time In recorded." or "Time Out recorded."
-      alert("✅ " + message);
+  const message = await res.text(); // "Time In recorded." or "Time Out recorded."
 
+  // Show SweetAlert2 popup
+  Swal.fire({
+    title: message.includes("Time Out") 
+      ? '<span style="color: red;">Time Out</span>' 
+      : 'Attendance Recorded!',
+    html: `
+      <div style="font-size: 3rem; margin-top: 10px;">
+        <i class="bi bi-check-circle-fill ${message.includes("Time Out") ? 'text-danger' : 'text-success'}"></i>
+      </div>
+      <p style="font-size: 1.2rem; margin-top: 10px;">${message}</p>
+    `,
+    showConfirmButton: false,
+    timer: 2000,
+    timerProgressBar: true,
+    position: 'center',
+    backdrop: true,
+    didOpen: () => {
+      Swal.showLoading();
+    }
+  });
       // ✅ Refresh the logs display
       loadAttendanceLogs();
     } else {
@@ -242,9 +267,9 @@
     tbody.innerHTML = "";
 
     // ✅ Only take the first 5 logs
-    const latestTenLogs = logs.slice(0, 10);
+    const latestEightLogs = logs.slice(0, 8);
 
-    latestTenLogs.forEach(log => {
+    latestEightLogs.forEach(log => {
       const row = document.createElement("tr");
       row.innerHTML = `
         <td><img src="${log.imageUrl || '/images/default-profile.png'}" style="width: 60px; height: 60px; object-fit: cover;" class="rounded" /></td>
@@ -269,6 +294,19 @@
 setInterval(updateClock, 1000);
 updateClock();
 loadAttendanceLogs(); // 👈 Add this line to fetch logs on load
+
+
+document.getElementById("search-id").addEventListener("keydown", async function (event) {
+  if (event.key === "Enter") {
+    event.preventDefault(); // Prevent default form submission behavior
+
+    await searchStudent();     // 🔍 Auto-search
+    await submitAttendance();  // 📝 Auto-submit
+
+    this.value = "";           // 🔄 Clear the field
+    this.focus();              // 🎯 Keep focus for next scan
+  }
+});
 
 
   </script>
