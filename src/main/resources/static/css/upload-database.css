@@ -1,0 +1,37 @@
+
+
+.upload-form {
+    
+    background: white;
+    color: white;
+    padding: 2rem;
+    border-radius: 10px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.5);
+    width: 70%;
+    margin-left: 15%;
+  }
+  
+  .upload-form h2 {
+    color: #333;
+  }
+  
+  .upload-form .form-label {
+    font-weight: 500;
+  }
+  
+  .upload-form .btn {
+    width: 100%;
+  }
+  
+  #uploadStatus {
+    margin-top: 20px;
+    display: none;
+    background-color: #d4edda;
+    color: #155724;
+    border: 1px solid #c3e6cb;
+    padding: 10px 15px;
+    border-radius: 5px;
+    font-weight: 500;
+    font-size: 16px;
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+}

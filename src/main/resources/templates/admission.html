@@ -32,12 +32,15 @@
         
         <div class="col-md-9 p-4">
           <h1>Welcome to the Admission Page</h1>
+
+          <div class="mb-4 d-flex align-items-center gap-2">
+            <input type="text" id="firstName" class="form-control w-50" placeholder="Enter First Name">
+            <input type="text" id="lastName" class="form-control w-50" placeholder="Enter Last Name">
+            <button class="btn btn-primary" onclick="searchStudent()">Search</button>
+        </div>
+        
+          
           <!--MAIN CONTENT HERE-->
-          <div class="navbar">
-            <a href="#">Database Upload</a>
-            <a href="#">Add Family Saint</a>
-            <a href="#">Reports</a>
-          </div>
         
           <div class="container">
             <div class="studInfo-container">
@@ -147,68 +150,146 @@
 
               <h3>Guardian Information</h3>
 
-              <label class="father">Father:</label>
-              <input type="text" class="father-input">
-              
-              <label class="occupation">Occupation:</label>
-              <input type="text" class="occupation-input">
+            <div class="father-group">
+                <label class="father">Father:</label>
+                <input type="text" class="father-input">
+                
+                <label class="father-occupation">Occupation:</label>
+                <input type="text" class="father-occupation-input">
 
-              <label class="contact">Contact Num:</label>
-              <input type="text" class="contact-input">
-                            
+                <label class="father-contact">Contact Num:</label>
+                <input type="text" class="father-contact-input">
             </div>
 
-            <div class="parentInfo2-group">  
+            <div class="mother-group">
+                <label class="mother">Mother:</label>
+                <input type="text" class="mother-input">
+                
+                <label class="mother-occupation">Occupation:</label>
+                <input type="text" class="mother-occupation-input">
 
-              <label class="mother">Mother:</label>
-              <input type="text" class="mother-input">
-              
-              <label class="occupation">Occupation:</label>
-              <input type="text" class="occupation-input">
-
-              <label class="contact">Contact Num:</label>
-              <input type="text" class="contact-input">
-                            
+                <label class="mother-contact">Contact Num:</label>
+                <input type="text" class="mother-contact-input">
             </div>
 
-            <div class="guardian-group">  
+            <div class="guardian-group">
+                <label class="guardian">Guardian:</label>
+                <input type="text" class="guardian-input">
 
-              <label class="guardian">Guardian:</label>
-              <input type="text" class="mother-input">
+                <label class="guardrel">Relationship:</label>
+                <input type="text" class="guardrel-input">
+                
+                <label class="guardian-occupation">Occupation:</label>
+                <input type="text" class="guardian-occupation-input">
 
-              <label class="guardrel">Relationship:</label>
-              <input type="text" class="guardrel-input">
-              
-              <label class="occupation">Occupation:</label>
-              <input type="text" class="occupation-input">
-
-              <label class="contact">Contact Num:</label>
-              <input type="text" class="contact-input">
-                            
+                <label class="guardian-contact">Contact Num:</label>
+                <input type="text" class="guardian-contact-input">
             </div>
+          
 
           </div>
+                
+                   
+        </div>
 
-            <!--PUT PICTURE AT THE RIGHT SIDE OF INFORMATION-->
-          <div class="pic-container text-center">
-            <div class="photo-placeholder">
-              <span>Photo Placeholder</span>
-            </div>
-            <p class="student-name">Student Name</p>
-            <input type="file" id="upload-photo" class="d-none" accept="image/*">
-            <button class="btn btn-primary btn-sm mt-2" onclick="document.getElementById('upload-photo').click();">Add Photo </button>
-            <button class="btn btn-danger btn-sm mt-2">Remove Photo</button>
+        <div class="container">
+          <div class="studBackground-container">
+              <span>BOYSTOWN CREDENTIALS</span>
           </div>
+      
+          <!-- Add Credential Button -->
+          <button class="add-credential-btn" onclick="showModal()">Add Credential</button>
+
+      
+          <!-- Credentials Table -->
+          <table class="table table-bordered mt-4">
+              <thead>
+                  <tr>
+                      <th>List of Requirements</th>
+                      <th>Org Copy</th>
+                      <th>Photocopy</th>
+                      <th>Action</th>
+                  </tr>
+              </thead>
+
+              <tbody id="credentials-table-body">
+                  <!-- Rows will be dynamically added here -->
+              </tbody>
+
+          </table>
+
+          <!-- School Year and Family Saint Section -->
+          <div class="row justify-content-center mt-4">
+          <!-- School Year Input -->
+          <div class="col-md-4 text-center">
+            <label for="schoolYear" class="form-label">School Year</label>
+            <input type="text" class="schoolYear-input">
+          </div>
+
+          <!-- Family Saint Dropdown -->
+          <div class="col-md-4 text-center">
+            <label for="familySaint" class="form-label">Family Saint</label>
+              <select id="familySaint" class="form-select text-center">
+                <option selected disabled>Select Family Saint</option>
+                <option value="St. Joseph">St. Joseph</option>
+                <option value="St. Peter">St. Peter</option>
+                <option value="St. Paul">St. Paul</option>
+                <option value="St. Francis">St. Francis</option>
+                <option value="St. Michael">St. Michael</option>
+              </select>
+          </div>
+          <!-- Submit Button -->
+          <!-- Submit Button -->
+          <div class="col-12 text-center mt-3">
+            <button type="submit" class="submitbtn">Submit</button>
+          </div>
+
 
         </div>
+
+      </div>
+      
+            <!-- Modal for entering the credential name -->
+            <div class="modal fade" id="credentialModal" tabindex="-1" aria-labelledby="credentialModalLabel" aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="credentialModalLabel">Enter Credential Name</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body">
+                            <input type="text" id="credentialNameInput" class="form-control" placeholder="Enter credential name">
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                            <button type="button" class="btn btn-primary" onclick="addCredentialRow()">Add Credential</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!--PUT PICTURE AT THE RIGHT SIDE OF INFORMATION-->
+            <div class="pic-container text-center">
+              <div class="photo-placeholder">
+                <span>Photo Placeholder</span>
+              </div>
+              <p class="student-name">Student Name</p>
+              <input type="file" id="upload-photo" class="d-none" accept="image/*">
+              <button class="btn btn-primary btn-sm mt-2" onclick="document.getElementById('upload-photo').click();">Add Photo </button>
+              <button class="btn btn-danger btn-sm mt-2">Remove Photo</button>
+            </div>
+
+        
       </div>
     </div>
 
     
 
     <!-- Bootstrap JS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-    <script th:src="@{/js/user-management.js}"></script>
+    <script src="/js/admission.js"></script>
+
 
 </body>
 

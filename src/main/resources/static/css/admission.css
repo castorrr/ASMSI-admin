@@ -3,19 +3,6 @@ body {
     margin: 0;
     padding: 0;
 }
-.navbar {
-    display: flex;
-    justify-content: space-around;
-    background: linear-gradient(to right, #0033cc, #6699ff);;
-    padding: 10px;
-    color: white;
-}
-
-.navbar a {
-    color: white;
-    text-decoration: none;
-    font-weight: bold;
-}
 .container {
     margin-top: 15px;
     margin-right: 500px;
@@ -301,14 +288,6 @@ body {
   .elementary-group input {
     max-width: 28%;            /* Limit the width of input fields */
   }
-
-  .parentInfo-group {
-    margin-top: 55px;
-    margin-left: 0px;
-    display: flex;               /* Enables Flexbox */
-    flex-wrap: wrap;             /* Allows wrapping if necessary */
-    gap: 10px;                   /* Adds space between items */
-  }
   .parentInfo-group h3{
     position: absolute;
     margin-top: -45px;
@@ -316,8 +295,16 @@ body {
     font-weight: bold;
     color: #ff0000;
   }
+  .father-group {
+    margin-top: 55px;
+    margin-left: 0px;
+    display: flex;               /* Enables Flexbox */
+    flex-wrap: wrap;             /* Allows wrapping if necessary */
+    gap: 10px;                   /* Adds space between items */
+  }
+  
   /* Style for the labels */
-  .parentInfo-group label {
+  .father-group label {
     margin-top: -25px;
     font-size: 12px;
     color: #91413D;
@@ -325,7 +312,7 @@ body {
   }
   
   /* Style for the input fields */
-  .parentInfo-group input {
+  .father-group input {
     margin-left: -70px;
     margin-right: 5px;
     width: 100%;                 /* Make the input fields take up available space */
@@ -339,26 +326,19 @@ body {
   }
   
   /* Optional: Limit input width for better alignment */
-  .parentInfo-group input {
+  .father-group input {
     max-width: 28%            /* Limit the width of input fields */
   }
 
-  .parentInfo2-group {
+  .mother-group {
     margin-top: 30px;
     margin-left: 0px;
     display: flex;               /* Enables Flexbox */
     flex-wrap: wrap;             /* Allows wrapping if necessary */
     gap: 10px;                   /* Adds space between items */
   }
-  .parentInfo2-group h3{
-    position: absolute;
-    margin-top: -45px;
-    font-size: 15px;
-    font-weight: bold;
-    color: #ff0000;
-  }
   /* Style for the labels */
-  .parentInfo2-group label {
+  .mother-group label {
     margin-top: -25px;
     font-size: 12px;
     color: #91413D;
@@ -366,7 +346,7 @@ body {
   }
   
   /* Style for the input fields */
-  .parentInfo2-group input {
+  .mother-group input {
     margin-left: -70px;
     margin-right: 5px;
     width: 100%;                 /* Make the input fields take up available space */
@@ -380,7 +360,7 @@ body {
   }
   
   /* Optional: Limit input width for better alignment */
-  .parentInfo2-group input {
+  .mother-group input {
     max-width: 28%;            /* Limit the width of input fields */
   }
 
@@ -425,36 +405,133 @@ body {
     max-width: 20%;            /* Limit the width of input fields */
   }
 
-  .pic-container {
-    width: 20%;
-    padding: 15px;
-    background-color: #6db2f3;
-    border: 1px solid #ccc;
-    border-radius: 8px;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    position: absolute;
-    top: 325px;
-    right: 30px;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
-}
 
-.photo-placeholder {
-    width: 200px;
-    height: 200px;
-    border: 2px dashed #aaa;
-    background-color: #e9ecef;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 14px;
-    color: #888;
-    border-radius: 8px;
-}
 
 .student-name {
     margin-top: 10px;
     font-weight: bold;
     text-align: center;
 }
+
+.add-credential-btn {
+  background-color: #0d6efd; /* Bootstrap primary color */
+  color: #fff;
+  border: none;
+  padding: 10px 20px;
+  margin-top: 15px;
+  border-radius: 8px;
+  font-size: 16px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  margin-left: 5%;
+  margin-right: auto;
+}
+
+.add-credential-btn:hover {
+  background-color: #0b5ed7; /* Darker blue on hover */
+}
+
+
+/* Transparent and styled table */
+.table {
+  width: 100%;
+  margin-top: 20px;
+  border-collapse: collapse;
+  text-align: center;
+  background-color: transparent; /* Make the table background transparent */
+}
+
+/* Make table headers and cells transparent and center content */
+.table th,
+.table td {
+  background-color: transparent; /* Make each cell transparent */
+  color: #000; /* Optional: Set text color for visibility */
+  vertical-align: middle;
+  padding: 10px;
+  border: 1px solid #ccc; /* Optional: Light border for structure */
+}
+
+/* Center the radio buttons */
+.table input[type="radio"] {
+  margin: 0 auto;
+  display: block;
+}
+
+/* Center the action buttons */
+.table .btn {
+  margin: 0 auto;
+  display: block;
+}
+
+/* Optional: remove hover background if Bootstrap adds it */
+.table-hover tbody tr:hover {
+  background-color: transparent;
+}
+
+.pic-container {
+  width: 20%;
+  padding: 15px;
+  background-color: #6db2f3;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  position: absolute;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+}
+
+.photo-placeholder {
+  width: 200px;
+  height: 200px;
+  border: 2px dashed #aaa;
+  background-color: #e9ecef;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 14px;
+  color: #888;
+  border-radius: 8px;
+}
+
+/* Style the inputs and select */
+.schoolYear-input,
+#familySaint {
+  width: 100%;
+  max-width: 300px;
+  padding: 10px;
+  border-radius: 8px;
+  border: 1px solid #ccc;
+  text-align: center;
+  margin: 0 auto;
+  box-shadow: none;
+}
+
+/* Style the labels */
+.form-label {
+  color: #91413D;
+  font-weight: bold;
+  margin-bottom: 5px;
+  display: block;
+  text-align: center;
+}
+
+/* Style the submit button */
+.submitbtn {
+
+  width: 200px;
+  padding: 10px 40px;
+  font-size: 16px;
+  border-radius: 8px;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  transition: background-color 0.3s ease;
+  cursor: pointer;
+}
+
+.submitbtn:hover {
+  background-color: #0056b3;
+}
+
+

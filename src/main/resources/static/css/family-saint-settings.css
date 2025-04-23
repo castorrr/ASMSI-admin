@@ -1,0 +1,104 @@
+/* Add styling for the content inside the col-md-9 p-4 */
+.col-md-9.p-4 {
+  background-color: #fff;
+  border-radius: 10px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+h2.mb-4 {
+  font-size: 2rem;
+  font-weight: 600;
+  color: #343a40;
+}
+
+.card {
+  margin-left: 25%;
+  width: 50%;
+  border-radius: 8px;
+  border: 1px solid #ddd;
+  background: white;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+}
+
+.card p {
+  font-size: 1.1rem;
+  color: #495057;
+}
+
+.card .form-label {
+  font-size: 1rem;
+  color: #6c757d;
+}
+
+.card .form-control {
+  border-radius: 5px;
+  border: 1px solid #ced4da;
+  box-shadow: none;
+}
+
+.card .form-control:focus {
+  border-color: #80bdff;
+  box-shadow: 0 0 0 0.2rem rgba(38, 143, 255, 0.25);
+}
+
+.card .btn {
+  background-color: #28a745;
+  border: none;
+  color: white;
+  border-radius: 5px;
+  font-size: 1rem;
+}
+
+.card .btn:hover {
+  background-color: #218838;
+}
+
+.card .btn-close {
+  font-size: 1.2rem;
+}
+
+.table {
+  font-size: 1rem;
+}
+
+.table th, .table td {
+  text-align: center;
+  padding: 0.75rem;
+}
+
+.table th {
+  background-color: #f8f9fa;
+}
+
+.table-responsive {
+  margin-top: 2rem;
+}
+
+.position-fixed {
+  z-index: 1055;
+  right: 20px;
+  top: 20px;
+}
+
+.toast {
+  min-width: 250px;
+  max-width: 350px;
+  font-size: 0.875rem;
+}
+
+.toast-body {
+  padding: 1rem;
+}
+
+.toast.bg-success {
+  background-color: #28a745;
+}
+
+.toast.bg-danger {
+  background-color: #dc3545;
+}
+
+.toast-header {
+  font-size: 1rem;
+  font-weight: bold;
+}
