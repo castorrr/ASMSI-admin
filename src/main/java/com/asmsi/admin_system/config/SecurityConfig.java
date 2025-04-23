@@ -29,12 +29,11 @@ public class SecurityConfig {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
         
-       
             .authorizeHttpRequests(auth -> auth
             
             .requestMatchers(
                 "/login", "/signup", "/request-account", "/forget-password", "/forgot-password", "/reset-password",
-                "/css/**", "/js/**", "/images/**", "/upload-csv", "/home", "/api/attendance/attendance","/api/attendance/**"
+                "/css/**", "/js/**", "/images/**", "/upload-csv", "/home", "/api/attendance/attendance", "/api/attendance/**", "/family-saint-settings/api"
             ).permitAll()
                 .anyRequest().authenticated()
             )  
