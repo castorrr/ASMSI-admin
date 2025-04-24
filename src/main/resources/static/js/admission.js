@@ -63,8 +63,29 @@ function displaySearchResults(students) {
     document.querySelector('.guardian-occupation-input').value = student.guardianOccupation || '';
     document.querySelector('.guardian-contact-input').value = student.guardianContact || '';
     document.querySelector('.schoolYear-input').value = student.schoolYear || '';
+    loadFamilySaintOptions(student.schoolYear);
+
     makeReadOnly();
+    
 }
+
+function loadFamilySaintOptions(schoolYear) {
+    const dropdown = document.getElementById('familySaint');
+    fetch(`/family-saint-settings/api?schoolYear=${schoolYear}`)
+        .then(res => res.json())
+        .then(data => {
+            dropdown.innerHTML = '<option selected disabled>Select Family Saint</option>';
+            data.forEach(saint => {
+                const option = document.createElement('option');
+                option.value = saint.saintName;
+                option.textContent = saint.saintName;
+                dropdown.appendChild(option);
+            });
+        })
+        .catch(err => console.error("Failed to fetch family saints", err));
+}
+
+
 
 function makeReadOnly() {
     const inputs = document.querySelectorAll('input');
