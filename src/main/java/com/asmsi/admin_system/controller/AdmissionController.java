@@ -29,6 +29,7 @@ public class AdmissionController {
         model.addAttribute("activePage", "admission");
         return "admission";
     }
+    
 
     // Upload Database Page
     @GetMapping("/upload-database")
@@ -167,6 +168,37 @@ public class AdmissionController {
 
     }
 
-   
+    @GetMapping("/reports")
+    public String showReports(
+            @RequestParam(required = false) String familySaint,
+            @RequestParam(required = false) String schoolYear,
+            Model model) {
+
+        List<FinalStudent> students;
+
+        // Filter by both family saint and school year
+        if (familySaint != null && !familySaint.isEmpty() && schoolYear != null && !schoolYear.isEmpty()) {
+            students = finalStudentRepository.findByFamilySaintAndSchoolYear(familySaint, schoolYear);
+        }
+        // Filter only by family saint
+        else if (familySaint != null && !familySaint.isEmpty()) {
+            students = finalStudentRepository.findByFamilySaint(familySaint);
+        }
+        // Filter only by school year
+        else if (schoolYear != null && !schoolYear.isEmpty()) {
+            students = finalStudentRepository.findBySchoolYear(schoolYear);
+        }
+        // If no filter is applied, show all students
+        else {
+            students = finalStudentRepository.findAll();
+        }
+
+        model.addAttribute("students", students);
+        model.addAttribute("familySaints", finalStudentRepository.findDistinctFamilySaints());
+        model.addAttribute("schoolYears", finalStudentRepository.findDistinctSchoolYears());
+
+        return "reports";
+    }
+
 
 }
