@@ -29,6 +29,11 @@ public class AuthController {
     private final PasswordResetTokenRepository passwordTokenRepository;
     private final EmailService emailService;
 
+    @GetMapping("/")
+    public String showLandingPage() {
+        return "landing-page"; // Assuming you have an index.html template
+    }
+
     @GetMapping("/signup")
     public String showSignupForm() {
         log.info("Navigated to signup page.");
