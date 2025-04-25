@@ -30,40 +30,43 @@
             <h3>Welcome Back, Aloysians!</h3>
             <p>Please log in to continue.</p>
 
-            <!-- Error Message -->
-            <div th:if="${param.error}" class="alert alert-danger">
-              <strong>Login Failed!</strong>
-              <p
-                th:if="${session['SPRING_SECURITY_LAST_EXCEPTION'].message.contains('disabled')}"
-              >
-                Your account is still pending approval. Please wait for admin
-                verification.
-              </p>
-              <p
-                th:if="${session['SPRING_SECURITY_LAST_EXCEPTION'].message.contains('not found')}"
-              >
-                No account found with that username.
-              </p>
-              <p
-                th:if="${session['SPRING_SECURITY_LAST_EXCEPTION'].message.contains('Bad credentials')}"
-              >
-                Incorrect password. Please try again.
-              </p>
-              <p
-                th:unless="
-                  ${session['SPRING_SECURITY_LAST_EXCEPTION'].message.contains('disabled')} or
-                  ${session['SPRING_SECURITY_LAST_EXCEPTION'].message.contains('not found')} or
-                  ${session['SPRING_SECURITY_LAST_EXCEPTION'].message.contains('Bad credentials')}"
-              >
-                <span
-                  th:text="${session['SPRING_SECURITY_LAST_EXCEPTION'].message}"
-                ></span>
-              </p>
-            </div>
+            <!-- Message Container -->
+            <div class="message-container">
+              <!-- Error Message -->
+              <div th:if="${param.error}" class="alert alert-danger">
+                <strong>Login Failed!</strong>
+                <p
+                  th:if="${session['SPRING_SECURITY_LAST_EXCEPTION'].message.contains('disabled')}"
+                >
+                  Your account is still pending approval. Please wait for admin
+                  verification.
+                </p>
+                <p
+                  th:if="${session['SPRING_SECURITY_LAST_EXCEPTION'].message.contains('not found')}"
+                >
+                  No account found with that username.
+                </p>
+                <p
+                  th:if="${session['SPRING_SECURITY_LAST_EXCEPTION'].message.contains('Bad credentials')}"
+                >
+                  Incorrect password. Please try again.
+                </p>
+                <p
+                  th:unless="
+                      ${session['SPRING_SECURITY_LAST_EXCEPTION'].message.contains('disabled')} or
+                      ${session['SPRING_SECURITY_LAST_EXCEPTION'].message.contains('not found')} or
+                      ${session['SPRING_SECURITY_LAST_EXCEPTION'].message.contains('Bad credentials')}"
+                >
+                  <span
+                    th:text="${session['SPRING_SECURITY_LAST_EXCEPTION'].message}"
+                  ></span>
+                </p>
+              </div>
 
-            <!-- Logout Message -->
-            <div th:if="${param.logout}" class="alert alert-success">
-              You have been logged out successfully.
+              <!-- Logout Message -->
+              <div th:if="${param.logout}" class="alert alert-success">
+                You have been logged out successfully.
+              </div>
             </div>
 
             <!-- Login Form -->
@@ -98,7 +101,7 @@
                 </div>
               </div>
 
-              <div class="form-group text right">
+              <div class="form-group text-right">
                 <a href="/forget-password" class="forgot-password-link"
                   >Forgot Password?</a
                 >
@@ -137,5 +140,10 @@
         icon.classList.add("glyphicon-eye-open");
       }
     }
+
+    setTimeout(function () {
+      const alert = document.querySelector(".alert");
+      if (alert) alert.style.display = "none";
+    }, 5000);
   </script>
 </html>
