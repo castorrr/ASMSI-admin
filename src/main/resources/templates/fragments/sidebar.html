@@ -104,9 +104,28 @@
 
     <!-- Events -->
     <li>
-      <a th:href="@{/events}" class="nav-link text-white">
-        <i class="bi bi-calendar-event"></i> Events
+      <a class="nav-link text-white d-flex justify-content-between align-items-center"
+         data-bs-toggle="collapse"
+         href="#eventsAttendanceLog"
+         role="button"
+         th:attr="aria-expanded=${activePage == 'events' || activePage == 'attendance-log'}"
+         onclick="toggleIcon(this)">
+        <span><i class="bi bi-calendar-event"></i> Events</span>
+        <i class="bi bi-chevron-down toggle-arrow"></i>
       </a>
+    
+      <div class="collapse ps-3"
+           id="eventsAttendanceLog"
+           th:classappend="${activePage == 'events' || activePage == 'attendance-log'} ? 'show'">
+        <ul class="nav flex-column">
+          <li class="nav-item">
+            <a th:href="@{/events}" class="nav-link text-white">Event List</a>
+          </li>
+          <li class="nav-item">
+            <a th:href="@{/attendance-log}" class="nav-link text-white">Event Attendance</a>
+          </li>
+        </ul>
+      </div>
     </li>
 
     <!-- E-Library -->
