@@ -60,7 +60,7 @@
                             <div class="card-body">
                                 <div class="event-header d-flex justify-content-between">
                                     <h5 class="card-title mb-0" th:text="${event.name}"></h5>
-                                    <span class="event-date" th:text="${#temporals.format(event.dateTime, 'MMM dd')}"></span>
+                                    <span class="event-date" th:text="${#temporals.format(event.dateTime, 'MMM dd, yyyy')}"></span>
                                 </div>
                                 
                                 <div class="my-2">
