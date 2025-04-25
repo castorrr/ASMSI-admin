@@ -35,3 +35,108 @@
     font-size: 16px;
     box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
 }
+
+/* Alert Container Styling */
+.alert-container {
+  position: fixed;
+  top: 20px; /* Slightly spaced from the top */
+  right: 20px; /* Positioned to the right */
+  z-index: 1050; /* Ensures it appears above other content */
+  max-width: 350px; /* Max width of the alert */
+  min-width: 250px; /* Min width of the alert */
+  margin-bottom: 10px; /* Space between alerts */
+}
+
+/* Success Message */
+.alert-success {
+  background-color: #28a745; /* Green */
+  color: white;
+  padding: 1rem; /* Adjust padding */
+  border-radius: 5px;
+  font-size: 0.875rem; /* Adjust font size */
+  border: 1px solid #218838;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  opacity: 0; /* Start with alert hidden */
+  animation: alertFadeIn 1s forwards; /* Fade-in animation */
+}
+
+/* Error Message */
+.alert-danger {
+  background-color: #dc3545; /* Red */
+  color: white;
+  padding: 1rem; /* Adjust padding */
+  border-radius: 5px;
+  font-size: 0.875rem; /* Adjust font size */
+  border: 1px solid #c82333;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  opacity: 0; /* Start with alert hidden */
+  animation: alertFadeIn 1s forwards; /* Fade-in animation */
+}
+
+/* Icon styling (optional) */
+.alert-success::before,
+.alert-danger::before {
+  content: '';
+  display: inline-block;
+  width: 20px;
+  height: 20px;
+  background-size: cover;
+  margin-right: 10px;
+}
+
+.alert-success::before {
+  background-image: url('https://img.icons8.com/ios/452/checkmark.png'); /* Green check icon */
+}
+
+.alert-danger::before {
+  background-image: url('https://img.icons8.com/ios/452/close.png'); /* Red close icon */
+}
+
+/* Fade-In Animation */
+@keyframes alertFadeIn {
+  0% {
+      opacity: 0;
+      transform: translateY(-20px);
+  }
+  100% {
+      opacity: 1;
+      transform: translateY(0);
+  }
+}
+
+/* Close Button (optional) */
+.alert-success .btn-close,
+.alert-danger .btn-close {
+  color: white;
+  font-size: 18px;
+  background: none;
+  border: none;
+  opacity: 0.7;
+}
+
+.alert-success .btn-close:hover,
+.alert-danger .btn-close:hover {
+  opacity: 1;
+}
+
+/* Optional: Auto-hide Alert after 3 seconds */
+.alert-success.show,
+.alert-danger.show {
+  animation: alertFadeIn 1s forwards, alertFadeOut 1s 3s forwards; /* Fade-out after 3s */
+}
+
+@keyframes alertFadeOut {
+  0% {
+      opacity: 1;
+  }
+  100% {
+      opacity: 0;
+      transform: translateY(-20px);
+  }
+}
+
+

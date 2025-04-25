@@ -90,13 +90,9 @@ function loadFamilySaintOptions(schoolYear) {
 function makeReadOnly() {
     const inputs = document.querySelectorAll('input');
     const select = document.querySelectorAll('select');
-    const addCredentialButton = document.querySelector('#addCredentialBtn');
     
     inputs.forEach(input => {
-        // Exclude the search input fields by their IDs
-        // Also, ensure modal input fields are excluded by checking for modal-specific class or ID
-        if (input.id !== 'firstName' && input.id !== 'lastName' && 
-            !input.closest('.modal') && input !== addCredentialButton) {
+        if (input.id !== 'firstName' && input.id !== 'lastName') {
             input.readOnly = true;
         }
     });
@@ -105,65 +101,75 @@ function makeReadOnly() {
         // Ensure the dropdown is not made read-only
         selectElement.disabled = false;
     });
-
-    // Ensure "Add Credential" button is not disabled
-    addCredentialButton.disabled = false;
 }
 
+window.onload = function() {
+    const familySaintSelect = document.getElementById("familySaint");
+    const submitButton = document.querySelector(".submitbtn");
 
-    let credentialCount = 0; // Keeps track of the number of credentials added
+    // Initially disable the submit button
+    submitButton.disabled = true;
 
-    // Function to show the modal to enter the credential name
-    function showModal() {
-        const modal = new bootstrap.Modal(document.getElementById('credentialModal'));
-        modal.show();
-    }
-
-    // Function to add a new row to the credentials table
-    function addCredentialRow() {
-        const credentialName = document.getElementById('credentialNameInput').value;
-
-        // If no name is provided, stop the function and show an alert
-        if (!credentialName) {
-            alert("Credential name is required.");
-            return;
+    // Check if family saint is selected, then enable the button
+    familySaintSelect.addEventListener("change", function() {
+        if (familySaintSelect.value !== "") {
+            submitButton.disabled = false; // Enable submit button
+        } else {
+            submitButton.disabled = true; // Disable submit button if no saint is selected
         }
+    });
+};
 
-        credentialCount++;
+window.onload = function() {
+    const familySaintSelect = document.getElementById("familySaint");
+    const submitButton = document.querySelector(".submitbtn");
+    const successModal = document.getElementById("successModal");
+    const closeSuccessBtn = document.getElementById("closeSuccessBtn");
 
-        // Close the modal after adding the row
-        const modal = bootstrap.Modal.getInstance(document.getElementById('credentialModal'));
-        modal.hide();
+    // Initially disable the submit button
+    submitButton.disabled = true;
 
-        const tableBody = document.getElementById('credentials-table-body');
-        const newRow = document.createElement('tr');
-
-        // Create new row content with the user-provided credential name
-        newRow.innerHTML = `
-            <td>${credentialName}</td>
-            <td><input type="radio" name="requirement${credentialCount}" value="orgCopy" class="org-copy"></td>
-            <td><input type="radio" name="requirement${credentialCount}" value="photocopy" class="photocopy"></td>
-            <td>
-                <button class="btn btn-danger btn-sm" onclick="deleteCredential(${credentialCount})">Delete</button>
-            </td>
-        `;
-
-        // Append the new row to the table body
-        tableBody.appendChild(newRow);
-
-        // Clear the input field for the next use
-        document.getElementById('credentialNameInput').value = '';
-    }
-
-    // Function to delete a credential
-    function deleteCredential(id) {
-        // Logic for deleting the credential
-        const row = document.querySelector(`#credentials-table-body tr:nth-child(${id})`);
-        if (row) {
-            row.remove();
+    // Check if family saint is selected, then enable the button
+    familySaintSelect.addEventListener("change", function() {
+        if (familySaintSelect.value !== "") {
+            submitButton.disabled = false; // Enable submit button
+        } else {
+            submitButton.disabled = true; // Disable submit button if no saint is selected
         }
-        alert('Deleted credential ' + id);
-    }
+    });
 
+    // Display the success modal if successMessage is set in the model
+
+    window.onload = function() {
+        const toast = document.getElementById("toast");
+        if (toast) {
+            setTimeout(function() {
+                toast.classList.remove("show");
+                toast.classList.add("hide");
+            }, 3000);
     
+            document.getElementById("closeToast").addEventListener("click", function () {
+                toast.classList.remove("show");
+                toast.classList.add("hide");
+            });
+        }
+    };
+    
+};
 
+
+window.addEventListener('DOMContentLoaded', (event) => {
+    const toast = document.getElementById('toastMessage');
+    if (toast) {
+      setTimeout(() => {
+        toast.classList.add('hide');
+      }, 2000); // Adjust the delay in milliseconds (4000ms = 4 seconds)
+    }
+  });
+
+  function closeToast(button) {
+    const toast = button.closest('.custom-toast');
+    if (toast) {
+      toast.classList.add('hide');
+    }
+  }

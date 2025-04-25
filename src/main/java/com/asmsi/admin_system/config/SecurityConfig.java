@@ -18,7 +18,7 @@ import com.asmsi.admin_system.service.UserService;
 public class SecurityConfig {
 
     private final UserService userService;
-    private final BCryptPasswordEncoder passwordEncoder; // ✅ Injected from AppConfig
+    private final BCryptPasswordEncoder passwordEncoder;
 
     public SecurityConfig(UserService userService, BCryptPasswordEncoder passwordEncoder) {
         this.userService = userService;
@@ -28,15 +28,17 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
-        
+            // Disable CSRF protection only for /admission and /submit
+            .csrf(csrf -> csrf.ignoringRequestMatchers("/admission", "/submit")) 
             .authorizeHttpRequests(auth -> auth
-            
-            .requestMatchers(
-                "/login", "/signup", "/request-account", "/forget-password", "/forgot-password", "/reset-password",
-                "/css/**", "/js/**", "/images/**", "/upload-csv", "/home", "/api/attendance/attendance", "/api/attendance/**", "/family-saint-settings/api"
-            ).permitAll()
+                .requestMatchers(
+                    "/login", "/signup", "/request-account", "/forget-password", "/forgot-password", "/reset-password",
+                    "/css/**", "/js/**", "/images/**", "/upload-csv", "/home", "/api/attendance/attendance", "/api/attendance/**", "/family-saint-settings/api"
+                ).permitAll()
+                .requestMatchers("/admission", "/admission/**", "/submit")
+                    .hasRole("ADMIN")
                 .anyRequest().authenticated()
-            )  
+            )
             .formLogin(form -> form
                 .loginPage("/login")
                 .defaultSuccessUrl( "/home", true)
@@ -55,7 +57,7 @@ public class SecurityConfig {
     public AuthenticationProvider authenticationProvider() {
         DaoAuthenticationProvider provider = new DaoAuthenticationProvider();
         provider.setUserDetailsService(userService);
-        provider.setPasswordEncoder(passwordEncoder); // ✅ Uses passwordEncoder from AppConfig
+        provider.setPasswordEncoder(passwordEncoder);
         return provider;
     }
 
@@ -63,8 +65,5 @@ public class SecurityConfig {
     public AuthenticationManager authenticationManager(AuthenticationConfiguration authenticationConfiguration) throws Exception {
         return authenticationConfiguration.getAuthenticationManager();
     }
-
-    
-
-    
 }
+
