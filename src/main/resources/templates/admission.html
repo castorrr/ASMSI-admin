@@ -25,195 +25,314 @@
 
   <div th:replace="fragments/header :: header(${username})"></div>
 
-    <div class="container-fluid">
-      <div class="row">
+  <div class="container-fluid">
+    <div class="row">
        
-        <div th:replace="fragments/sidebar :: sidebar(role=${role})"></div>
+      <div th:replace="fragments/sidebar :: sidebar(role=${role})"></div>
         
-        <div class="col-md-9 p-4">
-          <h1>Welcome to the Admission Page</h1>
+      <div class="col-md-9 p-4">
 
-          <div class="mb-4 d-flex align-items-center gap-2">
+        <!--MAIN CONTENT HERE-->        
+        <h1>Welcome to the Admission Page</h1>
+
+        <div class="mb-4 d-flex align-items-center gap-2">
             <input type="text" id="firstName" class="form-control w-50" placeholder="Enter First Name">
             <input type="text" id="lastName" class="form-control w-50" placeholder="Enter Last Name">
             <button class="btn btn-primary" onclick="searchStudent()">Search</button>
         </div>
-        
-          
-          <!--MAIN CONTENT HERE-->
-        
-          <div class="container">
-            <div class="studInfo-container">
-              <span>STUDENT INFORMATION</span>
-                <div>
-                  <a href="#">Download Form</a>
-                  <a href="#">Print ID</a>
-                </div>
-            </div>
+        <!--FORM FOR DATABASE SAVING START HERE-->
+        <form action="/submit" method="POST">
+          <!--CSRF TOKEN-->
+          <input type="hidden" name="_csrf" value="${_csrf.token}">
 
-            <div class="name-group">  
-              <label class="last-name">Last Name:</label>
-              <input type="text" class="lastName-input">
+        <!--STUDENT INFORMATION CONTAINER-->
+        <div class="container">
+          <div class="studInfo-container">
+            <span>STUDENT INFORMATION</span>
+          </div>
+
+          <div class="name-group">  
+            <label class="last-name">Last Name:</label>
+            <input type="text" name="lastName" class="lastName-input">
               
-              <label class="first-name">First Name:</label>
-              <input type="text" class="firstName-input">
+            <label class="first-name">First Name:</label>
+            <input type="text" name="firstName"class="firstName-input">
               
-              <label class="middle-name">Middle Name:</label>
-              <input type="text" class="middleName-input">
+            <label class="middle-name">Middle Name:</label>
+            <input type="text" name="middleName" class="middleName-input">
               
-              <label class="suffix">Suffix:</label>
-              <input type="text" class="suffix-input">
-            </div>
+            <label class="suffix">Suffix:</label>
+            <input type="text" name="suffix" class="suffix-input">
+          </div>
 
-            <hr>
+          <hr>
 
-            <div class="address-group">
+          <div class="address-group">
 
-              <h3>Complete Address</h3>
+            <h3>Complete Address</h3>
 
-              <label class="barangay">Brgy./St./Purok/:</label>
-              <input type="text" class ="barangay-input">
+            <label class="barangay">Brgy./St./Purok/:</label>
+            <input type="text" name="barangay" class ="barangay-input">
 
-              <label class="municipality">Municipality:</label>
-              <input type="text" class ="municipality-input">
+            <label class="municipality">Municipality:</label>
+            <input type="text" name="municipality" class ="municipality-input">
 
-              <label class="province">Province:</label>
-              <input type="text" class ="province-input">
-            </div>
+            <label class="province">Province:</label>
+            <input type="text" name="province" class ="province-input">            
+          </div>
 
-            <hr>
+          <hr>
             
-            <div class="birthday-group">
+          <div class="birthday-group">
 
-              <h3>Birth Information</h3>
+            <h3>Birth Information</h3>
 
-              <label class="birthdate">Date of Birth:</label>
-              <input type="date" class="birthdate-input">
+            <label class="birthdate">Date of Birth:</label>
+            <input type="date" name="birthdate"class="birthdate-input">
 
-              <label class="birthPlace">Place of Birth:</label>
-              <input type="text" class ="birthPlace-input">
+            <label class="birthPlace">Place of Birth:</label>
+            <input type="text" name="birthPlace" class ="birthPlace-input">
 
-              <label class="age">Age:</label>
-              <input type="text" class ="age-input">
-
-            </div>
-
-            <hr>
-
-            <div class="otherInfo-group">
-
-              <h3>Other Information</h3>
-
-              <label class="examPlace">Exam Place:</label>
-              <input type="text" class ="examPlace-input">
-
-              <label class="idNum">ID Number:</label>
-              <input type="text" class ="idNum-input">
-
-              <label class="lrn">LRN:</label>
-              <input type="text" class ="LRN-input">
-
-            </div>
+            <label class="age">Age:</label>
+            <input type="text" name="age" class ="age-input">
 
           </div>
 
-          <div class="container">
-            <div class="studBackground-container">
-              <span>STUDENT BACKGROUND</span>
-            </div>
+          <hr>
 
-            <div class="studentInfo-group">  
-              <label class="religion">Religion:</label>
-              <input type="text" class="religion-input">
-              
-              <label class="gender">Gender:</label>
-              <input type="text" class="gender-input">
-              
-              <label class="citizenship">Citizenship:</label>
-              <input type="text" class="citizenship-input">
-              
-            </div>
+          <div class="otherInfo-group">
 
-            <div class="elementary-group">  
+            <h3>Other Information</h3>
 
-              <label class="elementary">Elem School:</label>
-              <input type="text" class="elementary-input">
+            <label class="examPlace">Exam Place:</label>
+            <input type="text" name="examPlace"class ="examPlace-input">
+
+            <label class="idNum">ID Number:</label>
+            <input type="text" name="idNumber" class ="idNum-input">
+
+            <label class="lrn">LRN:</label>
+            <input type="text" name="lrn" class ="LRN-input">
+
+          </div>
+
+        </div>
+        <!--STUDENT INFORMATION CONTAINER END HERE-->
+
+        <!--STUDENT BACKGROUND CONTAINER-->
+        <div class="container">
+          <div class="studBackground-container">
+            <span>STUDENT BACKGROUND</span>
+          </div>
+
+          <div class="studentInfo-group">  
+            <label class="religion">Religion:</label>
+            <input type="text" name="religion" class="religion-input">
               
-              <label class="elemAddress">Address:</label>
-              <input type="text" class="elemAddress-input">
+            <label class="gender">Gender:</label>
+            <input type="text" name="gender" class="gender-input">
+              
+            <label class="citizenship">Citizenship:</label>
+            <input type="text" name="citizenship" class="citizenship-input">
+              
+          </div>
+
+          <div class="elementary-group">  
+
+            <label class="elementary">Elem School:</label>
+            <input type="text" name="elementarySchool" class="elementary-input">
+              
+            <label class="elemAddress">Address:</label>
+            <input type="text" name="elemAddress" class="elemAddress-input">
                             
-            </div>
+          </div>
 
-            <hr>
+          <hr>
 
-            <div class="parentInfo-group">  
+          <div class="parentInfo-group">  
 
-              <h3>Guardian Information</h3>
+            <h3>Guardian Information</h3>
 
             <div class="father-group">
                 <label class="father">Father:</label>
-                <input type="text" class="father-input">
+                <input type="text" name="fatherName" class="father-input">
                 
                 <label class="father-occupation">Occupation:</label>
-                <input type="text" class="father-occupation-input">
+                <input type="text" name="fatherOccupation" class="father-occupation-input">
 
                 <label class="father-contact">Contact Num:</label>
-                <input type="text" class="father-contact-input">
+                <input type="text" name="fatherContact" class="father-contact-input">
             </div>
 
             <div class="mother-group">
                 <label class="mother">Mother:</label>
-                <input type="text" class="mother-input">
+                <input type="text" name="motherName" class="mother-input">
                 
                 <label class="mother-occupation">Occupation:</label>
-                <input type="text" class="mother-occupation-input">
+                <input type="text" name="motherOccupation" class="mother-occupation-input">
 
                 <label class="mother-contact">Contact Num:</label>
-                <input type="text" class="mother-contact-input">
+                <input type="text" name="motherContact" class="mother-contact-input">
             </div>
 
             <div class="guardian-group">
                 <label class="guardian">Guardian:</label>
-                <input type="text" class="guardian-input">
+                <input type="text" name="guardianName" class="guardian-input">
 
                 <label class="guardrel">Relationship:</label>
-                <input type="text" class="guardrel-input">
+                <input type="text" name="guardianRelationship" class="guardrel-input">
                 
                 <label class="guardian-occupation">Occupation:</label>
-                <input type="text" class="guardian-occupation-input">
+                <input type="text" name="guardianOccupation" class="guardian-occupation-input">
 
                 <label class="guardian-contact">Contact Num:</label>
-                <input type="text" class="guardian-contact-input">
-            </div>
-          
-
-          </div>
-                
-                   
+                <input type="text" name="guardianContact" class="guardian-contact-input">
+            </div>          
+          </div>     
         </div>
-
+        <!--STUDENT BACKGROUND CONTAINER END HERE-->
+        <!--BOYSTOWN CREDENTIALS CONTAINER-->
         <div class="container">
           <div class="studBackground-container">
               <span>BOYSTOWN CREDENTIALS</span>
           </div>
-      
-          <!-- Add Credential Button -->
-          <button class="add-credential-btn" onclick="showModal()">Add Credential</button>
 
-      
           <!-- Credentials Table -->
           <table class="table table-bordered mt-4">
               <thead>
                   <tr>
                       <th>List of Requirements</th>
-                      <th>Org Copy</th>
-                      <th>Photocopy</th>
-                      <th>Action</th>
+                      <th>Status</th>
                   </tr>
               </thead>
 
               <tbody id="credentials-table-body">
-                  <!-- Rows will be dynamically added here -->
+                <!--PSA -->
+                <tr>
+                  <td>Birth Certificate / PSA</td>
+                  <td>
+                    <select name="psastatus" class="form-select">
+                      <option value="complete">Complete</option>
+                      <option value="partial-original">Partial (Original)</option>
+                      <option value="partial-photocopy">Partial (Photocopy)</option>
+                      <option value="pending">Pending</option>
+                    </select>
+                  </td>
+                </tr>
+
+                <!--BAPTISMAL CERTIFICATE-->
+                <tr>
+                  <td>Baptismal Certificate</td>
+                  <td>
+                    <select name="baptismalstatus" class="form-select">
+                      <option value="complete">Complete</option>
+                      <option value="partial-original">Partial (Original)</option>
+                      <option value="partial-photocopy">Partial (Photocopy)</option>
+                      <option value="pending">Pending</option>
+                    </select>
+                  </td>
+                </tr>
+
+                <!--CONFIRMATION CERTIFICATE-->
+                <tr>
+                  <td>Confirmation Certificate</td>
+                  <td>
+                    <select name="confirmationstatus" class="form-select">
+                      <option value="complete">Complete</option>
+                      <option value="partial-original">Partial (Original)</option>
+                      <option value="partial-photocopy">Partial (Photocopy)</option>
+                      <option value="pending">Pending</option>
+                    </select>
+                  </td>
+                </tr>
+
+                <!--GOOD MORAL CERTIFICATE-->
+                <tr>
+                  <td>Good Moral Certificate</td>
+                  <td>
+                    <select name="goodmoralstatus" class="form-select">
+                      <option value="complete">Complete</option>
+                      <option value="partial-original">Partial (Original)</option>
+                      <option value="partial-photocopy">Partial (Photocopy)</option>
+                      <option value="pending">Pending</option>
+                    </select>
+                  </td>
+                </tr>
+
+                <!--FORM138-->
+                <tr>
+                  <td>Form138</td>
+                  <td>
+                    <select name="form138status" class="form-select">
+                      <option value="complete">Complete</option>
+                      <option value="partial-original">Partial (Original)</option>
+                      <option value="partial-photocopy">Partial (Photocopy)</option>
+                      <option value="pending">Pending</option>
+                    </select>
+                  </td>
+                </tr>
+
+                <!--CERTIFICATE OF INDIGENCY OR CERTIFICATE OF NON-EMPLOYMENT-->
+                <tr>
+                  <td>Certificate of Indigency or Certificate of Non-employment</td>
+                  <td>
+                    <select name="indigencystatus" class="form-select">
+                      <option value="complete">Complete</option>
+                      <option value="partial-original">Partial (Original)</option>
+                      <option value="partial-photocopy">Partial (Photocopy)</option>
+                      <option value="pending">Pending</option>
+                    </select>
+                  </td>
+                </tr>
+
+                <!--PARENTS PHILHEALTH MDR-->
+                <tr>
+                  <td>Parent's Philhealth MDR</td>
+                  <td>
+                    <select name="philhealthstatus" class="form-select">
+                      <option value="complete">Complete</option>
+                      <option value="partial-original">Partial (Original)</option>
+                      <option value="partial-photocopy">Partial (Photocopy)</option>
+                      <option value="pending">Pending</option>
+                    </select>
+                  </td>
+                </tr>
+
+                <!--KASUNDUAN OR CONTRACT-->
+                <tr>
+                  <td>KASUNDUAN/ CONTRACT</td>
+                  <td>
+                    <select name="kasunduansatus" class="form-select">
+                      <option value="complete">Complete</option>
+                      <option value="pending">Pending</option>
+                    </select>
+                  </td>
+                </tr>
+
+                <!--STUDENT PHOTOS-->
+                <tr>
+                  <td>STUDENT PICTURES (1X1,2X2)</td>
+                  <td>
+                    <select name="photoStatus" class="form-select">
+                      <option value="complete">Complete</option>
+                      <option value="partial-original">Partial (1X1)</option>
+                      <option value="partial-photocopy">Partial (2X2)</option>
+                      <option value="pending">Pending</option>
+                    </select>
+                  </td>
+                </tr>
+
+                <!--MEDICAL RECORD-->
+                <tr>
+                  <td>Student Medical Record</td>
+                  <td>
+                    <select name="medicalrecordstatus" class="form-select">
+                      <option value="complete">Complete</option>
+                      <option value="pending">Pending</option>
+                    </select>
+                  </td>
+                </tr>
+
+
               </tbody>
 
           </table>
@@ -221,51 +340,63 @@
           <!-- School Year and Family Saint Section -->
           <div class="row justify-content-center mt-4">
           <!-- School Year Input -->
-          <div class="col-md-4 text-center">
-            <label for="schoolYear" class="form-label">School Year</label>
-            <input type="text" class="schoolYear-input">
-          </div>
+            <div class="col-md-4 text-center">
+              <label for="schoolYear" class="form-label">School Year</label>
+              <input type="text" name="schoolYear" class="schoolYear-input">
+            </div>
 
           <!-- Family Saint Dropdown -->
 
-          <div class="col-md-4 text-center">
-            <label for="familySaint" class="form-label">Family Saint</label>
-            <select id="familySaint" class="form-select text-center">
-                <option selected disabled>Select Family Saint</option>
-                <!-- Options will be populated dynamically -->
-            </select>
-          </div>
+            <div class="col-md-4 text-center">
+              <label for="familySaint" class="form-label">Family Saint</label>
+              <select id="familySaint" name="familySaint" class="form-select text-center">
+                  <option selected disabled>Select Family Saint</option>
+                  <!-- Options will be populated dynamically -->
+              </select>
+            </div>
 
           
-          <div class="col-12 text-center mt-3">
-            <button type="submit" class="submitbtn">Submit</button>
-          </div>
+            <div class="col-12 text-center mt-3">
+              <button type="submit" class="submitbtn" disabled>Submit</button>
+            </div>
+
+            <!-- Toast Notifications -->
+            <div class="position-fixed p-3" style="top: 0; right: 0;">
+              <div 
+                id="toastMessage"
+                class="custom-toast show"
+                th:if="${successMessage != null or errorMessage != null}"
+                th:classappend="${errorMessage != null} ? ' bg-danger' : ' bg-success'">
+              
+                <div class="custom-toast-header">
+                  <strong th:text="${successMessage != null} ? 'Success' : 'Error'">Message</strong>
+                  <button type="button" class="close-btn" onclick="closeToast(this)">&times;</button>
+                </div>
+              
+                <div class="custom-toast-body">
+                  <span th:if="${successMessage != null}" th:text="${successMessage}">Student successfully added!</span>
+                  <span th:if="${errorMessage != null}" th:text="${errorMessage}">Something went wrong!</span>
+                </div>
+              
+              </div>
+            </div>
+            
+            
+
+            
+            
+          
+
+
+
 
 
         </div>
-
-      </div>
-      
-            <!-- Modal for entering the credential name -->
-            <div class="modal fade" id="credentialModal" tabindex="-1" aria-labelledby="credentialModalLabel" aria-hidden="true">
-                <div class="modal-dialog">
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            <h5 class="modal-title" id="credentialModalLabel">Enter Credential Name</h5>
-                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                        </div>
-                        <div class="modal-body">
-                            <input type="text" id="credentialNameInput" class="form-control" placeholder="Enter credential name">
-                        </div>
-                        <div class="modal-footer">
-                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                            <button type="button" class="btn btn-primary" onclick="addCredentialRow()">Add Credential</button>
-                        </div>
-                    </div>
-                </div>
-            </div>     
-      </div>
+        <!--BOYSTOWN CREDENTIAL CONTAINER ENDS HERE-->
+        </form>
+      </div>                 
     </div>
+  </div>
 
     
 
