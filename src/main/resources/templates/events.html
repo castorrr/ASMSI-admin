@@ -469,7 +469,7 @@
                 document.getElementById('scannerInput').focus();
             }
         }
-        
+
         // Update student display
         function updateStudentDisplay(student) {
             document.getElementById('studentName').textContent = student.name || '-';
@@ -483,78 +483,68 @@
         }
         
         // Submit attendance - FIXED CSRF ISSUE
-        async function submitAttendance() {
-            if (!currentStudent || !currentEventId) {
-                Swal.fire({
-                    icon: 'error',
-                    title: 'Cannot Submit',
-                    text: 'No student selected or event not set'
-                });
-                return;
-            }
-            
-            try {
-                const token = getCsrfToken();
-                const header = getCsrfHeader();
-                const user = getCurrentUser();
-                
-                const attendanceData = {
-                    eventId: currentEventId,
-                    studentId: currentStudent.idNumber,
-                    name: currentStudent.name,
-                    lrn: currentStudent.lrn,
-                    campus: currentStudent.campus,
-                    date: new Date().toISOString().split('T')[0],
-                    timeIn: new Date().toLocaleTimeString('en-US', {hour12: false}),
-                    recordedBy: user
-                };
-                
-                console.log('Submitting attendance:', attendanceData);
-                console.log('Using CSRF token:', token);
-                console.log('Using header:', header);
-                
-                const response = await fetch('/api/attendance/submit', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        [header]: token
-                    },
-                    body: JSON.stringify(attendanceData)
-                });
-                
-                console.log('Response status:', response.status);
-                
-                if (!response.ok) {
-                    const error = await response.json().catch(() => ({}));
-                    throw new Error(error.message || `Server returned ${response.status}`);
-                }
-                
-                const result = await response.json();
-                console.log('Submission result:', result);
-                
-                Swal.fire({
-                    icon: 'success',
-                    title: 'Success!',
-                    text: `Attendance recorded for ${currentStudent.name}`,
-                    timer: 2000,
-                    showConfirmButton: false
-                });
-                
-                await fetchAttendanceLogs(currentStudent.idNumber);
-                resetAttendanceForm();
-                
-            } catch (error) {
-                console.error('Submission error:', error);
-                Swal.fire({
-                    icon: 'error',
-                    title: 'Submission Failed',
-                    text: error.message.includes('Forbidden') 
-                        ? 'Session expired. Please refresh the page and try again.'
-                        : error.message,
-                    footer: 'Check console for details'
-                });
-            }
+      // Submit attendance to event_attendance table
+async function submitAttendance() {
+    if (!currentStudent || !currentEventId || !currentEventName) {
+        Swal.fire({
+            icon: 'error',
+            title: 'Cannot Submit',
+            text: 'No student selected or event not set'
+        });
+        return;
+    }
+
+    try {
+        const attendanceData = {
+            eventId: currentEventId,
+            eventName: currentEventName,
+            studentId: currentStudent.idNumber,
+            name: currentStudent.name,
+            lrn: currentStudent.lrn,
+            campus: currentStudent.campus,
+            familySaint: currentStudent.familySaint,
+            batchNumber: currentStudent.batchNumber,
+            imageUrl: currentStudent.imageUrl,
+            date: new Date().toISOString().split('T')[0],
+            timeIn: new Date().toLocaleTimeString('en-US', { hour12: false }),
+            recordedBy: getCurrentUser()
+        };
+
+        const response = await fetch('/api/event-attendance/submit', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                [getCsrfHeader()]: getCsrfToken()  // (Optional) Add CSRF header if needed
+            },
+            body: JSON.stringify(attendanceData)
+        });
+
+        if (!response.ok) {
+            const errorText = await response.text();
+            throw new Error(errorText || 'Submission failed');
         }
+
+        Swal.fire({
+            icon: 'success',
+            title: 'Success!',
+            text: 'Attendance recorded successfully!',
+            timer: 2000,
+            showConfirmButton: false
+        });
+
+        resetAttendanceForm();
+
+    } catch (error) {
+        Swal.fire({
+            icon: 'error',
+            title: 'Submission Failed',
+            text: error.message,
+            footer: 'Please try again'
+        });
+        console.error('Submission error:', error);
+    }
+}
+
         
         // Fetch attendance logs
         async function fetchAttendanceLogs(studentId) {
