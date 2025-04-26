@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>User Profile</title>
+
+  <!-- Shared and Page-Specific Styles -->
+  <link rel="stylesheet" th:href="@{/css/header.css}">
+  <link rel="stylesheet" th:href="@{/css/profile.css}">
+  <!-- If you use FontAwesome, include its CSS (or another icon library) -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" 
+        integrity="sha512-papKx7+gTrPEfgl+Zn6s7J8ikxg59dQO4Z02IlfeYPZH3ekqNMqX0+RYPw9ENX8Y+qqw0P3BsJ2E/m9zdC2UPA==" 
+        crossorigin="anonymous" referrerpolicy="no-referrer" />
+
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+    }
+    section {
+      padding: 30px 20px;
+    }
+    .alert {
+      padding: 10px;
+      margin: 10px 0;
+      border-radius: 4px;
+    }
+    .alert-success {
+      background-color: #d4edda;
+      color: #155724;
+      border: 1px solid #c3e6cb;
+    }
+    .alert-danger {
+      background-color: #f8d7da;
+      color: #721c24;
+      border: 1px solid #f5c6cb;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Header Fragment (UNTOUCHED) -->
+  <div th:replace="fragments/header :: header(${username})"></div>
+
+  <!-- Profile Section -->
+  <section class="profile-container">
+    <!-- Alert Messages -->
+    <div th:if="${success}" class="alert alert-success" th:text="${success}"></div>
+    <div th:if="${error}" class="alert alert-danger" th:text="${error}"></div>
+    
+    <div class="profile-header">
+      <!-- Updated profile-image container -->
+      <div class="profile-image">
+        <!-- Display current profile image or default if missing -->
+        <img id="profileImg" th:src="${user.profileImageUrl != null} ? ${user.profileImageUrl} : '/images/default-profile.png'" 
+             alt="Profile Picture" />
+        <!-- Camera icon overlay inside the picture container -->
+        <label for="profileImage" class="upload-overlay">
+          <i class="fa fa-camera"></i>
+        </label>
+        <!-- Hidden file input for profile image upload -->
+        <form id="profileImageForm" th:action="@{/profile/upload-image}" method="post" enctype="multipart/form-data" style="display: none;">
+          <input type="hidden" name="_csrf" th:value="${_csrf.token}" />
+          <input type="file" id="profileImage" name="profileImage" accept="image/*" style="display: none;"
+               onchange="uploadProfileImage()">
+        </form>
+        <p class="user-role" th:text="${user.role}">Role</p>
+      </div>
+      
+      <div class="profile-name">
+        <h2 th:text="${user.name}">Full Name</h2>
+
+        <div class="info-row">
+          <div class="info-block">
+            <label for="username">Username</label>
+            <input type="text" id="username" th:value="${user.username}" readonly>
+          </div>
+          <div class="info-block">
+            <label for="email">Email</label>
+            <input type="email" id="email" name="email" th:value="${user.email}" readonly>
+          </div>
+        </div>
+        <div class="account-approval">
+          <p>
+            Account approved by 
+            <strong th:text="${user.adminId != null} ? 'Admin ' + ${user.adminId} : 'Pending Approval'"></strong>
+            on 
+            <strong th:text="${user.dateApproved != null} ? ${user.dateApproved} : 'Not Approved Yet'"></strong>.
+          </p>
+        </div>
+      </div>
+      
+      <div class="profile-edit">
+        <button class="edit-btn" type="button" onclick="openEditModal()">Edit</button>
+        <form th:action="@{/logout}" method="post" class="logout-form">
+          <input type="hidden" name="_csrf" th:value="${_csrf.token}" />
+          <button type="submit" class="logout-btn">Logout</button>
+        </form>
+      </div>
+    </div>
+  </section>
+
+  <!-- EDIT PROFILE MODAL -->
+  <div id="editProfileModal" class="modal-overlay">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3>Edit Personal Info</h3>
+        <!-- Close button: circular blue button -->
+        <button class="close-btn" type="button" onclick="closeEditModal()">&times;</button>
+      </div>
+      <form class="edit-form" th:action="@{/profile/update}" method="post" enctype="multipart/form-data">
+        <!-- CSRF token for Spring Security -->
+        <input type="hidden" name="_csrf" th:value="${_csrf.token}" />
+        
+        <!-- Full Name Field -->
+        <div class="form-group">
+          <label for="editName">Full Name</label>
+          <input type="text" id="editName" name="name" th:value="${user.name}" required>
+        </div>
+        
+        <!-- Username Field (editable) -->
+        <div class="form-group">
+          <label for="editUsername">Username</label>
+          <input type="text" id="editUsername" name="username" th:value="${user.username}" required>
+        </div>
+  
+        <!-- Email Field (editable) -->
+        <div class="form-group">
+          <label for="editEmail">Email</label>
+          <input type="email" id="editEmail" name="email" th:value="${user.email}" required>
+        </div>
+  
+        <!-- Password Update Fields -->
+        <div class="form-group">
+          <label for="currentPassword">Current Password</label>
+          <input type="password" id="currentPassword" name="currentPassword">
+          <small class="form-text">Required to change password</small>
+        </div>
+        <div class="form-group">
+          <label for="newPassword">New Password</label>
+          <input type="password" id="newPassword" name="newPassword">
+          <small class="form-text">Leave blank to keep current password</small>
+        </div>
+        <div class="form-group">
+          <label for="confirmPassword">Confirm Password</label>
+          <input type="password" id="confirmPassword" name="confirmPassword">
+        </div>
+        
+        <!-- Save Button -->
+        <button type="submit" class="save-btn">Save</button>
+      </form>
+    </div>
+  </div>
+
+  <!-- JavaScript to control modals and image upload -->
+  <script>
+    function openEditModal() {
+      document.getElementById("editProfileModal").style.display = "flex";
+    }
+    
+    function closeEditModal() {
+      document.getElementById("editProfileModal").style.display = "none";
+    }
+    
+    // Close modal if user clicks outside modal box
+    window.onclick = function(event) {
+      const modal = document.getElementById("editProfileModal");
+      if (event.target === modal) {
+        modal.style.display = "none";
+      }
+    }
+
+    // Profile Image Upload function
+    function uploadProfileImage() {
+      const fileInput = document.getElementById('profileImage');
+      if (fileInput.files && fileInput.files[0]) {
+        const reader = new FileReader();
+        
+        // Preview the image before uploading
+        reader.onload = function(e) {
+          document.getElementById('profileImg').src = e.target.result;
+        };
+        reader.readAsDataURL(fileInput.files[0]);
+        
+        // Submit the form automatically
+        document.getElementById('profileImageForm').submit();
+      }
+    }
+    
+    // Event listener for the file input
+    document.addEventListener("DOMContentLoaded", function() {
+      const profileImageInput = document.getElementById('profileImage');
+      const uploadOverlay = document.querySelector('.upload-overlay');
+      
+      uploadOverlay.addEventListener('click', function() {
+        profileImageInput.click();
+      });
+      
+      // Show the modal if there's an error (so the user doesn't lose form data)
+      if (document.querySelector(".alert-danger")) {
+        openEditModal();
+      }
+    });
+  </script>
+</body>
+</html>

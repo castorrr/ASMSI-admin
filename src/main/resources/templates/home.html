@@ -2,19 +2,11 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
   <head>
     <meta charset="UTF-8" />
-    <title>Home</title>
-
+    <title>Dashboard | Student Manager</title>
     <!-- Bootstrap CSS -->
-    <link
-      rel="stylesheet"
-      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
-    />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" />
     <!-- Bootstrap Icons -->
-    <link
-      rel="stylesheet"
-      href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css"
-    />
-
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" />
     <!-- Custom CSS -->
     <link rel="stylesheet" th:href="@{/css/header.css}" />
     <link rel="stylesheet" th:href="@{/css/sidebar.css}" />
@@ -27,20 +19,148 @@
     <div class="container-fluid">
       <div class="row">
         <!-- Sidebar Section -->
-      
-          <div th:replace="fragments/sidebar :: sidebar(role=${role})"></div>
-    
+        <div th:replace="fragments/sidebar :: sidebar(role=${role})"></div>
 
-        <!-- Main Content Section -->
-        <div class="col-md-9 p-4">
-          <h1>Welcome to the Home Page</h1>
-          <p>
-            This is your main content area. Use this space for displaying
-            content, updates, or anything relevant.
-          </p>
+        <!-- Main Dashboard Content - Modified to use col-md-10 instead of col-md-9 -->
+        <div class="col-md-10 home-content">
+          <h1 class="mb-4">Dashboard</h1>
 
-          <div class="alert alert-info">
-            <strong>Reminder:</strong> Don’t forget to check your messages!
+          <div class="row">
+            <!-- Left Section - Students (50% width) -->
+            <div class="col-md-6 mb-4">
+              <div class="d-flex justify-content-between align-items-center mb-3">
+                <h2>Students</h2>
+                <a th:href="@{/student-info}" class="btn btn-primary">More</a>
+              </div>
+              
+              <!-- Dashboard Metrics -->
+              <section id="dashboard-info">
+                <div class="row g-4">
+                  <!-- Total Students -->
+                  <div class="col-md-6">
+                    <div class="info-box bg-primary">
+                      <i class="bi bi-people-fill fs-1 mb-2"></i>
+                      <div>Total Students</div>
+                      <h2 th:text="${totalStudents}">150</h2>
+                    </div>
+                  </div>
+                  <!-- Freshman Passers -->
+                  <div class="col-md-6">
+                    <div class="info-box bg-success">
+                      <i class="bi bi-person-check-fill fs-1 mb-2"></i>
+                      <div>Freshman Passers</div>
+                      <h2 th:text="${enrolledStudents}">120</h2>
+                    </div>
+                  </div>
+                </div>
+              </section>
+
+              <!-- Recently Enrolled Students -->
+              <section id="recent-students" class="mt-4">
+                <h4>Recently Enrolled</h4>
+                <table class="table table-striped mt-3">
+                  <thead>
+                    <tr>
+                      <th>Picture</th>
+                      <th>LRN</th>
+                      <th>Name</th>
+                      <th>ID Number</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <!-- Dynamic data from recent students -->
+                    <tr th:each="student : ${recentStudents}">
+                      <td>
+                        <img th:src="${student.imageUrl != null ? student.imageUrl : '/images/default-profile.png'}" 
+                            alt="Student Image" width="40" height="40" class="rounded-circle">
+                      </td>
+                      <td th:text="${student.lrn}">LRN001</td>
+                      <td th:text="${student.name}">John Doe</td>
+                      <td th:text="${student.idNumber}">ID001</td>
+                    </tr>
+                    <!-- Fallback to dummy data if no recent students -->
+                    <tr th:if="${#lists.isEmpty(recentStudents)}">
+                      <td><img src="/images/default-profile.png" alt="Student Image" width="40" height="40" class="rounded-circle"></td>
+                      <td>LRN001</td>
+                      <td>John Doe</td>
+                      <td>ID001</td>
+                    </tr>
+                    <tr th:if="${#lists.isEmpty(recentStudents)}">
+                      <td><img src="/images/default-profile.png" alt="Student Image" width="40" height="40" class="rounded-circle"></td>
+                      <td>LRN002</td>
+                      <td>Jane Smith</td>
+                      <td>ID002</td>
+                    </tr>
+                    <tr th:if="${#lists.isEmpty(recentStudents)}">
+                      <td><img src="/images/default-profile.png" alt="Student Image" width="40" height="40" class="rounded-circle"></td>
+                      <td>LRN003</td>
+                      <td>Alice Johnson</td>
+                      <td>ID003</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </section>
+            </div>
+            
+            <!-- Right Section - Events (50% width) -->
+            <div class="col-md-6">
+              <div class="d-flex justify-content-between align-items-center mb-3">
+                <h2>Upcoming Events</h2>
+                <a th:href="@{/events}" class="btn btn-primary">More</a>
+              </div>
+              
+              <section id="events-section">
+                <div class="events-container">
+                  <!-- Dynamic Event Cards - Vertical Layout -->
+                  <div class="event-card-vertical mb-3" th:each="event : ${upcomingEvents}">
+                    <div class="card h-100">
+                      <div class="card-body">
+                        <h5 class="card-title" th:text="${event.name}">Event Name</h5>
+                        <p class="card-text">
+                          <small class="text-muted" th:text="${#temporals.format(event.dateTime, 'MMM dd, yyyy | h:mm a')}">Event Date</small>
+                        </p>
+                        <p class="card-text" th:text="'Venue: ' + ${event.venue}">Venue</p>
+                      </div>
+                    </div>
+                  </div>
+                  
+                  <!-- Fallback to dummy data if no events -->
+                  <div class="event-card-vertical mb-3" th:if="${#lists.isEmpty(upcomingEvents) || upcomingEvents.size() < 1}">
+                    <div class="card h-100">
+                      <div class="card-body">
+                        <h5 class="card-title">Orientation</h5>
+                        <p class="card-text">
+                          <small class="text-muted">Sep 01, 2025 | 9:00 AM</small>
+                        </p>
+                        <p class="card-text">Venue: Main Auditorium</p>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="event-card-vertical mb-3" th:if="${#lists.isEmpty(upcomingEvents) || upcomingEvents.size() < 2}">
+                    <div class="card h-100">
+                      <div class="card-body">
+                        <h5 class="card-title">Exam Week</h5>
+                        <p class="card-text">
+                          <small class="text-muted">Oct 15, 2025 | 8:00 AM</small>
+                        </p>
+                        <p class="card-text">Venue: Exam Hall</p>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="event-card-vertical mb-3" th:if="${#lists.isEmpty(upcomingEvents) || upcomingEvents.size() < 3}">
+                    <div class="card h-100">
+                      <div class="card-body">
+                        <h5 class="card-title">Sports Day</h5>
+                        <p class="card-text">
+                          <small class="text-muted">Nov 20, 2025 | 10:00 AM</small>
+                        </p>
+                        <p class="card-text">Venue: Sports Complex</p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </section>
+            </div>
           </div>
         </div>
       </div>
@@ -49,4 +169,4 @@
     <!-- Bootstrap JS -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
   </body>
-</html>
+</html> 

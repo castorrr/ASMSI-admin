@@ -4,63 +4,40 @@
   class="navbar navbar-expand-lg shadow-sm px-3"
   style="font-family: 'Inter', sans-serif;"
 >
-  <!-- Logo & Title -->
-  <a class="navbar-brand d-flex align-items-center" href="#">
+  <!-- Logo & Title - wrapped in a link to /home -->
+  <a class="navbar-brand d-flex align-items-center" th:href="@{/home}">
     <img
       src="/images/logo.png"
       alt="Sisters of Mary Schools Logo"
-      
     />
-    <div class="line">
-      
-      <span >
-      
-      </span>
-      
-
-    </div>
+    <div class="line"></div>
     <div class="d-flex flex-column">
       <span class="fw-semibold">Sisters of Mary Schools - Cebu Philippines</span>
       <span style="color: white; font-size: 1.5rem;">
         ADMINISTRATIVE MANAGEMENT SYSTEM
       </span>
-      
-
     </div>
   </a>
 
   <!-- Right Side (User Avatar & Messages) -->
   <div class="ms-auto d-flex align-items-center">
-    <!-- Logout Button -->
-    <form th:action="@{/logout}" method="post" class="me-3">
-      <input type="hidden" name="_csrf" th:value="${_csrf.token}" />
-      <button type="submit" class="btn btn-danger btn-sm">Logout</button>
-    </form>
-
     <!-- Message Icon -->
     <a href="#" class="me-3 text-dark"
-    title="Messages"
-    style="text-decoration: none;">
+       title="Messages"
+       style="text-decoration: none;">
       <i class="bi bi-envelope fs-4"
-      style="font-size: 1.5rem; color: #ffffff;"></i>
+         style="font-size: 1.5rem; color: #ffffff;"></i>
     </a>
 
     <!-- User Avatar & Name -->
     <div class="d-flex align-items-center">
-      <span
-        class="me-1 fw-bold"
-        th:text="${username}"
-        style="font-weight: bold; margin-right: 3px;"
-      >
-        John Doe
-      </span>
-      <img
-        src="/images/logo.png"
-        alt="Avatar"
-        style="border-radius: 12px; width: 50px; height: 50px; margin-right: 0px;"
-      />
+      <span class="me-1 fw-bold" th:text="${username}" style="font-weight: bold; margin-right: 3px;">John Doe</span>
+      <a th:href="@{/profile}">
+        <!-- Display user profile picture if available, otherwise use default -->
+        <img th:src="${userProfileImage != null} ? ${userProfileImage} : '/images/default-profile.png'" 
+             alt="Avatar" 
+             style="border-radius: 12px; width: 50px; height: 50px; cursor: pointer; object-fit: cover;" />
+      </a>
     </div>
-    
-    
   </div>
 </div>

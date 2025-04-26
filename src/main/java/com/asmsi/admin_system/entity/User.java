@@ -37,9 +37,7 @@ public class User implements UserDetails {
     @Column(nullable = false)
     private String role; // "ADMIN", "USER"
 
-
     @Column(nullable = false)
-
     @Builder.Default
     private boolean isApproved = false; // Default false, admin will approve
 
@@ -53,19 +51,29 @@ public class User implements UserDetails {
     @Column(name = "token_expiry")
     private LocalDateTime tokenExpiry;
 
+    // New field for storing the profile image URL or path
+    @Column(name = "profile_image_url")
+    private String profileImageUrl;
+
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return List.of(new SimpleGrantedAuthority("ROLE_" + role.toUpperCase()));
     }
   
     @Override
-    public boolean isAccountNonExpired() { return true; }
+    public boolean isAccountNonExpired() { 
+        return true; 
+    }
 
     @Override
-    public boolean isAccountNonLocked() { return true; }
+    public boolean isAccountNonLocked() { 
+        return true; 
+    }
 
     @Override
-    public boolean isCredentialsNonExpired() { return true; }
+    public boolean isCredentialsNonExpired() { 
+        return true; 
+    }
 
     @Override
     public boolean isEnabled() { 

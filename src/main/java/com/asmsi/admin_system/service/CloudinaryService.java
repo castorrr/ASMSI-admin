@@ -7,7 +7,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.Map;
+import java.util.UUID;
 
 @Service
 public class CloudinaryService {
@@ -25,7 +27,20 @@ public class CloudinaryService {
     }
 
     public String uploadImage(MultipartFile file) throws IOException {
-        Map<String, Object> uploadResult = cloudinary.uploader().upload(file.getBytes(), ObjectUtils.emptyMap());
-        return uploadResult.get("url").toString();
+        // Generate a unique public ID for the image
+        String publicId = "profile_" + UUID.randomUUID().toString();
+        
+        // Create upload parameters
+        Map<String, Object> params = new HashMap<>();
+        params.put("public_id", publicId);
+        params.put("folder", "profile-images"); // Optional: store in a specific folder
+        params.put("overwrite", true);
+        params.put("resource_type", "image");
+        
+        // Upload to Cloudinary
+        Map<String, Object> uploadResult = cloudinary.uploader().upload(file.getBytes(), params);
+        
+        // Return the secure URL of the uploaded image
+        return uploadResult.get("secure_url").toString();
     }
 }

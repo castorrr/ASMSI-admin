@@ -3,21 +3,64 @@
   padding: 30px;
 }
 
-/* Welcome Message */
+/* Dashboard Heading */
 .home-content h1 {
   font-size: 2rem;
   font-weight: bold;
   color: #333;
 }
 
-/* Info Box */
+/* Info Boxes */
 .info-box {
-  background: #007bff;
   color: white;
   padding: 20px;
-  border-radius: 8px;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-  margin-top: 20px;
+  border-radius: 12px;
   text-align: center;
-  font-size: 1.2rem;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.bg-primary {
+  background-color: #007bff !important;
+}
+
+.bg-success {
+  background-color: #28a745 !important;
+}
+
+.info-box h2 {
+  font-weight: bold;
+  margin-top: 10px;
+}
+
+/* Section Headings */
+h2 {
+  margin-top: 20px;
+  font-size: 1.75rem;
+  color: #333;
+}
+
+/* Students Table */
+table.table {
+  margin-top: 15px;
+}
+
+/* Event Card Styling - Vertical */
+.events-container {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.event-card-vertical {
+  transition: transform 0.2s ease;
+  cursor: pointer;
+}
+
+.event-card-vertical:hover {
+  transform: translateX(5px);
+}
+
+/* Alert Styling */
+.alert {
+  margin-top: 20px;
 }
