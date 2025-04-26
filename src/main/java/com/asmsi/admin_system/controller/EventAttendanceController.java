@@ -4,6 +4,7 @@ import com.asmsi.admin_system.entity.EventAttendance;
 import com.asmsi.admin_system.repository.EventAttendanceRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/event-attendance")
@@ -16,5 +17,10 @@ public class EventAttendanceController {
     public String submitEventAttendance(@RequestBody EventAttendance attendance) {
         eventAttendanceRepository.save(attendance);
         return "Event Attendance Saved Successfully!";
+    }
+
+    @GetMapping("/logs/{studentId}")
+    public List<EventAttendance> getAttendanceLogs(@PathVariable String studentId) {
+        return eventAttendanceRepository.findByStudentId(studentId);
     }
 }

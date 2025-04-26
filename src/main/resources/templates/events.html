@@ -549,22 +549,27 @@ async function submitAttendance() {
         // Fetch attendance logs
         async function fetchAttendanceLogs(studentId) {
             try {
-                const response = await fetch(`/api/attendance/logs/${encodeURIComponent(studentId)}`);
+                const response = await fetch(`/api/event-attendance/logs/${encodeURIComponent(studentId)}`);
+
                 if (!response.ok) throw new Error('Failed to fetch logs');
                 
                 const logs = await response.json();
                 const logsTable = document.getElementById('attendanceLogs');
                 logsTable.innerHTML = '';
                 
-                logs.slice(0, 5).forEach(log => {
-                    const row = document.createElement('tr');
-                    row.innerHTML = `
-                        <td>${log.date || '-'}</td>
-                        <td>${log.timeIn || '-'}</td>
-                        <td>${log.eventName || '-'}</td>
-                    `;
-                    logsTable.appendChild(row);
-                });
+                if (logs.length === 0) {
+            logsTable.innerHTML = '<tr><td colspan="3" class="text-center">No attendance records found</td></tr>';
+        } else {
+            logs.slice(0, 5).forEach(log => {
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>${log.date || '-'}</td>
+                    <td>${log.timeIn || '-'}</td>
+                    <td>${log.eventName || '-'}</td>
+                `;
+                logsTable.appendChild(row);
+            });
+        }
             } catch (error) {
                 console.error('Error loading logs:', error);
             }
