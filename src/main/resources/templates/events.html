@@ -178,48 +178,40 @@
     </div>
 
     <!-- Attendance Modal -->
-    <div class="modal fade" id="attendanceModal" tabindex="-1" aria-labelledby="attendanceModalLabel" aria-hidden="true">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="attendanceModalLabel">Event Attendance</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body">
-                    <form id="attendanceForm">
-                        <div class="mb-3">
-                            <label for="completeName" class="form-label">Complete Name</label>
-                            <input type="text" class="form-control" id="completeName" required>
-                        </div>
-                        <div class="mb-3">
-                            <label for="batch" class="form-label">Batch</label>
-                            <input type="text" class="form-control" id="batch" required>
-                        </div>
-                        <div class="mb-3">
-                            <label for="familySaint" class="form-label">Family Saint</label>
-                            <input type="text" class="form-control" id="familySaint" required>
-                        </div>
-                        <div class="mb-3">
-                            <label for="idNumber" class="form-label">ID Number</label>
-                            <input type="text" class="form-control" id="idNumber" required>
-                        </div>
-                        <div class="mb-3">
-                            <label for="picture" class="form-label">Picture</label>
-                            <input type="file" class="form-control" id="picture" accept="image/*" required>
-                        </div>
-                        <div class="mb-3">
-                            <label for="timeIn" class="form-label">Time In</label>
-                            <input type="datetime-local" class="form-control" id="timeIn" required>
-                        </div>
-                        <div class="modal-footer">
-                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-                            <button type="submit" class="btn btn-primary">Submit Attendance</button>
-                        </div>
-                    </form>
-                </div>
-            </div>
+<div class="modal fade" id="attendanceModal" tabindex="-1" aria-labelledby="attendanceModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="attendanceModalLabel">Event Attendance</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
+        <div class="modal-body">
+            <input type="text" id="scannerInput" class="form-control" autocomplete="off" placeholder="Scan here" style="opacity: 0; height: 0; position: absolute;" />
+
+          <form id="attendanceForm">
+            <div class="mb-3 text-center">
+              <img id="previewPhoto" src="/images/default-profile.png" alt="Student Photo" class="rounded" style="width: 400px; height: 400px; object-fit: cover;" />
+            </div>
+            <p><strong>LRN:</strong> <span id="lrn">-</span></p>
+            <p><strong>ID Number:</strong> <span id="idNumber">-</span></p>
+            <p><strong>Name:</strong> <span id="name">-</span></p>
+            <p><strong>Campus:</strong> <span id="campus">-</span></p>
+            <p><strong>Family Saint:</strong> <span id="familySaint">-</span></p>
+            <p><strong>Batch Number:</strong> <span id="batchNumber">-</span></p>
+           
+  
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+              <button type="submit" class="btn btn-primary">Confirm Attendance</button>
+            </div>
+          </form>
+        </div>
+      </div>
     </div>
+  </div>
+  
+  
+  
 
     <!-- Bootstrap JS -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
@@ -382,10 +374,7 @@
                 document.getElementById('attendanceModalLabel').textContent = 
                     `Attendance for ${eventName}`;
                 
-                // Set current time for time-in
-                const now = new Date();
-                document.getElementById('timeIn').value = 
-                    now.toISOString().slice(0, 16).replace('T', ' ');
+                
                 
                 // Show the modal
                 attendanceModal.show();
@@ -420,5 +409,94 @@
         });
     });
 </script>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const scannerInput = document.getElementById('scannerInput');
+        const lrnEl = document.getElementById('lrn');
+        const idEl = document.getElementById('idNumber');
+        const nameEl = document.getElementById('name');
+        const campusEl = document.getElementById('campus');
+        const saintEl = document.getElementById('familySaint');
+        const batchEl = document.getElementById('batchNumber');
+        const previewEl = document.getElementById('previewPhoto');
+    
+        let currentEventId = null;
+    
+        // Focus the scanner input when modal shows
+        const modalEl = document.getElementById('attendanceModal');
+        modalEl.addEventListener('shown.bs.modal', function () {
+            scannerInput.focus();
+        });
+    
+        // Listen for scan input
+        scannerInput.addEventListener('change', function () {
+            const scannedValue = scannerInput.value.trim();
+            scannerInput.value = ''; // Clear for next scan
+    
+            if (!scannedValue) return;
+    
+            console.log("Scanned code:", scannedValue);
+    
+            // 🔁 Replace this fetch URL with your real API endpoint
+            fetch(`/api/students/${scannedValue}`)
+                .then(res => {
+                    if (!res.ok) throw new Error("Student not found");
+                    return res.json();
+                })
+                .then(student => {
+                    lrnEl.textContent = student.lrn;
+                    idEl.textContent = student.idNumber;
+                    nameEl.textContent = student.name;
+                    campusEl.textContent = student.campus;
+                    saintEl.textContent = student.familySaint;
+                    batchEl.textContent = student.batch;
+                    previewEl.src = student.pictureUrl || '/images/default-profile.png';
+                })
+                .catch(err => {
+                    alert("Student not found.");
+                    console.error(err);
+                });
+        });
+    
+        // Store clicked eventId
+        document.querySelectorAll('.clickable-card').forEach(card => {
+            card.addEventListener('click', function () {
+                currentEventId = this.getAttribute('data-id');
+            });
+        });
+    
+        // Attach event ID to form submit
+        document.getElementById('attendanceForm').addEventListener('submit', function (e) {
+            e.preventDefault();
+    
+            const data = {
+                eventId: currentEventId,
+                lrn: lrnEl.textContent,
+                idNumber: idEl.textContent,
+                name: nameEl.textContent,
+                campus: campusEl.textContent,
+                familySaint: saintEl.textContent,
+                batch: batchEl.textContent
+            };
+    
+            console.log("Submitting attendance:", data);
+    
+            fetch('/api/attendance', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(data)
+            }).then(res => {
+                if (!res.ok) throw new Error("Submission failed");
+                alert("Attendance recorded!");
+                bootstrap.Modal.getInstance(modalEl).hide();
+            }).catch(err => {
+                alert("Error submitting attendance");
+                console.error(err);
+            });
+        });
+    });
+    </script>
+    
 </body>
 </html>
