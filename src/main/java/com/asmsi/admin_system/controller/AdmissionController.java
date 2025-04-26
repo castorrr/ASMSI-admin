@@ -1,13 +1,19 @@
 package com.asmsi.admin_system.controller;
 
 import com.asmsi.admin_system.entity.AdmissionData;
+import com.asmsi.admin_system.entity.FinalStudent;
+import com.asmsi.admin_system.repository.FinalStudentRepository;
 import com.asmsi.admin_system.service.AdmissionService;
 import com.asmsi.admin_system.service.XmlParserHelper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+import java.time.LocalDate;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.util.List;
 
@@ -23,6 +29,7 @@ public class AdmissionController {
         model.addAttribute("activePage", "admission");
         return "admission";
     }
+    
 
     // Upload Database Page
     @GetMapping("/upload-database")
@@ -56,6 +63,142 @@ public class AdmissionController {
         return "upload-database";
     }
 
-   
+    //HANDLE SAVING FORM TO DATABASE
+    @Autowired
+    private FinalStudentRepository finalStudentRepository;
+
+    @PreAuthorize("hasRole('ADMIN')")
+    @PostMapping("/submit")
+    public String submitForm(@RequestParam String lastName, 
+                             @RequestParam String firstName, 
+                             @RequestParam String middleName,
+                             @RequestParam String suffix, 
+                             @RequestParam String barangay,
+                             @RequestParam String municipality, 
+                             @RequestParam String province,
+                             @RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate birthdate, 
+                             @RequestParam String birthPlace,
+                             @RequestParam int age,
+                             @RequestParam String examPlace,
+                             @RequestParam String idNumber,
+                             @RequestParam String lrn,
+                             @RequestParam String religion, 
+                             @RequestParam String gender, 
+                             @RequestParam String citizenship,
+                             @RequestParam String elementarySchool, 
+                             @RequestParam String elemAddress,
+                             @RequestParam String fatherName,
+                             @RequestParam String fatherOccupation,
+                             @RequestParam String fatherContact,
+                             @RequestParam String motherName,
+                             @RequestParam String motherOccupation,
+                             @RequestParam String motherContact,
+                             @RequestParam String guardianName,
+                             @RequestParam String guardianRelationship,
+                             @RequestParam String guardianOccupation,
+                             @RequestParam String guardianContact,
+                             @RequestParam String psastatus,
+                             @RequestParam String baptismalstatus,
+                             @RequestParam String confirmationstatus,
+                             @RequestParam String goodmoralstatus,
+                             @RequestParam String form138status,
+                             @RequestParam String indigencystatus,
+                             @RequestParam String philhealthstatus,
+                             @RequestParam String kasunduansatus,
+                             @RequestParam String photoStatus,
+                             @RequestParam String medicalrecordstatus,
+                             @RequestParam String schoolYear,
+                             @RequestParam String familySaint,
+                             Model model,
+                             RedirectAttributes redirectAttributes) {  
+                                                            
+        try{
+        FinalStudent finalStudent = new FinalStudent();
+        finalStudent.setLastName(lastName);
+        finalStudent.setFirstName(firstName);
+        finalStudent.setMiddleName(middleName);
+        finalStudent.setSuffix(suffix);
+        finalStudent.setBarangay(barangay);
+        finalStudent.setMunicipality(municipality);
+        finalStudent.setProvince(province);
+        finalStudent.setBirthdate(birthdate);
+        finalStudent.setBirthPlace(birthPlace);
+        finalStudent.setAge(age);
+        finalStudent.setExamPlace(examPlace);
+        finalStudent.setIdNumber(idNumber);
+        finalStudent.setLrn(lrn);
+        finalStudent.setReligion(religion);
+        finalStudent.setGender(gender);
+        finalStudent.setCitizenship(citizenship);
+        finalStudent.setElementarySchool(elementarySchool);
+        finalStudent.setElemAddress(elemAddress);
+        finalStudent.setFatherName(fatherName);
+        finalStudent.setFatherOccupation(fatherOccupation);
+        finalStudent.setFatherContact(fatherContact);
+        finalStudent.setMotherName(motherName);
+        finalStudent.setMotherOccupation(motherOccupation);
+        finalStudent.setMotherContact(motherContact);
+        finalStudent.setGuardianName(guardianName);
+        finalStudent.setGuardianRelationship(guardianRelationship);
+        finalStudent.setGuardianOccupation(guardianOccupation);
+        finalStudent.setGuardianContact(guardianContact);
+        finalStudent.setPsastatus(psastatus);
+        finalStudent.setBaptismalstatus(baptismalstatus);
+        finalStudent.setConfirmationstatus(confirmationstatus);
+        finalStudent.setGoodmoralstatus(goodmoralstatus);
+        finalStudent.setForm138status(form138status);
+        finalStudent.setIndigencystatus(indigencystatus);
+        finalStudent.setPhilhealthstatus(philhealthstatus);
+        finalStudent.setKasunduansatus(kasunduansatus);
+        finalStudent.setPhotoStatus(photoStatus);
+        finalStudent.setMedicalrecordstatus(medicalrecordstatus);
+        finalStudent.setSchoolYear(schoolYear);
+        finalStudent.setFamilySaint(familySaint);
+
+        finalStudentRepository.save(finalStudent);
+
+        redirectAttributes.addFlashAttribute("successMessage", "Student successfully added!");
+     } catch (Exception e) {
+         // Flash error message
+         redirectAttributes.addFlashAttribute("errorMessage", "Failed to save student data: " + e.getMessage());
+     }
+
+        return "redirect:/admission";
+
+
+    }
+
+    @GetMapping("/reports")
+    public String showReports(
+            @RequestParam(required = false) String familySaint,
+            @RequestParam(required = false) String schoolYear,
+            Model model) {
+
+        List<FinalStudent> students;
+
+        // Filter by both family saint and school year
+        if (familySaint != null && !familySaint.isEmpty() && schoolYear != null && !schoolYear.isEmpty()) {
+            students = finalStudentRepository.findByFamilySaintAndSchoolYear(familySaint, schoolYear);
+        }
+        // Filter only by family saint
+        else if (familySaint != null && !familySaint.isEmpty()) {
+            students = finalStudentRepository.findByFamilySaint(familySaint);
+        }
+        // Filter only by school year
+        else if (schoolYear != null && !schoolYear.isEmpty()) {
+            students = finalStudentRepository.findBySchoolYear(schoolYear);
+        }
+        // If no filter is applied, show all students
+        else {
+            students = finalStudentRepository.findAll();
+        }
+
+        model.addAttribute("students", students);
+        model.addAttribute("familySaints", finalStudentRepository.findDistinctFamilySaints());
+        model.addAttribute("schoolYears", finalStudentRepository.findDistinctSchoolYears());
+
+        return "reports";
+    }
+
 
 }

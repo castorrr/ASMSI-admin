@@ -7,6 +7,8 @@
     <!-- Bootstrap CSS -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css">
+    <!-- SweetAlert2 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css" rel="stylesheet">
 
     <!-- Custom CSS -->
     <link rel="stylesheet" th:href="@{/css/header.css}">
@@ -60,7 +62,7 @@
                             <div class="card-body">
                                 <div class="event-header d-flex justify-content-between">
                                     <h5 class="card-title mb-0" th:text="${event.name}"></h5>
-                                    <span class="event-date" th:text="${#temporals.format(event.dateTime, 'MMM dd')}"></span>
+                                    <span class="event-date" th:text="${#temporals.format(event.dateTime, 'MMM dd, yyyy')}"></span>
                                 </div>
                                 
                                 <div class="my-2">
@@ -167,10 +169,6 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="modal-footer">
-                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-                            <button type="submit" class="btn btn-primary">Save Changes</button>
-                        </div>
                     </form>
                 </div>
             </div>
@@ -179,43 +177,63 @@
 
     <!-- Attendance Modal -->
     <div class="modal fade" id="attendanceModal" tabindex="-1" aria-labelledby="attendanceModalLabel" aria-hidden="true">
-        <div class="modal-dialog">
+        <div class="modal-dialog modal-lg">
             <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title" id="attendanceModalLabel">Event Attendance</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
-                    <form id="attendanceForm">
-                        <div class="mb-3">
-                            <label for="completeName" class="form-label">Complete Name</label>
-                            <input type="text" class="form-control" id="completeName" required>
+                    <!-- Hidden scanner input that will capture the QR data -->
+                    <input type="text" id="scannerInput" class="form-control mb-3" placeholder="Scan QR Code or Enter ID" autofocus>
+                    
+                    <div class="row">
+                        <!-- Student Info Column -->
+                        <div class="col-md-5">
+                            <div class="card h-100">
+                                <div class="card-body text-center">
+                                    <img id="studentPhoto" src="/images/default-profile.png" 
+                                         alt="Student Photo" class="rounded mb-3 img-fluid" 
+                                         style="max-height: 300px; object-fit: cover;">
+                                    <h5 id="studentName" class="card-title">-</h5>
+                                    <div class="text-start">
+                                        <p><strong>LRN:</strong> <span id="studentLrn">-</span></p>
+                                        <p><strong>ID Number:</strong> <span id="studentIdNumber">-</span></p>
+                                        <p><strong>Campus:</strong> <span id="studentCampus">-</span></p>
+                                        <p><strong>Family Saint:</strong> <span id="studentFamilySaint">-</span></p>
+                                        <p><strong>Batch Number:</strong> <span id="studentBatchNumber">-</span></p>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
-                        <div class="mb-3">
-                            <label for="batch" class="form-label">Batch</label>
-                            <input type="text" class="form-control" id="batch" required>
+                        
+                        <!-- Attendance Logs Column -->
+                        <div class="col-md-7">
+                            <div class="card h-100">
+                                <div class="card-body">
+                                    <h5 class="card-title">Recent Attendance</h5>
+                                    <div class="table-responsive">
+                                        <table class="table table-sm">
+                                            <thead>
+                                                <tr>
+                                                    <th>Date</th>
+                                                    <th>Time In</th>
+                                                    <th>Name</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody id="attendanceLogs">
+                                                <!-- Attendance logs will be populated here -->
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
-                        <div class="mb-3">
-                            <label for="familySaint" class="form-label">Family Saint</label>
-                            <input type="text" class="form-control" id="familySaint" required>
-                        </div>
-                        <div class="mb-3">
-                            <label for="idNumber" class="form-label">ID Number</label>
-                            <input type="text" class="form-control" id="idNumber" required>
-                        </div>
-                        <div class="mb-3">
-                            <label for="picture" class="form-label">Picture</label>
-                            <input type="file" class="form-control" id="picture" accept="image/*" required>
-                        </div>
-                        <div class="mb-3">
-                            <label for="timeIn" class="form-label">Time In</label>
-                            <input type="datetime-local" class="form-control" id="timeIn" required>
-                        </div>
-                        <div class="modal-footer">
-                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-                            <button type="submit" class="btn btn-primary">Submit Attendance</button>
-                        </div>
-                    </form>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button1" class="btn btn-secondary1" data-bs-dismiss="modal"></button>
+                    <button type="button1" id="confirmAttendanceBtn" class="btn btn-primary1" disabled></button>
                 </div>
             </div>
         </div>
@@ -223,8 +241,9 @@
 
     <!-- Bootstrap JS -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- SweetAlert2 JS -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     
-    <!-- Custom JavaScript for Audience Selection -->
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             // Handle "All Levels" checkbox behavior
@@ -249,176 +268,368 @@
         });
     </script>
 
-<script>
-    document.addEventListener('DOMContentLoaded', function() {
-        // Get the school year select element
-        const schoolYearSelect = document.getElementById('schoolYear');
-        
-        // Submit the form when school year changes
-        if (schoolYearSelect) {
-            schoolYearSelect.addEventListener('change', function() {
-                // Get the selected year
-                const selectedYear = this.value;
-                
-                // Reload the page with the year filter
-                if (selectedYear) {
-                    window.location.href = `/events?schoolYear=${selectedYear}`;
-                } else {
-                    window.location.href = '/events';
-                }
-            });
-        }
-    });
-</script>
-
-<script>
-    document.addEventListener('DOMContentLoaded', function() {
-        const eventModal = new bootstrap.Modal(document.getElementById('eventModal'));
-        const eventForm = document.getElementById('eventForm');
-        const modalTitle = document.getElementById('modalTitle');
-        
-        // Handle edit buttons
-        document.querySelectorAll('.edit-btn').forEach(btn => {
-            btn.addEventListener('click', function() {
-                const eventId = this.getAttribute('data-id');
-                
-                // Fetch event data
-                fetch(`/events/edit/${eventId}`)
-                    .then(response => response.json())
-                    .then(event => {
-                        // Update modal title
-                        modalTitle.textContent = 'Edit Event';
-                        
-                        // Set form action for update
-                        eventForm.action = `/events/update/${eventId}`;
-                        
-                        // Fill form with event data
-                        document.getElementById('eventId').value = eventId;
-                        document.getElementById('eventName').value = event.name;
-                        document.getElementById('eventSpeaker').value = event.speaker;
-                        document.getElementById('eventDateTime').value = formatDateTimeForInput(event.dateTime);
-                        document.getElementById('eventVenue').value = event.venue;
-                        
-                        // Handle audience checkboxes
-                        resetAudienceCheckboxes();
-                        if (event.audience === 'All Levels') {
-                            document.getElementById('allLevels').checked = true;
-                            disableGradeCheckboxes();
-                        } else if (event.audience !== 'None') {
-                            event.audience.split(',').forEach(grade => {
-                                const checkbox = document.querySelector(`.grade-checkbox[value="${grade.trim()}"]`);
-                                if (checkbox) checkbox.checked = true;
-                            });
-                        }
-                        
-                        // Show modal
-                        eventModal.show();
-                    });
-            });
-        });
-        
-        // Handle create button
-        document.querySelector('[data-bs-target="#eventModal"]').addEventListener('click', function() {
-            // Update modal title
-            modalTitle.textContent = 'Create Event';
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Get the school year select element
+            const schoolYearSelect = document.getElementById('schoolYear');
             
-            // Reset form for create
-            eventForm.action = '/events/create';
-            eventForm.reset();
-            document.getElementById('eventId').value = '';
-            resetAudienceCheckboxes();
-        });
-        
-        // Helper functions
-        function formatDateTimeForInput(dateTimeString) {
-            const date = new Date(dateTimeString);
-            return date.toISOString().slice(0, 16);
-        }
-        
-        function resetAudienceCheckboxes() {
-            document.getElementById('allLevels').checked = false;
-            document.querySelectorAll('.grade-checkbox').forEach(cb => {
-                cb.checked = false;
-                cb.disabled = false;
-            });
-        }
-        
-        function disableGradeCheckboxes() {
-            document.querySelectorAll('.grade-checkbox').forEach(cb => {
-                cb.checked = false;
-                cb.disabled = true;
-            });
-        }
-        
-        // Handle "All Levels" checkbox behavior
-        document.getElementById('allLevels').addEventListener('change', function() {
-            if (this.checked) {
-                disableGradeCheckboxes();
-            } else {
-                document.querySelectorAll('.grade-checkbox').forEach(cb => {
-                    cb.disabled = false;
+            // Submit the form when school year changes
+            if (schoolYearSelect) {
+                schoolYearSelect.addEventListener('change', function() {
+                    // Get the selected year
+                    const selectedYear = this.value;
+                    
+                    // Reload the page with the year filter
+                    if (selectedYear) {
+                        window.location.href = `/events?schoolYear=${selectedYear}`;
+                    } else {
+                        window.location.href = '/events';
+                    }
                 });
             }
         });
-    });
+    </script>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const eventModal = new bootstrap.Modal(document.getElementById('eventModal'));
+            const eventForm = document.getElementById('eventForm');
+            const modalTitle = document.getElementById('modalTitle');
+            
+            // Handle edit buttons
+            document.querySelectorAll('.edit-btn').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    const eventId = this.getAttribute('data-id');
+                    
+                    // Fetch event data
+                    fetch(`/events/edit/${eventId}`)
+                        .then(response => response.json())
+                        .then(event => {
+                            // Update modal title
+                            modalTitle.textContent = 'Edit Event';
+                            
+                            // Set form action for update
+                            eventForm.action = `/events/update/${eventId}`;
+                            
+                            // Fill form with event data
+                            document.getElementById('eventId').value = eventId;
+                            document.getElementById('eventName').value = event.name;
+                            document.getElementById('eventSpeaker').value = event.speaker;
+                            document.getElementById('eventDateTime').value = formatDateTimeForInput(event.dateTime);
+                            document.getElementById('eventVenue').value = event.venue;
+                            
+                            // Handle audience checkboxes
+                            resetAudienceCheckboxes();
+                            if (event.audience === 'All Levels') {
+                                document.getElementById('allLevels').checked = true;
+                                disableGradeCheckboxes();
+                            } else if (event.audience !== 'None') {
+                                event.audience.split(',').forEach(grade => {
+                                    const checkbox = document.querySelector(`.grade-checkbox[value="${grade.trim()}"]`);
+                                    if (checkbox) checkbox.checked = true;
+                                });
+                            }
+                            
+                            // Show modal
+                            eventModal.show();
+                        });
+                });
+            });
+            
+            // Handle create button
+            document.querySelector('[data-bs-target="#eventModal"]').addEventListener('click', function() {
+                // Update modal title
+                modalTitle.textContent = 'Create Event';
+                
+                // Reset form for create
+                eventForm.action = '/events/create';
+                eventForm.reset();
+                document.getElementById('eventId').value = '';
+                resetAudienceCheckboxes();
+            });
+            
+            // Helper functions
+            function formatDateTimeForInput(dateTimeString) {
+                const date = new Date(dateTimeString);
+                return date.toISOString().slice(0, 16);
+            }
+            
+            function resetAudienceCheckboxes() {
+                document.getElementById('allLevels').checked = false;
+                document.querySelectorAll('.grade-checkbox').forEach(cb => {
+                    cb.checked = false;
+                    cb.disabled = false;
+                });
+            }
+            
+            function disableGradeCheckboxes() {
+                document.querySelectorAll('.grade-checkbox').forEach(cb => {
+                    cb.checked = false;
+                    cb.disabled = true;
+                });
+            }
+            
+            // Handle "All Levels" checkbox behavior
+            document.getElementById('allLevels').addEventListener('change', function() {
+                if (this.checked) {
+                    disableGradeCheckboxes();
+                } else {
+                    document.querySelectorAll('.grade-checkbox').forEach(cb => {
+                        cb.disabled = false;
+                    });
+                }
+            });
+        });
     </script>
 
 <script>
     document.addEventListener('DOMContentLoaded', function() {
         const attendanceModal = new bootstrap.Modal(document.getElementById('attendanceModal'));
+        let currentEventId = null;
+        let currentEventName = null;
+        let currentStudent = null;
         
-        // Handle card clicks
+        // Get CSRF token safely
+        function getCsrfToken() {
+            const meta = document.querySelector('meta[name="_csrf"]');
+            return meta ? meta.content : '';
+        }
+        
+        // Get CSRF header name safely
+        function getCsrfHeader() {
+            const meta = document.querySelector('meta[name="_csrf_header"]');
+            return meta ? meta.content : 'X-CSRF-TOKEN';
+        }
+        
+        // Get current user safely
+        function getCurrentUser() {
+            const input = document.getElementById('current-user');
+            return input ? input.value : 'unknown';
+        }
+    
+        // Handle card clicks to open attendance modal
         document.querySelectorAll('.clickable-card').forEach(card => {
-            card.addEventListener('click', function(e) {
-                // Don't trigger if clicking on buttons inside the card
-                if (e.target.closest('button, a, [data-bs-toggle]')) {
-                    return;
-                }
-                
-                const eventId = this.getAttribute('data-id');
-                const eventName = this.getAttribute('data-name');
-                
-                // Set the modal title with event name
-                document.getElementById('attendanceModalLabel').textContent = 
-                    `Attendance for ${eventName}`;
-                
-                // Set current time for time-in
-                const now = new Date();
-                document.getElementById('timeIn').value = 
-                    now.toISOString().slice(0, 16).replace('T', ' ');
-                
-                // Show the modal
-                attendanceModal.show();
-            });
+    card.addEventListener('click', function(e) {
+        currentEventId = this.getAttribute('data-id');
+        currentEventName = this.getAttribute('data-name');
+        
+        document.getElementById('attendanceModalLabel').textContent = 
+            `Attendance for ${currentEventName}`;
+        
+        resetAttendanceForm();
+        fetchAttendanceLogs(currentEventId); // fetch recent attendees
+        attendanceModal.show();
+        setTimeout(() => document.getElementById('scannerInput').focus(), 100);
+    });
+});
+        
+        // Scanner input handler
+        document.getElementById('scannerInput').addEventListener('change', function() {
+            const scannedId = this.value.trim();
+            if (scannedId) {
+                fetchStudentData(scannedId);
+                this.value = '';
+            }
         });
         
-        // Handle attendance form submission
-        document.getElementById('attendanceForm').addEventListener('submit', function(e) {
-            e.preventDefault();
-            
-            // Collect form data
-            const formData = {
-                eventId: document.querySelector('.clickable-card.active')?.getAttribute('data-id'),
-                completeName: document.getElementById('completeName').value,
-                batch: document.getElementById('batch').value,
-                familySaint: document.getElementById('familySaint').value,
-                idNumber: document.getElementById('idNumber').value,
-                picture: document.getElementById('picture').files[0],
-                timeIn: document.getElementById('timeIn').value
-            };
-            
-            // Here you would typically send the data to your backend
-            console.log('Attendance data to submit:', formData);
-            // Example: fetch('/api/attendance', { method: 'POST', body: formData })
-            
-            // Show success message and close modal
-            attendanceModal.hide();
-            alert('Attendance submitted successfully!');
-            
-            // Reset form
-            this.reset();
+        // Handle confirm attendance button
+        document.getElementById('confirmAttendanceBtn').addEventListener('click', submitAttendance);
+        
+        // Fetch student data
+        async function fetchStudentData(studentId) {
+    try {
+        studentId = studentId.trim().toUpperCase();
+        
+        const response = await fetch(`/api/attendance/student/${encodeURIComponent(studentId)}`);
+        
+        if (!response.ok) {
+            const error = await response.json().catch(() => ({}));
+            throw new Error(error.message || 'Student not found');
+        }
+        
+        currentStudent = await response.json();
+        updateStudentDisplay(currentStudent);
+
+        // 🛡️ Check if student already attended this event
+        const logsResponse = await fetch(`/api/event-attendance/logs/event/${encodeURIComponent(currentEventId)}`);
+        const logs = await logsResponse.json();
+        const alreadyAttended = logs.some(log => log.studentId === currentStudent.idNumber);
+
+        if (alreadyAttended) {
+            Swal.fire({
+                icon: 'warning',
+                title: 'Already Attended',
+                text: 'This student has already attended this event!',
+                timer: 3000,
+                showConfirmButton: false
+            });
+            resetStudentDisplay();
+            document.getElementById('scannerInput').focus();
+        } else {
+            // ✅ Automatically submit attendance if not yet attended
+            await submitAttendance();
+        }
+
+    } catch (error) {
+        Swal.fire({
+            icon: 'error',
+            title: 'Error',
+            text: error.message,
+            footer: `ID: ${studentId}`
         });
+        resetStudentDisplay();
+    } finally {
+        document.getElementById('scannerInput').focus();
+    }
+}
+
+
+        // Update student display
+        function updateStudentDisplay(student) {
+            document.getElementById('studentName').textContent = student.name || '-';
+            document.getElementById('studentLrn').textContent = student.lrn || '-';
+            document.getElementById('studentIdNumber').textContent = student.idNumber || '-';
+            document.getElementById('studentCampus').textContent = student.campus || '-';
+            document.getElementById('studentFamilySaint').textContent = student.familySaint || '-';
+            document.getElementById('studentBatchNumber').textContent = student.batchNumber || '-';
+            document.getElementById('studentPhoto').src = student.imageUrl || '/images/default-profile.png';
+            document.getElementById('confirmAttendanceBtn').disabled = false;
+        }
+        
+        // Submit attendance - FIXED CSRF ISSUE
+      // Submit attendance to event_attendance table
+      async function submitAttendance() {
+    if (!currentStudent || !currentEventId || !currentEventName) {
+        Swal.fire({
+            icon: 'error',
+            title: 'Cannot Submit',
+            text: 'No student selected or event not set'
+        });
+        return;
+    }
+
+    try {
+        const attendanceData = {
+            eventId: currentEventId,
+            eventName: currentEventName,
+            studentId: currentStudent.idNumber,
+            name: currentStudent.name,
+            lrn: currentStudent.lrn,
+            campus: currentStudent.campus,
+            familySaint: currentStudent.familySaint,
+            batchNumber: currentStudent.batchNumber,
+            imageUrl: currentStudent.imageUrl,
+            date: new Date().toISOString().split('T')[0],
+            timeIn: new Date().toLocaleTimeString('en-US', { hour12: false }),
+            recordedBy: getCurrentUser()
+        };
+
+        const response = await fetch('/api/event-attendance/submit', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                [getCsrfHeader()]: getCsrfToken()
+            },
+            body: JSON.stringify(attendanceData)
+        });
+
+        if (!response.ok) {
+            const errorText = await response.text();
+            throw new Error(errorText || 'Submission failed');
+        }
+
+        Swal.fire({
+            icon: 'success',
+            title: 'Success!',
+            text: 'Attendance recorded successfully!',
+            timer: 2000,
+            showConfirmButton: false
+        });
+
+        // After successful attendance:
+        await fetchAttendanceLogs(currentEventId); // Refresh recent attendance
+        resetStudentDisplay();
+        document.getElementById('scannerInput').focus();
+
+    } catch (error) {
+        Swal.fire({
+            icon: 'error',
+            title: 'Submission Failed',
+            text: error.message,
+            footer: 'Please try again'
+        });
+        console.error('Submission error:', error);
+    }
+}
+
+
+        
+ // Fetch all students who attended this event
+ async function fetchAttendanceLogs(eventId) {
+    try {
+        const response = await fetch(`/api/event-attendance/logs/event/${encodeURIComponent(eventId)}`);
+        if (!response.ok) throw new Error('Failed to fetch event logs');
+        
+        const logs = await response.json();
+        const logsTable = document.getElementById('attendanceLogs');
+        logsTable.innerHTML = '';
+
+        if (logs.length === 0) {
+            logsTable.innerHTML = '<tr><td colspan="3" class="text-center">No attendance records found</td></tr>';
+        } else {
+            // 🛡️ Filter duplicates based on studentId
+            const uniqueStudents = {};
+            const uniqueLogs = logs.filter(log => {
+                if (!uniqueStudents[log.studentId]) {
+                    uniqueStudents[log.studentId] = true;
+                    return true;
+                }
+                return false;
+            });
+
+            uniqueLogs.forEach(log => {
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>${log.date || '-'}</td>
+                    <td>${log.timeIn || '-'}</td>
+                    <td>${log.name || '-'}</td>
+                `;
+                logsTable.appendChild(row);
+            });
+        }
+    } catch (error) {
+        console.error('Error loading event logs:', error);
+    }
+}
+
+
+        
+        // Reset functions
+        function resetAttendanceForm() {
+            document.getElementById('scannerInput').value = '';
+            resetStudentDisplay();
+            document.getElementById('scannerInput').focus();
+        }
+        
+        function resetStudentDisplay() {
+            document.getElementById('studentName').textContent = '-';
+    document.getElementById('studentLrn').textContent = '-';
+    document.getElementById('studentIdNumber').textContent = '-';
+    document.getElementById('studentCampus').textContent = '-';
+    document.getElementById('studentFamilySaint').textContent = '-';
+    document.getElementById('studentBatchNumber').textContent = '-';
+    document.getElementById('studentPhoto').src = '/images/default-profile.png';
+    document.getElementById('confirmAttendanceBtn').disabled = true;
+    currentStudent = null;
+        }
+        
+        // Modal event handlers
+        document.getElementById('attendanceModal').addEventListener('shown.bs.modal', () => {
+            document.getElementById('scannerInput').focus();
+        });
+        
+        document.getElementById('attendanceModal').addEventListener('hidden.bs.modal', resetAttendanceForm);
     });
-</script>
+    </script>
 </body>
 </html>

@@ -18,7 +18,7 @@ import com.asmsi.admin_system.service.UserService;
 public class SecurityConfig {
 
     private final UserService userService;
-    private final BCryptPasswordEncoder passwordEncoder; // ✅ Injected from AppConfig
+    private final BCryptPasswordEncoder passwordEncoder;
 
     public SecurityConfig(UserService userService, BCryptPasswordEncoder passwordEncoder) {
         this.userService = userService;
@@ -28,25 +28,31 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
-        
-            .authorizeHttpRequests(auth -> auth
-            
-            .requestMatchers(
-                "/login", "/signup", "/request-account", "/forget-password", "/forgot-password", "/reset-password",
-                "/css/**", "/js/**", "/images/**", "/upload-csv", "/home", "/api/attendance/attendance", "/api/attendance/**", "/family-saint-settings/api"
-            ).permitAll()
-                .anyRequest().authenticated()
-            )  
-            .formLogin(form -> form
-                .loginPage("/login")
-                .defaultSuccessUrl( "/home", true)
-                .permitAll()
-            )
-            .logout(logout -> logout
-                .logoutUrl("/logout")
-                .logoutSuccessUrl("/login?logout")
-                .permitAll()
-            );
+                // Disable CSRF for API endpoints and specific paths
+                .csrf(csrf -> csrf.ignoringRequestMatchers(
+                        "/admission/**",
+                        "/submit",
+                        "/api/**" // This will cover all API endpoints
+                ))
+                .authorizeHttpRequests(auth -> auth
+                        .requestMatchers(
+                                "/", "/login", "/signup", "/request-account",
+                                "/forget-password", "/forgot-password", "/reset-password",
+                                "/css/**", "/js/**", "/images/**", "/upload-csv", "/home",
+                                "/api/attendance/**", // Include all attendance API endpoints
+                                "/family-saint-settings/api")
+                        .permitAll()
+                        .requestMatchers("/admission/**", "/submit")
+                        .hasRole("ADMIN")
+                        .anyRequest().authenticated())
+                .formLogin(form -> form
+                        .loginPage("/login")
+                        .defaultSuccessUrl("/home", true)
+                        .permitAll())
+                .logout(logout -> logout
+                        .logoutUrl("/logout")
+                        .logoutSuccessUrl("/login?logout")
+                        .permitAll());
 
         return http.build();
     }
@@ -55,16 +61,13 @@ public class SecurityConfig {
     public AuthenticationProvider authenticationProvider() {
         DaoAuthenticationProvider provider = new DaoAuthenticationProvider();
         provider.setUserDetailsService(userService);
-        provider.setPasswordEncoder(passwordEncoder); // ✅ Uses passwordEncoder from AppConfig
+        provider.setPasswordEncoder(passwordEncoder);
         return provider;
     }
 
     @Bean
-    public AuthenticationManager authenticationManager(AuthenticationConfiguration authenticationConfiguration) throws Exception {
+    public AuthenticationManager authenticationManager(AuthenticationConfiguration authenticationConfiguration)
+            throws Exception {
         return authenticationConfiguration.getAuthenticationManager();
     }
-
-    
-
-    
 }
