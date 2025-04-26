@@ -19,8 +19,9 @@ public class EventAttendanceController {
         return "Event Attendance Saved Successfully!";
     }
 
-    @GetMapping("/logs/{studentId}")
-    public List<EventAttendance> getAttendanceLogs(@PathVariable String studentId) {
-        return eventAttendanceRepository.findByStudentId(studentId);
+    
+    @GetMapping("/logs/event/{eventId}")
+    public List<EventAttendance> getAttendanceLogsByEvent(@PathVariable String eventId) {
+        return eventAttendanceRepository.findByEventId(eventId);
     }
 }

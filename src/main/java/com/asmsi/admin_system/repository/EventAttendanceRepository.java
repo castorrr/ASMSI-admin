@@ -5,5 +5,5 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import java.util.List;
 
 public interface EventAttendanceRepository extends JpaRepository<EventAttendance, Long> {
-    List<EventAttendance> findByStudentId(String studentId);
+    List<EventAttendance> findByEventId(String eventId);
 }

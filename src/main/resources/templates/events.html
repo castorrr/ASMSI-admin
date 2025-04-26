@@ -222,7 +222,7 @@
                                                 <tr>
                                                     <th>Date</th>
                                                     <th>Time In</th>
-                                                    <th>Event</th>
+                                                    <th>Name</th>
                                                 </tr>
                                             </thead>
                                             <tbody id="attendanceLogs">
@@ -422,8 +422,9 @@
                 document.getElementById('attendanceModalLabel').textContent = 
                     `Attendance for ${currentEventName}`;
                 
-                resetAttendanceForm();
-                attendanceModal.show();
+                    resetAttendanceForm();
+fetchAttendanceLogs(currentEventId); // fetch logs immediately when opening modal
+attendanceModal.show();
                 setTimeout(() => document.getElementById('scannerInput').focus(), 100);
             });
         });
@@ -455,7 +456,7 @@
                 
                 currentStudent = await response.json();
                 updateStudentDisplay(currentStudent);
-                await fetchAttendanceLogs(currentStudent.idNumber);
+                //await fetchAttendanceLogs(currentStudent.idNumber);
                 
             } catch (error) {
                 Swal.fire({
@@ -532,7 +533,11 @@ async function submitAttendance() {
             showConfirmButton: false
         });
 
-        resetAttendanceForm();
+        await fetchAttendanceLogs(currentEventId);
+
+        resetStudentDisplay();
+        document.getElementById('scannerInput').focus();
+
 
     } catch (error) {
         Swal.fire({
@@ -546,34 +551,34 @@ async function submitAttendance() {
 }
 
         
-        // Fetch attendance logs
-        async function fetchAttendanceLogs(studentId) {
-            try {
-                const response = await fetch(`/api/event-attendance/logs/${encodeURIComponent(studentId)}`);
+ // Fetch all students who attended this event
+async function fetchAttendanceLogs(eventId) {
+    try {
+        const response = await fetch(`/api/event-attendance/logs/event/${encodeURIComponent(eventId)}`);
+        if (!response.ok) throw new Error('Failed to fetch event logs');
+        
+        const logs = await response.json();
+        const logsTable = document.getElementById('attendanceLogs');
+        logsTable.innerHTML = '';
 
-                if (!response.ok) throw new Error('Failed to fetch logs');
-                
-                const logs = await response.json();
-                const logsTable = document.getElementById('attendanceLogs');
-                logsTable.innerHTML = '';
-                
-                if (logs.length === 0) {
+        if (logs.length === 0) {
             logsTable.innerHTML = '<tr><td colspan="3" class="text-center">No attendance records found</td></tr>';
         } else {
-            logs.slice(0, 5).forEach(log => {
+            logs.forEach(log => {
                 const row = document.createElement('tr');
                 row.innerHTML = `
                     <td>${log.date || '-'}</td>
                     <td>${log.timeIn || '-'}</td>
-                    <td>${log.eventName || '-'}</td>
+                    <td>${log.name || '-'}</td>
                 `;
                 logsTable.appendChild(row);
             });
         }
-            } catch (error) {
-                console.error('Error loading logs:', error);
-            }
-        }
+    } catch (error) {
+        console.error('Error loading event logs:', error);
+    }
+}
+
         
         // Reset functions
         function resetAttendanceForm() {
@@ -584,15 +589,14 @@ async function submitAttendance() {
         
         function resetStudentDisplay() {
             document.getElementById('studentName').textContent = '-';
-            document.getElementById('studentLrn').textContent = '-';
-            document.getElementById('studentIdNumber').textContent = '-';
-            document.getElementById('studentCampus').textContent = '-';
-            document.getElementById('studentFamilySaint').textContent = '-';
-            document.getElementById('studentBatchNumber').textContent = '-';
-            document.getElementById('studentPhoto').src = '/images/default-profile.png';
-            document.getElementById('attendanceLogs').innerHTML = '<tr><td colspan="3" class="text-center">No records found</td></tr>';
-            document.getElementById('confirmAttendanceBtn').disabled = true;
-            currentStudent = null;
+    document.getElementById('studentLrn').textContent = '-';
+    document.getElementById('studentIdNumber').textContent = '-';
+    document.getElementById('studentCampus').textContent = '-';
+    document.getElementById('studentFamilySaint').textContent = '-';
+    document.getElementById('studentBatchNumber').textContent = '-';
+    document.getElementById('studentPhoto').src = '/images/default-profile.png';
+    document.getElementById('confirmAttendanceBtn').disabled = true;
+    currentStudent = null;
         }
         
         // Modal event handlers
