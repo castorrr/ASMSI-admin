@@ -215,6 +215,8 @@
       <input type="text" name="guardianOccupation" class="guardian-occupation-input" th:value="${studentData?.guardianOccupation}">
       <label class="guardian-contact">Contact Num:</label>
       <input type="text" name="guardianContact" class="guardian-contact-input" th:value="${studentData?.guardianContact}">
+      <input type="hidden" name="status" id="statusInput" value="Arrived">
+      <input type="hidden" name="timestamp" id="timestampInput">
     </div>
   </div>
 
@@ -314,6 +316,9 @@
                 th:text="${saint.saintName}"
                 th:selected="${saint.saintName == studentData?.familySaint}"></option>
       </select>
+
+
+
     </div>
 
     <!-- Code Number -->
@@ -371,6 +376,8 @@
     document.getElementById("admissionForm").addEventListener("submit", function (e) {
       const selectedYear = document.getElementById("schoolYearSelect").value;
       document.getElementById("hiddenSchoolYear").value = selectedYear;
+      document.getElementById("statusInput").value = "Arrived";
+  document.getElementById("timestampInput").value = new Date().toISOString(); // ISO format for backend use
 
       if (!this.checkValidity()) {
         e.preventDefault();
@@ -600,34 +607,21 @@
     const stayStep = /*[[${stayOnStep}]]*/ 0;
 
     if (successMessage && successMessage.trim() !== '') {
-      Swal.fire({
-        icon: 'success',
-        title: 'Success',
-        text: successMessage,
-        timer: 2000,
-        showConfirmButton: false
-      });
+      Swal.fire({ icon: 'success', title: 'Success', text: successMessage, timer: 2000, showConfirmButton: false });
     }
 
     if (errorMessage && errorMessage.trim() !== '') {
-      Swal.fire({
-        icon: 'error',
-        title: 'Error',
-        text: errorMessage,
-        timer: 3000,
-        showConfirmButton: false
-      });
+      Swal.fire({ icon: 'error', title: 'Error', text: errorMessage, timer: 3000, showConfirmButton: false });
     }
 
     if (stayStep > 0) {
       document.querySelectorAll('.form-step').forEach(p => p.classList.remove('active'));
       const activeStep = document.getElementById('step-' + stayStep);
-      if (activeStep) {
-        activeStep.classList.add('active');
-      }
+      if (activeStep) activeStep.classList.add('active');
     }
   });
 </script>
+
 
 
 

@@ -27,7 +27,7 @@
         data-bs-toggle="collapse"
         href="#studentSettings"
         role="button"
-        th:attr="aria-expanded=${activePage == 'via-settings' || activePage == 'student-info' || activePage == 'family-saint-settings' || activePage == 'batch-settings'}"
+        th:attr="aria-expanded=${studentInfoExpanded}"
         onclick="toggleIcon(this)"
       >
         <span><i class="bi bi-person-lines-fill"></i> Student Information</span>
@@ -37,18 +37,14 @@
       <div
         class="collapse ps-3"
         id="studentSettings"
-        th:classappend="${activePage == 'via-settings' || activePage == 'student-info' || activePage == 'family-saint-settings' || activePage == 'batch-settings'} ? 'show'"
+        th:classappend="${studentInfoExpanded} ? 'show'"
       >
         <ul class="nav flex-column">
           <li class="nav-item">
-            <a th:href="@{/student-info}" class="nav-link text-white"
-              >Student Information</a
-            >
+            <a th:href="@{/student-info}" class="nav-link text-white">Student Information</a>
           </li>
           <li class="nav-item">
-            <a th:href="@{/via-settings}" class="nav-link text-white"
-              >VIA Settings</a
-            >
+            <a th:href="@{/via-settings}" class="nav-link text-white">VIA Settings</a>
           </li>
         </ul>
       </div>
@@ -61,7 +57,7 @@
         data-bs-toggle="collapse"
         href="#admissionSettings"
         role="button"
-        th:attr="aria-expanded=${activePage == 'upload-database' || activePage == 'family-saint-settings'}"
+        th:attr="aria-expanded=${admissionExpanded}"
         onclick="toggleIcon(this)"
       >
         <span><i class="bi bi-person-lines-fill"></i> Admission</span>
@@ -71,30 +67,24 @@
       <div
         class="collapse ps-3"
         id="admissionSettings"
-        th:classappend="${activePage == 'upload-database' || activePage == 'family-saint-settings' || activePage == 'admission'} ? 'show'"
+        th:classappend="${admissionExpanded} ? 'show'"
       >
         <ul class="nav flex-column">
           <li class="nav-item">
-            <a th:href="@{/admission}" class="nav-link text-white"
-              >Admission Form</a
-            >
+            <a th:href="@{/admission}" class="nav-link text-white">Admission Form</a>
           </li>
           <li class="nav-item">
-            <a th:href="@{/upload-database}" class="nav-link text-white"
-              >Upload Database</a
-            >
+            <a th:href="@{/upload-database}" class="nav-link text-white">Upload Database</a>
           </li>
           <li class="nav-item">
-            <a th:href="@{/admission-settings/view}"
-            class="nav-link text-white"
-            th:classappend="${activePage == 'family-saint-settings'} ? 'active fw-bold text-primary'">
-            Admission Settings
-         </a>
-         
-
+            <a
+              th:href="@{/admission-settings/view}"
+              class="nav-link text-white"
+              th:classappend="${activePage == 'family-saint-settings'} ? 'active fw-bold text-primary'"
+            >Admission Settings</a>
           </li>
           <li class="nav-item">
-            <a th:href="@{/reports}" class="nav-link text-white">Reports</a>
+            <a th:href="@{/admissionreports}" class="nav-link text-white">Reports</a>
           </li>
         </ul>
       </div>
@@ -107,7 +97,7 @@
         data-bs-toggle="collapse"
         href="#attendanceSettings"
         role="button"
-        th:attr="aria-expanded=${activePage == 'attendance' || activePage == 'attendance-report'}"
+        th:attr="aria-expanded=${attendanceExpanded}"
         onclick="toggleIcon(this)"
       >
         <span><i class="bi bi-person-lines-fill"></i> Attendance</span>
@@ -117,7 +107,7 @@
       <div
         class="collapse ps-3"
         id="attendanceSettings"
-        th:classappend="${activePage == 'attendance' || activePage == 'attendance-report'} ? 'show'"
+        th:classappend="${attendanceExpanded} ? 'show'"
       >
         <ul class="nav flex-column">
           <li>
@@ -126,9 +116,7 @@
             </a>
           </li>
           <li class="nav-item">
-            <a th:href="@{/attendancereport}" class="nav-link text-white"
-              >Attendance Reports</a
-            >
+            <a th:href="@{/attendancereport}" class="nav-link text-white">Attendance Reports</a>
           </li>
         </ul>
       </div>
@@ -141,7 +129,7 @@
         data-bs-toggle="collapse"
         href="#eventsAttendanceLog"
         role="button"
-        th:attr="aria-expanded=${activePage == 'events' || activePage == 'attendance-log'}"
+        th:attr="aria-expanded=${eventsExpanded}"
         onclick="toggleIcon(this)"
       >
         <span><i class="bi bi-calendar-event"></i> Events</span>
@@ -151,7 +139,7 @@
       <div
         class="collapse ps-3"
         id="eventsAttendanceLog"
-        th:classappend="${activePage == 'events' || activePage == 'attendance-log'} ? 'show'"
+        th:classappend="${eventsExpanded} ? 'show'"
       >
         <ul class="nav flex-column">
           <li class="nav-item">
@@ -160,8 +148,6 @@
         </ul>
       </div>
     </li>
-
-    <!-- E-Library -->
 
     <!-- Admin Only -->
     <li th:if="${role == 'admin'}">
@@ -172,14 +158,12 @@
   </ul>
 </div>
 
-<!-- Collapse toggle handler -->
+<!-- Collapse toggle handler (optimized) -->
 <script>
   function toggleIcon(el) {
     const icon = el.querySelector(".toggle-arrow");
-    setTimeout(() => {
-      const isExpanded = el.getAttribute("aria-expanded") === "true";
-      icon.classList.toggle("bi-chevron-down", !isExpanded);
-      icon.classList.toggle("bi-chevron-up", isExpanded);
-    }, 100);
+    const isExpanded = el.getAttribute("aria-expanded") === "true";
+    icon.classList.toggle("bi-chevron-down", !isExpanded);
+    icon.classList.toggle("bi-chevron-up", isExpanded);
   }
 </script>

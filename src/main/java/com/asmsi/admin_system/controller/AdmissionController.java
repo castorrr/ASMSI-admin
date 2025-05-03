@@ -25,6 +25,7 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -91,8 +92,11 @@ public String admissionPage(Model model, @ModelAttribute("formData") AdmissionDa
     }
 
     @PostMapping("/submit")
+    
 @PreAuthorize("hasRole('ADMIN')")
 public String submitForm(
+     @RequestParam String status,
+    @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime timestamp,
     @RequestParam String lastName,
     @RequestParam String firstName,
     @RequestParam String middleName,
@@ -184,6 +188,8 @@ public String submitForm(
         admissionData.setSchoolYear(schoolYear);
         admissionData.setFamilySaint(familySaint);
         admissionData.setCodeNumber(Integer.parseInt(codeNumber));
+        admissionData.setStatus(status);
+        admissionData.setTimestamp(timestamp);
 
         // ✅ Check for duplicates
         boolean isDuplicate = admissionService.getAllAdmissions().stream()
@@ -218,29 +224,7 @@ public String submitForm(
 
     
     // 👉 Reports page with filters
-    @GetMapping("/reports")
-public String showAdmissionReports(@RequestParam(required = false) String familySaint,
-                                   @RequestParam(required = false) String schoolYear,
-                                   Model model) {
-
-    List<AdmissionData> students;
-
-    if (familySaint != null && !familySaint.isEmpty() && schoolYear != null && !schoolYear.isEmpty()) {
-        students = admissionService.getByFamilySaintAndSchoolYear(familySaint, schoolYear);
-    } else if (familySaint != null && !familySaint.isEmpty()) {
-        students = admissionService.getByFamilySaint(familySaint);
-    } else if (schoolYear != null && !schoolYear.isEmpty()) {
-        students = admissionService.getBySchoolYear(schoolYear);
-    } else {
-        students = admissionService.getAllAdmissions();
-    }
-
-    model.addAttribute("students", students);
-    model.addAttribute("familySaints", admissionService.getDistinctFamilySaints());
-    model.addAttribute("schoolYears", admissionService.getDistinctSchoolYears());
-
-    return "reports";
-}
+   
 
     // 👉 Search API for admission data by ID number
     @GetMapping("/api/admission/search")

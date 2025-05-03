@@ -2,6 +2,8 @@ package com.asmsi.admin_system.entity;
 
 import jakarta.persistence.*;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
+
 import com.fasterxml.jackson.annotation.JsonFormat;
 
 @Entity
@@ -188,6 +190,13 @@ public class AdmissionData {
     public Integer getCodeNumber() { return codeNumber; }
     public void setCodeNumber(Integer codeNumber) { this.codeNumber = codeNumber; }
 
+    @Column
+    private String status;
+    
+    @Column
+    private LocalDateTime timestamp;
+
+
 
 
     public String getSchoolYear() {
@@ -197,4 +206,13 @@ public class AdmissionData {
     public void setSchoolYear(String schoolYear) {
         this.schoolYear = schoolYear;
     }
+
+    public String getStatus() { return status; }
+    public void setStatus(String status) { this.status = status; }
+    
+    public LocalDateTime getTimestamp() { return timestamp; }
+    public void setTimestamp(LocalDateTime timestamp) { this.timestamp = timestamp; }
+    
+
+
 }

@@ -10,13 +10,16 @@ import java.util.List;
 @Repository
 public interface AdmissionDataRepository extends JpaRepository<AdmissionData, Long> {
 
-    // Optional: find by idNum (or any other field if you need custom queries later)
     List<AdmissionData> findAllByIdNum(String idNum);
-        @Query("SELECT a.schoolYear, COUNT(a) FROM AdmissionData a GROUP BY a.schoolYear")
+
+    @Query("SELECT a.schoolYear, COUNT(a) FROM AdmissionData a GROUP BY a.schoolYear")
     List<Object[]> countBySchoolYear();
+
     List<AdmissionData> findByIdNum(String idNum);
+
     boolean existsByFamilySaintAndCodeNumberAndSchoolYear(String familySaint, int codeNumber, String schoolYear);
-       List<AdmissionData> findByFamilySaintAndSchoolYear(String familySaint, String schoolYear);
+
+    List<AdmissionData> findByFamilySaintAndSchoolYear(String familySaint, String schoolYear);
 
     List<AdmissionData> findByFamilySaint(String familySaint);
 
@@ -28,11 +31,19 @@ public interface AdmissionDataRepository extends JpaRepository<AdmissionData, Lo
     @Query("SELECT DISTINCT a.schoolYear FROM AdmissionData a")
     List<String> findDistinctSchoolYears();
 
+    @Query("SELECT a.examPlace, COUNT(a), SUM(CASE WHEN a.status = 'Arrived' THEN 1 ELSE 0 END) " +
+           "FROM AdmissionData a GROUP BY a.examPlace")
+    List<Object[]> getExamPlaceStats();
 
-   
-    
+    // ✅ Use this for fast count of Arrived
+    long countByStatusIgnoreCase(String status);
 
-
-
-
+    // ✅ PostgreSQL-compatible version
+    @Query(value = """
+        SELECT family_saint, COUNT(*) AS total, STRING_AGG(code_number::text, ',' ORDER BY code_number)
+        FROM admission_data
+        WHERE family_saint IS NOT NULL
+        GROUP BY family_saint
+    """, nativeQuery = true)
+    List<Object[]> getFamilySaintStatsSummary();
 }
