@@ -51,6 +51,10 @@ public class FinalStudent {
     private String medicalrecordstatus;
     private String schoolYear;
     private String familySaint;
+   
+
+// Credential statuses (optional string values like "original", "photocopy", "pending")
+
 
     // Getters and Setters
     public Long getId() {
@@ -380,5 +384,16 @@ public class FinalStudent {
     public void setFamilySaint(String familySaint) {
         this.familySaint = familySaint;
     }
+
+    private Integer codeNumber;
+
+public Integer getCodeNumber() {
+    return codeNumber;
+}
+
+public void setCodeNumber(Integer codeNumber) {
+    this.codeNumber = codeNumber;
+}
+
 }
 

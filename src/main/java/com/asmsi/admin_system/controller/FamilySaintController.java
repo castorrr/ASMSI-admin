@@ -3,12 +3,10 @@ package com.asmsi.admin_system.controller;
 import com.asmsi.admin_system.entity.FamilySaint;
 import com.asmsi.admin_system.service.FamilySaintService;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-
-import java.util.List;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 @Controller
 @RequestMapping("/family-saint-settings")
@@ -27,14 +25,7 @@ public class FamilySaintController {
         return "family-saint-settings";
     }
 
-    // Fetch list (used by JS)
-    @GetMapping("/api")
-    @ResponseBody
-    public List<FamilySaint> getFamilySaints(@RequestParam String schoolYear) {
-        return familySaintService.getBySchoolYear(schoolYear);
-    }
-
-    // Save via JSON (used by JS fetch)
+    // ✅ Only POST API retained to save new family saints
     @PostMapping("/api")
     @ResponseBody
     public ResponseEntity<FamilySaint> addFamilySaint(@RequestBody FamilySaint familySaint) {
@@ -42,16 +33,16 @@ public class FamilySaintController {
         return ResponseEntity.ok(saved);
     }
 
+    // Save via HTML form
     @PostMapping("/add")
-public String addFamilySaint(
-        @RequestParam("schoolYear") String schoolYear,
-        @RequestParam("saintName") String saintName,
-        RedirectAttributes redirectAttributes
-) {
-    FamilySaint newSaint = new FamilySaint(schoolYear, saintName);
-    familySaintService.save(newSaint);
-    redirectAttributes.addFlashAttribute("successMessage", "Family Saint added successfully.");
-    return "redirect:/family-saint-settings";
-}
-
+    public String addFamilySaint(
+            @RequestParam("schoolYear") String schoolYear,
+            @RequestParam("saintName") String saintName,
+            RedirectAttributes redirectAttributes
+    ) {
+        FamilySaint newSaint = new FamilySaint(schoolYear, saintName);
+        familySaintService.save(newSaint);
+        redirectAttributes.addFlashAttribute("successMessage", "Family Saint added successfully.");
+        return "redirect:/family-saint-settings";
+    }
 }

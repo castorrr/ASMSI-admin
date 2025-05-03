@@ -3,16 +3,7 @@ body {
     margin: 0;
     padding: 0;
 }
-.container {
-    margin-top: 15px;
-    margin-right: 500px;
-    width: 100%;
-    background: rgb(210, 219, 252);
-    padding: 15px;
-    border-radius: 10px;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
-    margin-bottom: 50px;
-}
+
 
 .studInfo-container {
     background: linear-gradient(to right, #0033cc, #6699ff);
@@ -150,6 +141,7 @@ body {
   .birthday-group input {
     max-width: 28%;            /* Limit the width of input fields */
   }
+  
 
   .otherInfo-group {
     margin-top: 55px;
@@ -172,7 +164,13 @@ body {
     color: #91413D;
     width: 75px;                /* Set a fixed width for labels */
   }
-  
+  .form-step {
+  margin-top: 15px;
+  padding-top: 20px;
+  padding-bottom: 20px;
+  width: 100%;
+  position: relative; /* ✅ or remove this line entirely */
+}
   /* Style for the input fields */
   .otherInfo-group input {
     margin-left: -70px;
@@ -191,6 +189,7 @@ body {
   .otherInfo-group input {
     max-width: 28%;            /* Limit the width of input fields */
   }
+  
   
   .studBackground-container {
     background: linear-gradient(to right, #0033cc, #6699ff);
@@ -228,6 +227,60 @@ body {
     color: #91413D;
     width: 75px;                /* Set a fixed width for labels */
   }
+
+  select option:disabled {
+    color: #888;
+    background-color: #eee;
+  }
+  .taken-option {
+    color: red !important;
+    font-weight: bold;
+  }
+  
+  
+  body {
+    
+    margin: 0;
+    padding: 0;
+    background-color: #f0f0ff;
+    font-size: 16px;
+  }
+  .section-title {
+    color: red;
+    font-size: 20px;
+    margin-top: 30px;
+    font-weight: bold;
+  }
+  
+  table td,
+table th {
+  text-align: center;
+  vertical-align: middle;
+  padding: 8px;
+}
+
+table td:first-child,
+table th:first-child {
+  text-align: left;
+}
+
+  .container {
+    max-width: 90%;
+    margin-left: 250px;
+    width: 100%;
+    
+    background: rgb(210, 219, 252);
+    padding: 40px;
+    border-radius: 20px;
+    box-shadow: 0 0 25px rgba(0, 0, 0, 0.3);
+    
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+  }
+  
+  
   
   /* Style for the input fields */
   .studentInfo-group input {
@@ -536,70 +589,5 @@ body {
   bottom: 50px;
 }
 
-/* Toast Header */
-.toast-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 0.75rem 1rem;
-  font-weight: 600;
-  font-size: 1rem;
-  background-color: rgba(255, 255, 255, 0.1);
-  border-bottom: 1px solid rgba(255, 255, 255, 0.15);
-  border-top-left-radius: 12px;
-  border-top-right-radius: 12px;
-}
 
-/* Toast Body */
-.custom-toast {
-  position: relative;
-  min-width: 300px;
-  max-width: 400px;
-  border-radius: 12px;
-  color: #fff;
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
-  overflow: hidden;
-  opacity: 1;
-  transition: all 0.4s ease-in-out;
-}
-
-.custom-toast.bg-success {
-  background-color: #198754;
-}
-
-.custom-toast.bg-danger {
-  background-color: #dc3545;
-}
-
-.custom-toast-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 0.75rem 1rem;
-  font-size: 1rem;
-  font-weight: 600;
-  background-color: rgba(255, 255, 255, 0.05);
-  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-}
-
-.custom-toast-body {
-  padding: 1rem;
-  font-size: 0.95rem;
-}
-
-.close-btn {
-  background: none;
-  border: none;
-  color: #fff;
-  font-size: 1.25rem;
-  cursor: pointer;
-}
-
-.custom-toast.hide {
-  opacity: 0;
-  transform: translateX(-100%);
-  transition: opacity 0.4s ease, transform 0.4s ease;
-  pointer-events: none;
-}
 
