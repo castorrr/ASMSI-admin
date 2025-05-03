@@ -22,6 +22,8 @@ public interface FinalStudentRepository extends JpaRepository<FinalStudent, Long
     List<String> findDistinctSchoolYears();
 
     List<FinalStudent> findByFamilySaintAndSchoolYear(String familySaint, String schoolYear);
+    List<FinalStudent> findBySchoolYearAndFamilySaint(String schoolYear, String familySaint);
+
 
 }
 

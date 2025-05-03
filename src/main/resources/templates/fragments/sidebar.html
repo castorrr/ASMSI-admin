@@ -85,9 +85,13 @@
             >
           </li>
           <li class="nav-item">
-            <a th:href="@{/family-saint-settings}" class="nav-link text-white"
-              >Family Saint Settings</a
-            >
+            <a th:href="@{/admission-settings/view}"
+            class="nav-link text-white"
+            th:classappend="${activePage == 'family-saint-settings'} ? 'active fw-bold text-primary'">
+            Admission Settings
+         </a>
+         
+
           </li>
           <li class="nav-item">
             <a th:href="@{/reports}" class="nav-link text-white">Reports</a>

@@ -2,64 +2,105 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Upload Database</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Upload Database</title>
 
-    <link
-      rel="stylesheet"
-      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
-    />
-    <link
-      rel="stylesheet"
-      href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css"
-    />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" />
 
-    <link rel="stylesheet" th:href="@{/css/header.css}" />
-    <link rel="stylesheet" th:href="@{/css/sidebar.css}" />
-    <link rel="stylesheet" href="/css/upload-database.css">
+  <link rel="stylesheet" th:href="@{/css/header.css}" />
+  <link rel="stylesheet" th:href="@{/css/sidebar.css}" />
+  <link rel="stylesheet" href="/css/upload-database.css" />
 
+  <!-- ✅ SweetAlert2 CDN -->
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 </head>
 
 <body>
 
+  <!-- Header -->
   <div th:replace="fragments/header :: header(${username})"></div>
 
-    <div class="container-fluid">
-      <div class="row">
-       
-        <div th:replace="fragments/sidebar :: sidebar(role=${role})"></div>
-        
-        <div class="col-md-9 p-4">
-            <h2 class="mb-4">Upload Student Database</h2>
+  <div class="container-fluid">
+    <div class="row">
 
-            <form id="xmlUploadForm" class="upload-form" th:action="@{/upload-xml}" method="post" enctype="multipart/form-data">
-                <div class="mb-3">
-                    <label for="schoolYear" class="form-label">School Year</label>
-                    <input type="text" class="form-control" id="schoolYear" name="schoolYear" placeholder="e.g. 2024-2025" required>
-                </div>
+      <!-- Sidebar -->
+      <div th:replace="fragments/sidebar :: sidebar(role=${role})"></div>
 
-                <div class="mb-3">
-                    <label for="xmlFile" class="form-label">Upload XML File</label>
-                    <input type="file" class="form-control" id="xmlFile" name="xmlFile" accept=".xml" required>
-                </div>
+      <!-- Main Content -->
+      <div class="col-md-9 p-4">
+        <h2 class="mb-4">Upload Student Database</h2>
 
-                <div id="uploadStatus" class="text-success mb-3" style="display: none;">✅ XML file successfully uploaded!</div>
-
-                <button type="submit" class="btn btn-primary">Submit to Database</button>
-
-            </form>
-
-            <div th:if="${successMessage}" class="alert alert-success" th:text="${successMessage}"></div>
-            <div th:if="${errorMessage}" class="alert alert-danger" th:text="${errorMessage}"></div>
-
-
-        </div>             
+  <form id="xmlUploadForm" class="upload-form" th:action="@{/upload-xml}" method="post" enctype="multipart/form-data">
+    <div class="mb-3">
+      <label for="schoolYear" class="form-label">School Year</label>
+      <input type="text" class="form-control" id="schoolYear" name="schoolYear" placeholder="e.g. 2024-2025" required>
     </div>
 
-    <!-- Bootstrap JS -->
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-    <script th:src="@{/js/user-management.js}"></script>
+    <div class="mb-3">
+      <label for="xmlFile" class="form-label">Upload XML File</label>
+      <input type="file" class="form-control" id="xmlFile" name="xmlFile" accept=".xml" required>
+    </div>
+
+    <div id="uploadStatus" class="text-success mb-3" style="display: none;">✅ XML file successfully uploaded!</div>
+
+    <button type="submit" class="btn btn-primary">Submit to Database</button>
+  </form>
+
+ <!-- ✅ Table for Uploaded Data -->
+<h4 class="mt-5">Uploaded Student Summary</h4>
+<div class="table-responsive">
+  <table class="table table-bordered table-striped mt-3">
+    <thead class="table-light">
+      <tr>
+        <th>#</th>
+        <th>School Year</th>
+        <th>Number of Students</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr th:each="row : ${studentCounts}">
+        <td th:text="${row['id']}">1</td>
+        <td th:text="${row['schoolYear']}">2024-2025</td>
+        <td th:text="${row['totalStudents']}">50</td>
+      </tr>
+      
+    </tbody>
+  </table>
+</div>
+
+
+ <!-- ✅ SweetAlert Success -->
+<div th:if="${successMessage}">
+  <script th:inline="javascript">
+    Swal.fire({
+      icon: 'success',
+      title: 'Success',
+      text: [[${successMessage}]],
+      timer: 2000,
+      showConfirmButton: false
+    });
+  </script>
+</div>
+
+<!-- ✅ SweetAlert Error -->
+<div th:if="${errorMessage}">
+  <script th:inline="javascript">
+    Swal.fire({
+      icon: 'error',
+      title: 'Upload Failed',
+      text: [[${errorMessage}]],
+      timer: 2500,
+      showConfirmButton: false
+    });
+  </script>
+</div>
+
+
+  <!-- Bootstrap JS -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+  <script th:src="@{/js/user-management.js}"></script>
 
 </body>
 

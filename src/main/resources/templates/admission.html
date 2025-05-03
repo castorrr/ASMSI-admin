@@ -19,7 +19,47 @@
     <link rel="stylesheet" th:href="@{/css/sidebar.css}" />
     <link rel="stylesheet" href="/css/admission.css">
 
+    <style>
+      .form-step {
+        display: none;
+      }
+    
+      .form-step.active {
+        display: block;
+      }
+    
+      .custom-toast {
+        color: white;
+        padding: 1rem;
+        border-radius: 5px;
+        display: none;
+      }
+      .form-step {
+  margin-top: 15px; /* ✅ same as your Step 1 */
+}
+
+    
+      .custom-toast.show {
+        display: block;
+      }
+
+      .form-step {
+  display: none;
+  margin-top: 20px;
+  padding: 20px;
+  width: 100%;
+  box-sizing: border-box;
+}
+.form-step.active {
+  display: block;
+}
+
+    </style>
+    
+
 </head>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
 
 <body>
 
@@ -34,352 +74,279 @@
             <!--MAIN CONTENT HERE-->        
           <h1>Welcome to the Admission Page</h1>
 
-          <div class="mb-4 d-flex align-items-center gap-2">
-              <input type="text" id="firstName" class="form-control w-50" placeholder="Enter First Name">
-              <input type="text" id="lastName" class="form-control w-50" placeholder="Enter Last Name">
-              <button class="btn btn-primary" onclick="searchStudent()">Search</button>
-          </div>
-        <!--FORM FOR DATABASE SAVING START HERE-->
-          <form action="/submit" method="POST">
-            <!--CSRF TOKEN-->
-            <input type="hidden" name="_csrf" value="${_csrf.token}">
+         <!-- ✅ MOVE this inside .container, above the first step -->
+         <div class="d-flex justify-content-end align-items-center gap-2 mb-4">
+         
+          <select id="schoolYearSelect" name="schoolYear" class="form-select w-auto" required>
+            <option disabled value="">Select Year</option>
+            <option th:each="sy : ${schoolYears}"
+                    th:value="${sy}"
+                    th:text="${sy}"
+                    th:selected="${sy == schoolYear}">
+            </option>
+          </select>
+          
+        
+          <!-- ID Number Search -->
+          <input type="text" id="idNumberSearch" class="form-control" style="max-width: 250px;" placeholder="Enter Student ID Number">
+          <button class="btn btn-primary" onclick="searchStudent()">Search</button>
+        </div>
 
-          <!--STUDENT INFORMATION CONTAINER-->
-          <div class="container">
-            <div class="studInfo-container">
-              <span>STUDENT INFORMATION</span>
-            </div>
 
-            <div class="name-group">  
-              <label class="last-name">Last Name:</label>
-              <input type="text" name="lastName" class="lastName-input">
-                
-              <label class="first-name">First Name:</label>
-              <input type="text" name="firstName"class="firstName-input">
-                
-              <label class="middle-name">Middle Name:</label>
-              <input type="text" name="middleName" class="middleName-input">
-                
-              <label class="suffix">Suffix:</label>
-              <input type="text" name="suffix" class="suffix-input">
-            </div>
+          
+     
 
-            <hr>
 
-            <div class="address-group">
-
-              <h3>Complete Address</h3>
-
-              <label class="barangay">Brgy./St./Purok/:</label>
-              <input type="text" name="barangay" class ="barangay-input">
-
-              <label class="municipality">Municipality:</label>
-              <input type="text" name="municipality" class ="municipality-input">
-
-              <label class="province">Province:</label>
-              <input type="text" name="province" class ="province-input">            
-            </div>
-
-            <hr>
+            <div class="container">
+              <form id="admissionForm" action="/submit" method="POST">
+                <input type="hidden" name="schoolYear" id="hiddenSchoolYear">
               
-            <div class="birthday-group">
-
-              <h3>Birth Information</h3>
-
-              <label class="birthdate">Date of Birth:</label>
-              <input type="date" name="birthdate"class="birthdate-input">
-
-              <label class="birthPlace">Place of Birth:</label>
-              <input type="text" name="birthPlace" class ="birthPlace-input">
-
-              <label class="age">Age:</label>
-              <input type="text" name="age" class ="age-input">
-
-            </div>
-
-            <hr>
-
-            <div class="otherInfo-group">
-
-              <h3>Other Information</h3>
-
-              <label class="examPlace">Exam Place:</label>
-              <input type="text" name="examPlace"class ="examPlace-input">
-
-              <label class="idNum">ID Number:</label>
-              <input type="text" name="idNumber" class ="idNum-input">
-
-              <label class="lrn">LRN:</label>
-              <input type="text" name="lrn" class ="LRN-input">
-
-            </div>
-
-          </div>
-          <!--STUDENT INFORMATION CONTAINER END HERE-->
-
-          <!--STUDENT BACKGROUND CONTAINER-->
-          <div class="container">
-            <div class="studBackground-container">
-              <span>STUDENT BACKGROUND</span>
-            </div>
-
-            <div class="studentInfo-group">  
-              <label class="religion">Religion:</label>
-              <input type="text" name="religion" class="religion-input">
                 
-              <label class="gender">Gender:</label>
-              <input type="text" name="gender" class="gender-input">
                 
-              <label class="citizenship">Citizenship:</label>
-              <input type="text" name="citizenship" class="citizenship-input">
                 
-            </div>
+            
+               <!-- Step 1 -->
+<div class="form-step active" id="step-1">
+  <div class="studInfo-container">
+    <span>STUDENT INFORMATION</span>
+  </div>
 
-            <div class="elementary-group">  
+  <div class="name-group">
+    <label class="last-name">Last Name:</label>
+    <input type="text" name="lastName" class="lastName-input" th:value="${studentData?.lastName}">
+    <label class="first-name">First Name:</label>
+    <input type="text" name="firstName" class="firstName-input" th:value="${studentData?.firstName}">
+    <label class="middle-name">Middle Name:</label>
+    <input type="text" name="middleName" class="middleName-input" th:value="${studentData?.middleName}">
+    <label class="suffix">Suffix:</label>
+    <input type="text" name="suffix" class="suffix-input" th:value="${studentData?.suffix}">
+  </div>
 
-              <label class="elementary">Elem School:</label>
-              <input type="text" name="elementarySchool" class="elementary-input">
-                
-              <label class="elemAddress">Address:</label>
-              <input type="text" name="elemAddress" class="elemAddress-input">
-                              
-            </div>
+  <hr>
 
-            <hr>
+  <div class="address-group">
+    <h3>Complete Address</h3>
+    <label class="barangay">Brgy./St./Purok/:</label>
+    <input type="text" name="barangay" class="barangay-input" th:value="${studentData?.brgy}">
+    <label class="municipality">Municipality:</label>
+    <input type="text" name="municipality" class="municipality-input" th:value="${studentData?.municipality}">
+    <label class="province">Province:</label>
+    <input type="text" name="province" class="province-input" th:value="${studentData?.province}">
+  </div>
 
-            <div class="parentInfo-group">  
+  <hr>
 
-              <h3>Guardian Information</h3>
+  <div class="birthday-group">
+    <h3>Birth Information</h3>
+    <label class="birthdate">Date of Birth:</label>
+    <input type="date" name="birthdate" class="birthdate-input" th:value="${studentData?.birthDate}">
+    <label class="birthPlace">Place of Birth:</label>
+    <input type="text" name="birthPlace" class="birthPlace-input" th:value="${studentData?.birthPlace}">
+    <label class="age">Age:</label>
+    <input type="text" name="age" class="age-input" th:value="${studentData?.age}">
+  </div>
 
-              <div class="father-group">
-                  <label class="father">Father:</label>
-                  <input type="text" name="fatherName" class="father-input">
-                  
-                  <label class="father-occupation">Occupation:</label>
-                  <input type="text" name="fatherOccupation" class="father-occupation-input">
+  <hr>
 
-                  <label class="father-contact">Contact Num:</label>
-                  <input type="text" name="fatherContact" class="father-contact-input">
-              </div>
+  <div class="otherInfo-group">
+    <h3>Other Information</h3>
+    <label class="examPlace">Exam Place:</label>
+    <input type="text" name="examPlace" class="examPlace-input" th:value="${studentData?.examPlace}">
+    <label class="idNum">ID Number:</label>
+    <input type="text" name="idNumber" class="idNum-input" th:value="${studentData?.idNumber}">
+    <label class="lrn">LRN:</label>
+    <input type="text" name="lrn" class="LRN-input" th:value="${studentData?.lrn}">
+  </div>
 
-              <div class="mother-group">
-                  <label class="mother">Mother:</label>
-                  <input type="text" name="motherName" class="mother-input">
-                  
-                  <label class="mother-occupation">Occupation:</label>
-                  <input type="text" name="motherOccupation" class="mother-occupation-input">
-
-                  <label class="mother-contact">Contact Num:</label>
-                  <input type="text" name="motherContact" class="mother-contact-input">
-              </div>
-
-              <div class="guardian-group">
-                  <label class="guardian">Guardian:</label>
-                  <input type="text" name="guardianName" class="guardian-input">
-
-                  <label class="guardrel">Relationship:</label>
-                  <input type="text" name="guardianRelationship" class="guardrel-input">
-                  
-                  <label class="guardian-occupation">Occupation:</label>
-                  <input type="text" name="guardianOccupation" class="guardian-occupation-input">
-
-                  <label class="guardian-contact">Contact Num:</label>
-                  <input type="text" name="guardianContact" class="guardian-contact-input">
-              </div>          
-            </div>     
-          </div>
-          <!--STUDENT BACKGROUND CONTAINER END HERE-->
-          <!--BOYSTOWN CREDENTIALS CONTAINER-->
-          <div class="container">
-            <div class="studBackground-container">
-                <span>BOYSTOWN CREDENTIALS</span>
-            </div>
-
-            <!-- Credentials Table -->
-            <table class="table table-bordered mt-4">
-                <thead>
-                    <tr>
-                        <th>List of Requirements</th>
-                        <th>Status</th>
-                    </tr>
-                </thead>
-
-                <tbody id="credentials-table-body">
-                  <!--PSA -->
-                  <tr>
-                    <td>Birth Certificate / PSA</td>
-                    <td>
-                      <select name="psastatus" class="form-select">
-                        <option value="complete">Complete</option>
-                        <option value="partial-original">Partial (Original)</option>
-                        <option value="partial-photocopy">Partial (Photocopy)</option>
-                        <option value="pending">Pending</option>
-                      </select>
-                    </td>
-                  </tr>
-
-                  <!--BAPTISMAL CERTIFICATE-->
-                  <tr>
-                    <td>Baptismal Certificate</td>
-                    <td>
-                      <select name="baptismalstatus" class="form-select">
-                        <option value="complete">Complete</option>
-                        <option value="partial-original">Partial (Original)</option>
-                        <option value="partial-photocopy">Partial (Photocopy)</option>
-                        <option value="pending">Pending</option>
-                      </select>
-                    </td>
-                  </tr>
-
-                  <!--CONFIRMATION CERTIFICATE-->
-                  <tr>
-                    <td>Confirmation Certificate</td>
-                    <td>
-                      <select name="confirmationstatus" class="form-select">
-                        <option value="complete">Complete</option>
-                        <option value="partial-original">Partial (Original)</option>
-                        <option value="partial-photocopy">Partial (Photocopy)</option>
-                        <option value="pending">Pending</option>
-                      </select>
-                    </td>
-                  </tr>
-
-                  <!--GOOD MORAL CERTIFICATE-->
-                  <tr>
-                    <td>Good Moral Certificate</td>
-                    <td>
-                      <select name="goodmoralstatus" class="form-select">
-                        <option value="complete">Complete</option>
-                        <option value="partial-original">Partial (Original)</option>
-                        <option value="partial-photocopy">Partial (Photocopy)</option>
-                        <option value="pending">Pending</option>
-                      </select>
-                    </td>
-                  </tr>
-
-                  <!--FORM138-->
-                  <tr>
-                    <td>Form138</td>
-                    <td>
-                      <select name="form138status" class="form-select">
-                        <option value="complete">Complete</option>
-                        <option value="partial-original">Partial (Original)</option>
-                        <option value="partial-photocopy">Partial (Photocopy)</option>
-                        <option value="pending">Pending</option>
-                      </select>
-                    </td>
-                  </tr>
-
-                  <!--CERTIFICATE OF INDIGENCY OR CERTIFICATE OF NON-EMPLOYMENT-->
-                  <tr>
-                    <td>Certificate of Indigency or Certificate of Non-employment</td>
-                    <td>
-                      <select name="indigencystatus" class="form-select">
-                        <option value="complete">Complete</option>
-                        <option value="partial-original">Partial (Original)</option>
-                        <option value="partial-photocopy">Partial (Photocopy)</option>
-                        <option value="pending">Pending</option>
-                      </select>
-                    </td>
-                  </tr>
-
-                  <!--PARENTS PHILHEALTH MDR-->
-                  <tr>
-                    <td>Parent's Philhealth MDR</td>
-                    <td>
-                      <select name="philhealthstatus" class="form-select">
-                        <option value="complete">Complete</option>
-                        <option value="partial-original">Partial (Original)</option>
-                        <option value="partial-photocopy">Partial (Photocopy)</option>
-                        <option value="pending">Pending</option>
-                      </select>
-                    </td>
-                  </tr>
-
-                  <!--KASUNDUAN OR CONTRACT-->
-                  <tr>
-                    <td>KASUNDUAN/ CONTRACT</td>
-                    <td>
-                      <select name="kasunduansatus" class="form-select">
-                        <option value="complete">Complete</option>
-                        <option value="pending">Pending</option>
-                      </select>
-                    </td>
-                  </tr>
-
-                  <!--STUDENT PHOTOS-->
-                  <tr>
-                    <td>STUDENT PICTURES (1X1,2X2)</td>
-                    <td>
-                      <select name="photoStatus" class="form-select">
-                        <option value="complete">Complete</option>
-                        <option value="partial-original">Partial (1X1)</option>
-                        <option value="partial-photocopy">Partial (2X2)</option>
-                        <option value="pending">Pending</option>
-                      </select>
-                    </td>
-                  </tr>
-
-                  <!--MEDICAL RECORD-->
-                  <tr>
-                    <td>Student Medical Record</td>
-                    <td>
-                      <select name="medicalrecordstatus" class="form-select">
-                        <option value="complete">Complete</option>
-                        <option value="pending">Pending</option>
-                      </select>
-                    </td>
-                  </tr>
-
-
-                </tbody>
-
-            </table>
-
-            <!-- School Year and Family Saint Section -->
-            <div class="row justify-content-center mt-4">
-            <!-- School Year Input -->
-              <div class="col-md-4 text-center">
-                <label for="schoolYear" class="form-label">School Year</label>
-                <input type="text" name="schoolYear" class="schoolYear-input">
-              </div>
-
-            <!-- Family Saint Dropdown -->
-
-              <div class="col-md-4 text-center">
-                <label for="familySaint" class="form-label">Family Saint</label>
-                <select id="familySaint" name="familySaint" class="form-select text-center">
-                    <option selected disabled>Select Family Saint</option>
-                    <!-- Options will be populated dynamically -->
-                </select>
-              </div>
+  <div class="text-end mt-3">
+    <button type="button" class="btn btn-primary" onclick="nextStep(2)">Next</button>
+  </div>
+</div>
 
             
-              <div class="col-12 text-center mt-3">
-                <button type="submit" class="submitbtn" disabled>Submit</button>
-              </div>
+             <!-- Step 2 -->
+<div class="form-step" id="step-2">
+  <div class="studBackground-container">
+    <span>STUDENT BACKGROUND</span>
+  </div>
 
-              <!-- Toast Notifications -->
-              <div class="position-fixed p-3" style="top: 0; right: 0;">
-                <div 
-                  id="toastMessage"
-                  class="custom-toast show"
-                  th:if="${successMessage != null or errorMessage != null}"
-                  th:classappend="${errorMessage != null} ? ' bg-danger' : ' bg-success'">
-                
-                  <div class="custom-toast-header">
-                    <strong th:text="${successMessage != null} ? 'Success' : 'Error'">Message</strong>
-                    <button type="button" class="close-btn" onclick="closeToast(this)">&times;</button>
-                  </div>
-                
-                  <div class="custom-toast-body">
-                    <span th:if="${successMessage != null}" th:text="${successMessage}">Student successfully added!</span>
-                    <span th:if="${errorMessage != null}" th:text="${errorMessage}">Something went wrong!</span>
-                  </div>
-                
-                </div>
-              </div>            
-          </div>
+  <div class="studentInfo-group">
+    <label class="religion">Religion:</label>
+    <input type="text" name="religion" class="religion-input" th:value="${studentData?.religion}">
+    <label class="gender">Gender:</label>
+    <input type="text" name="gender" class="gender-input" th:value="${studentData?.gender}">
+    <label class="citizenship">Citizenship:</label>
+    <input type="text" name="citizenship" class="citizenship-input" th:value="${studentData?.citizenship}">
+  </div>
+
+  <div class="elementary-group">
+    <label class="elementary">Elem School:</label>
+    <input type="text" name="elementarySchool" class="elementary-input" th:value="${studentData?.elemSchool}">
+    <label class="elemAddress">Address:</label>
+    <input type="text" name="elemAddress" class="elemAddress-input" th:value="${studentData?.schoolAddress}">
+  </div>
+
+  <hr>
+
+  <div class="parentInfo-group">
+    <h4 class="section-title">Guardian Information</h4>
+    <div class="father-group">
+      <label class="father">Father:</label>
+      <input type="text" name="fatherName" class="father-input" th:value="${studentData?.fatherName}">
+      <label class="father-occupation">Occupation:</label>
+      <input type="text" name="fatherOccupation" class="father-occupation-input" th:value="${studentData?.fatherOccupation}">
+      <label class="father-contact">Contact Num:</label>
+      <input type="text" name="fatherContact" class="father-contact-input" th:value="${studentData?.fatherContact}">
+    </div>
+    <div class="mother-group">
+      <label class="mother">Mother:</label>
+      <input type="text" name="motherName" class="mother-input" th:value="${studentData?.motherName}">
+      <label class="mother-occupation">Occupation:</label>
+      <input type="text" name="motherOccupation" class="mother-occupation-input" th:value="${studentData?.motherOccupation}">
+      <label class="mother-contact">Contact Num:</label>
+      <input type="text" name="motherContact" class="mother-contact-input" th:value="${studentData?.motherContact}">
+    </div>
+    <div class="guardian-group">
+      <label class="guardian">Guardian:</label>
+      <input type="text" name="guardianName" class="guardian-input" th:value="${studentData?.guardianName}">
+      <label class="guardrel">Relationship:</label>
+      <input type="text" name="guardianRelationship" class="guardrel-input" th:value="${studentData?.guardianRelationship}">
+      <label class="guardian-occupation">Occupation:</label>
+      <input type="text" name="guardianOccupation" class="guardian-occupation-input" th:value="${studentData?.guardianOccupation}">
+      <label class="guardian-contact">Contact Num:</label>
+      <input type="text" name="guardianContact" class="guardian-contact-input" th:value="${studentData?.guardianContact}">
+    </div>
+  </div>
+
+  <div class="d-flex justify-content-between mt-3">
+    <button type="button" class="btn btn-secondary" onclick="prevStep(1)">Back</button>
+    <button type="button" class="btn btn-primary" onclick="nextStep(3)">Next</button>
+  </div>
+</div>
+
+               <!-- Step 3 -->
+<div class="form-step" id="step-3">
+  <div class="studBackground-container">
+    <span>BOYSTOWN CREDENTIALS</span>
+  </div>
+
+  <table class="table table-bordered mt-4">
+    <thead>
+      <tr>
+        <th>List of Requirements</th>
+        <th>Original</th>
+        <th>Photocopy</th>
+        <th>Pending / Promissory Note</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>Birth Certificate / PSA</td>
+        <td><input type="radio" name="psastatus" value="original" th:checked="${studentData?.psastatus == 'original'}" required></td>
+        <td><input type="radio" name="psastatus" value="photocopy" th:checked="${studentData?.psastatus == 'photocopy'}"></td>
+        <td><input type="radio" name="psastatus" value="pending" th:checked="${studentData?.psastatus == 'pending'}"></td>
+      </tr>
+      <tr>
+        <td>Baptismal Certificate</td>
+        <td><input type="radio" name="baptismalstatus" value="original" th:checked="${studentData?.baptismalstatus == 'original'}" required></td>
+        <td><input type="radio" name="baptismalstatus" value="photocopy" th:checked="${studentData?.baptismalstatus == 'photocopy'}"></td>
+        <td><input type="radio" name="baptismalstatus" value="pending" th:checked="${studentData?.baptismalstatus == 'pending'}"></td>
+      </tr>
+      <tr>
+        <td>Confirmation Certificate</td>
+        <td><input type="radio" name="confirmationstatus" value="original" th:checked="${studentData?.confirmationstatus == 'original'}" required></td>
+        <td><input type="radio" name="confirmationstatus" value="photocopy" th:checked="${studentData?.confirmationstatus == 'photocopy'}"></td>
+        <td><input type="radio" name="confirmationstatus" value="pending" th:checked="${studentData?.confirmationstatus == 'pending'}"></td>
+      </tr>
+      <tr>
+        <td>Good Moral Certificate</td>
+        <td><input type="radio" name="goodmoralstatus" value="original" th:checked="${studentData?.goodmoralstatus == 'original'}" required></td>
+        <td><input type="radio" name="goodmoralstatus" value="photocopy" th:checked="${studentData?.goodmoralstatus == 'photocopy'}"></td>
+        <td><input type="radio" name="goodmoralstatus" value="pending" th:checked="${studentData?.goodmoralstatus == 'pending'}"></td>
+      </tr>
+      <tr>
+        <td>Form138</td>
+        <td><input type="radio" name="form138status" value="original" th:checked="${studentData?.form138status == 'original'}" required></td>
+        <td><input type="radio" name="form138status" value="photocopy" th:checked="${studentData?.form138status == 'photocopy'}"></td>
+        <td><input type="radio" name="form138status" value="pending" th:checked="${studentData?.form138status == 'pending'}"></td>
+      </tr>
+      <tr>
+        <td>Certificate of Indigency</td>
+        <td><input type="radio" name="indigencystatus" value="original" th:checked="${studentData?.indigencystatus == 'original'}" required></td>
+        <td><input type="radio" name="indigencystatus" value="photocopy" th:checked="${studentData?.indigencystatus == 'photocopy'}"></td>
+        <td><input type="radio" name="indigencystatus" value="pending" th:checked="${studentData?.indigencystatus == 'pending'}"></td>
+      </tr>
+      <tr>
+        <td>Philhealth MDR</td>
+        <td><input type="radio" name="philhealthstatus" value="original" th:checked="${studentData?.philhealthstatus == 'original'}" required></td>
+        <td><input type="radio" name="philhealthstatus" value="photocopy" th:checked="${studentData?.philhealthstatus == 'photocopy'}"></td>
+        <td><input type="radio" name="philhealthstatus" value="pending" th:checked="${studentData?.philhealthstatus == 'pending'}"></td>
+      </tr>
+      <tr>
+        <td>Kasunduan</td>
+        <td><input type="radio" name="kasunduansatus" value="original" th:checked="${studentData?.kasunduansatus == 'original'}" required></td>
+        <td><input type="radio" name="kasunduansatus" value="photocopy" th:checked="${studentData?.kasunduansatus == 'photocopy'}"></td>
+        <td><input type="radio" name="kasunduansatus" value="pending" th:checked="${studentData?.kasunduansatus == 'pending'}"></td>
+      </tr>
+      <tr>
+        <td>Photos</td>
+        <td><input type="radio" name="photoStatus" value="original" th:checked="${studentData?.photoStatus == 'original'}" required></td>
+        <td><input type="radio" name="photoStatus" value="photocopy" th:checked="${studentData?.photoStatus == 'photocopy'}"></td>
+        <td><input type="radio" name="photoStatus" value="pending" th:checked="${studentData?.photoStatus == 'pending'}"></td>
+      </tr>
+      <tr>
+        <td>Medical Record</td>
+        <td><input type="radio" name="medicalrecordstatus" value="original" th:checked="${studentData?.medicalrecordstatus == 'original'}" required></td>
+        <td><input type="radio" name="medicalrecordstatus" value="photocopy" th:checked="${studentData?.medicalrecordstatus == 'photocopy'}"></td>
+        <td><input type="radio" name="medicalrecordstatus" value="pending" th:checked="${studentData?.medicalrecordstatus == 'pending'}"></td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div class="row justify-content-center mt-4">
+    <!-- Family Saint -->
+    <div class="col-md-4 text-center">
+      <label for="familySaint" class="form-label">Family Saint</label>
+      <select id="familySaint" name="familySaint" class="form-select text-center" required>
+        <option selected disabled value="">Select Family Saint</option>
+        <option th:each="saint : ${saints}"
+                th:value="${saint.saintName}"
+                th:text="${saint.saintName}"
+                th:selected="${saint.saintName == studentData?.familySaint}"></option>
+      </select>
+    </div>
+
+    <!-- Code Number -->
+    <div class="col-md-4 text-center">
+      <label for="codeNumber" class="form-label">Code Number</label>
+      <select id="codeNumber" name="codeNumber" class="form-select text-center" required>
+        <option selected disabled value="">Select Code Number</option>
+        <option th:each="num : ${#numbers.sequence(1, 50)}"
+                th:value="${num}"
+                th:text="${num}"
+                th:selected="${num == studentData?.codeNumber}"></option>
+      </select>
+    </div>
+  </div>
+
+  <div class="d-flex justify-content-between mt-3">
+    <button type="button" class="btn btn-secondary" onclick="prevStep(2)">Back</button>
+    <button type="submit" class="btn btn-success">Submit</button>
+  </div>
+</div>
+
+
+<!-- Toast Notification -->
+<div class="position-fixed p-3" style="top: 1rem; right: 1rem; z-index: 9999;">
+  <div id="toastMessage" class="custom-toast bg-success text-white p-3 rounded d-none">
+    <div class="d-flex justify-content-between align-items-center">
+      <strong>Submitted Successfully</strong>
+      <button type="button" class="btn-close btn-close-white ms-3" onclick="closeToast()"></button>
+    </div>
+  </div>
+</div>
+
+
           <!--BOYSTOWN CREDENTIAL CONTAINER ENDS HERE-->
           </form>
         </div>             
@@ -388,6 +355,282 @@
     <!-- Bootstrap JS -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script th:src="@{/js/admission.js}"></script>
+
+    <script>
+      function nextStep(stepNum) {
+        document.querySelectorAll('.form-step').forEach(p => p.classList.remove('active'));
+        document.getElementById('step-' + stepNum).classList.add('active');
+      }
+    
+      function prevStep(stepNum) {
+        document.querySelectorAll('.form-step').forEach(p => p.classList.remove('active'));
+        document.getElementById('step-' + stepNum).classList.add('active');
+      }
+    
+      document.addEventListener("DOMContentLoaded", function () {
+    document.getElementById("admissionForm").addEventListener("submit", function (e) {
+      const selectedYear = document.getElementById("schoolYearSelect").value;
+      document.getElementById("hiddenSchoolYear").value = selectedYear;
+
+      if (!this.checkValidity()) {
+        e.preventDefault();
+        this.reportValidity();
+      }
+    });
+  });
+</script>
+
+
+
+ 
+
+
+<script>
+  function searchStudent() {
+    const id = document.getElementById('idNumberSearch').value;
+
+    fetch(`/api/admission/search?idNumber=${id}`)
+      .then(response => {
+        if (!response.ok) {
+          throw new Error(`Server returned status ${response.status}`);
+        }
+        return response.json();
+      })
+      .then(data => {
+        if (!Array.isArray(data) || data.length === 0) {
+          Swal.fire({
+            icon: 'error',
+            title: 'Not Found',
+            text: 'No student matches this ID',
+            timer: 2000
+          });
+          return;
+        }
+
+        const student = data[0];
+
+        // ✅ Step 1
+        document.querySelector('input[name="lastName"]').value = student.lastName || '';
+        document.querySelector('input[name="firstName"]').value = student.firstName || '';
+        document.querySelector('input[name="middleName"]').value = student.middleName || '';
+        document.querySelector('input[name="suffix"]').value = student.suffix || '';
+        document.querySelector('input[name="barangay"]').value = student.brgy || '';
+        document.querySelector('input[name="municipality"]').value = student.municipality || '';
+        document.querySelector('input[name="province"]').value = student.province || '';
+        document.querySelector('input[name="birthdate"]').value = student.birthDate || '';
+        document.querySelector('input[name="birthPlace"]').value = student.birthPlace || '';
+        document.querySelector('input[name="age"]').value = student.age || '';
+        document.querySelector('input[name="examPlace"]').value = student.examPlace || '';
+        document.querySelector('input[name="idNumber"]').value = student.idNum || '';
+        document.querySelector('input[name="lrn"]').value = student.lrn || '';
+
+        // ✅ Step 2
+        document.querySelector('input[name="religion"]').value = student.religion || '';
+        document.querySelector('input[name="gender"]').value = student.gender || '';
+        document.querySelector('input[name="citizenship"]').value = student.citizenship || '';
+        document.querySelector('input[name="elementarySchool"]').value = student.elemSchool || '';
+        document.querySelector('input[name="elemAddress"]').value = student.schoolAddress || '';
+        document.querySelector('input[name="fatherName"]').value = student.fatherName || '';
+        document.querySelector('input[name="fatherOccupation"]').value = student.fatherOccupation || '';
+        document.querySelector('input[name="fatherContact"]').value = student.fatherContact || '';
+        document.querySelector('input[name="motherName"]').value = student.motherName || '';
+        document.querySelector('input[name="motherOccupation"]').value = student.motherOccupation || '';
+        document.querySelector('input[name="motherContact"]').value = student.motherContact || '';
+        document.querySelector('input[name="guardianName"]').value = student.guardianName || '';
+        document.querySelector('input[name="guardianRelationship"]').value = student.guardianRelationship || '';
+        document.querySelector('input[name="guardianOccupation"]').value = student.guardianOccupation || '';
+        document.querySelector('input[name="guardianContact"]').value = student.guardianContact || '';
+
+        // ✅ Step 3: Selects
+        const saintSelect = document.getElementById('familySaint');
+        if (student.familySaint) {
+          const saintOption = [...saintSelect.options].find(opt => opt.value === student.familySaint);
+          if (saintOption) saintOption.selected = true;
+        }
+
+        const codeSelect = document.getElementById('codeNumber');
+        if (student.codeNumber && student.familySaint && student.schoolYear) {
+  fetch(`/api/admission/used-codes?familySaint=${student.familySaint}&schoolYear=${student.schoolYear}`)
+    .then(res => res.json())
+    .then(usedCodes => {
+      codeSelect.innerHTML = '<option selected disabled value="">Select Code Number</option>';
+      for (let i = 1; i <= 50; i++) {
+        const option = document.createElement('option');
+        option.value = i;
+        option.textContent = i;
+        if (usedCodes.includes(i) && i != student.codeNumber) {
+          option.disabled = true;
+        }
+        codeSelect.appendChild(option);
+      }
+
+      const selectedOption = [...codeSelect.options].find(opt => opt.value == student.codeNumber);
+      if (selectedOption) selectedOption.selected = true;
+    });
+}
+
+
+        // ✅ Step 3: Radio buttons
+        const radioFields = [
+          'psastatus',
+          'baptismalstatus',
+          'confirmationstatus',
+          'goodmoralstatus',
+          'form138status',
+          'indigencystatus',
+          'philhealthstatus',
+          'kasunduansatus',
+          'photoStatus',
+          'medicalrecordstatus'
+        ];
+
+        radioFields.forEach(field => {
+          if (student[field]) {
+            const radio = document.querySelector(`input[name="${field}"][value="${student[field]}"]`);
+            if (radio) radio.checked = true;
+          }
+        });
+
+        Swal.fire({
+          icon: 'success',
+          title: 'Student Found',
+          text: `${student.firstName} ${student.lastName}`,
+          timer: 2000
+        });
+      })
+      .catch((error) => {
+        console.error('Fetch error:', error);
+        Swal.fire({
+          icon: 'error',
+          title: 'Error',
+          text: 'Failed to fetch data. Please check the console.',
+        });
+      });
+  }
+</script>
+
+
+<script>
+  document.addEventListener("DOMContentLoaded", function () {
+    const schoolYearSelect = document.getElementById("schoolYearSelect");
+    const familySaintSelect = document.getElementById("familySaint");
+    const codeSelect = document.getElementById("codeNumber");
+    const idInput = document.querySelector('input[name="idNumber"]');
+
+    // Populate School Years
+    fetch("/api/admission/school-years")
+      .then(res => res.json())
+      .then(years => {
+        years.forEach(year => {
+          const opt = document.createElement("option");
+          opt.value = year;
+          opt.textContent = year;
+          schoolYearSelect.appendChild(opt);
+        });
+
+        const currentYear = new Date().getFullYear().toString();
+        const match = [...schoolYearSelect.options].find(opt => opt.value === currentYear);
+        if (match) {
+          match.selected = true;
+          loadFamilySaints(currentYear);
+          document.getElementById("hiddenSchoolYear").value = currentYear;
+        }
+      })
+      .catch(err => console.error("Error loading school years", err));
+
+    // Populate Family Saints for selected school year
+    function loadFamilySaints(year) {
+      fetch(`/family-saint-settings/api?schoolYear=${year}`)
+        .then(res => res.json())
+        .then(data => {
+          familySaintSelect.innerHTML = '<option selected disabled value="">Select Family Saint</option>';
+          data.forEach(saint => {
+            const option = document.createElement("option");
+            option.value = saint.saintName;
+            option.textContent = saint.saintName;
+            familySaintSelect.appendChild(option);
+          });
+        })
+        .catch(err => console.error("Failed to load family saints:", err));
+    }
+
+    // Apply red color and label to used codes
+    function fetchUsedCodesAndStyle() {
+      const familySaint = familySaintSelect.value;
+      const schoolYear = schoolYearSelect.value;
+      const currentSelected = parseInt(codeSelect.value);
+
+      if (!familySaint || !schoolYear) return;
+
+      fetch(`/api/admission/used-codes?familySaint=${familySaint}&schoolYear=${schoolYear}`)
+        .then(res => res.json())
+        .then(usedCodes => {
+          [...codeSelect.options].forEach(opt => {
+            const val = parseInt(opt.value);
+            if (!isNaN(val)) {
+              if (usedCodes.includes(val) && val !== currentSelected) {
+                opt.style.color = "red";
+                opt.textContent = `${val} (taken)`;
+              } else {
+                opt.style.color = "";
+                opt.textContent = val;
+              }
+            }
+          });
+        })
+        .catch(err => console.error("Error styling used codes:", err));
+    }
+
+    // Event Listeners
+    schoolYearSelect.addEventListener("change", function () {
+      loadFamilySaints(this.value);
+      document.getElementById("hiddenSchoolYear").value = this.value;
+      fetchUsedCodesAndStyle();
+    });
+
+    familySaintSelect.addEventListener("change", fetchUsedCodesAndStyle);
+  });
+</script>
+    
+
+<script th:inline="javascript">
+  document.addEventListener("DOMContentLoaded", function () {
+    const successMessage = /*[[${successMessage}]]*/ '';
+    const errorMessage = /*[[${errorMessage}]]*/ '';
+    const stayStep = /*[[${stayOnStep}]]*/ 0;
+
+    if (successMessage && successMessage.trim() !== '') {
+      Swal.fire({
+        icon: 'success',
+        title: 'Success',
+        text: successMessage,
+        timer: 2000,
+        showConfirmButton: false
+      });
+    }
+
+    if (errorMessage && errorMessage.trim() !== '') {
+      Swal.fire({
+        icon: 'error',
+        title: 'Error',
+        text: errorMessage,
+        timer: 3000,
+        showConfirmButton: false
+      });
+    }
+
+    if (stayStep > 0) {
+      document.querySelectorAll('.form-step').forEach(p => p.classList.remove('active'));
+      const activeStep = document.getElementById('step-' + stayStep);
+      if (activeStep) {
+        activeStep.classList.add('active');
+      }
+    }
+  });
+</script>
+
+
+
 
 </body>
 
