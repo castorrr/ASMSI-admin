@@ -87,6 +87,8 @@
     </style>
   </head>
 
+
+
   <body>
     <!-- Header -->
     <div th:replace="fragments/header :: header(${username})"></div>
@@ -185,12 +187,33 @@
               role="tabpanel"
               aria-labelledby="saint-tab"
             >
+           
+<!-- Export buttons (visible) -->
+
+
+<!-- ✅ Hidden Export Table placed inside the correct tab -->
+<table id="exportFamilySaint" class="d-none">
+  <thead>
+    <tr>
+      <th>Family Saint</th>
+      <th>CN</th>
+      <th>Complete Name</th>
+      <th>Province</th>
+    </tr>
+  </thead>
+  <tbody></tbody>
+</table>
+
+<!-- Actual grid container -->
+<div id="saintGridContainer" class="row" style="row-gap: 20px;"></div>
+
 
             </div>
             <div
               class="tab-pane fade"
               id="testing"
               role="tabpanel"
+
               aria-labelledby="testing-tab"
             >
             <h5>Exam Place Statistics</h5>
@@ -226,10 +249,11 @@
         data.forEach(row => {
           const tr = document.createElement("tr");
           tr.innerHTML = `
-            <td>${row.examPlace}</td>
-            <td>${row.total}</td>
-            <td>${row.arrived}</td>
-          `;
+  <td>${row.examPlace}</td>
+  <td>${row.total}</td>
+  <td>${row.arrived}</td>
+`;
+
           tableBody.appendChild(tr);
         });
   
@@ -272,19 +296,219 @@
         data.forEach(row => {
           const tr = document.createElement('tr');
           tr.innerHTML = `
-            <td>${row.familySaint}</td>
-            <td>${row.totalStudents}</td>
-            <td>${row.usedCodeNumbers.join(', ')}</td>
-          `;
+  <td>${row.familySaint}</td>
+  <td>${row.totalStudents}</td>
+  <td>${row.usedCodeNumbers.join(', ')}</td>
+`;
+
           tableBody.appendChild(tr);
         });
       });
   });
 </script>
 
+<script>
+  document.addEventListener("DOMContentLoaded", function () {
+    fetch("/reports/family-saint-grid")
+      .then(res => res.json())
+      .then(data => {
+        const gridContainer = document.getElementById("saintGridContainer");
+        const exportTableBody = document.querySelector("#exportFamilySaint tbody");
+
+        gridContainer.innerHTML = "";
+        exportTableBody.innerHTML = "";
+
+        for (const saint in data) {
+          const rows = data[saint];
+
+          // Visible grid
+          const col = document.createElement("div");
+          col.className = "col-md-2 mb-4";
+          col.innerHTML = 
+            <div class="table-responsive shadow-sm border rounded p-2">
+              <h6 class="text-center bg-primary text-white py-1">${saint}</h6>
+              <table class="table table-bordered table-sm text-center">
+                <thead><tr><th>CN</th><th>Complete Name</th><th>Province</th></tr></thead>
+                <tbody>
+                  ${rows.map(r => 
+                    <tr>
+                      <td>${r.codeNumber}</td>
+                      <td>${r.studentName}</td>
+                      <td>${r.province}</td>
+                    </tr>
+                  ).join('')}
+                </tbody>
+              </table>
+            </div>
+          ;
+          gridContainer.appendChild(col);
+
+          // Hidden export table
+          rows.forEach(r => {
+            const tr = document.createElement("tr");
+            tr.innerHTML = `
+  <td>${row.examPlace}</td>
+  <td>${row.total}</td>
+  <td>${row.arrived}</td>
+`;
+
+            exportTableBody.appendChild(tr);
+          });
+        }
+
+        // Initialize DataTable on the hidden export table
+        const exportTable = $('#exportFamilySaint').DataTable({
+          dom: 'Bfrtip',
+          paging: false,
+          searching: false,
+          ordering: false,
+          info: false,
+          buttons: ['copy', 'csv', 'excel', 'pdf', 'print']
+        });
+
+        // Link export buttons to the hidden table
+        document.getElementById("exportCopy").onclick = () => exportTable.button('.buttons-copy').trigger();
+        document.getElementById("exportCSV").onclick = () => exportTable.button('.buttons-csv').trigger();
+        document.getElementById("exportExcel").onclick = () => exportTable.button('.buttons-excel').trigger();
+        document.getElementById("exportPDF").onclick = () => exportTable.button('.buttons-pdf').trigger();
+        document.getElementById("exportPrint").onclick = () => exportTable.button('.buttons-print').trigger();
+      });
+  });
+</script>
+
+
+
+
+    <script>
+  document.addEventListener("DOMContentLoaded", function () {
+    fetch('/reports/family-saint-grid')
+      .then(res => res.json())
+      .then(data => {
+        const container = document.getElementById("familySaintGridsWrapper");
+        container.innerHTML = '';
+
+        for (const saint in data) {
+          const entries = data[saint];
+
+          const tableHtml = 
+            <div class="col-md-2 mb-4">
+              <div class="table-responsive shadow-sm border rounded p-2">
+                <h6 class="text-center bg-primary text-white py-1">${saint}</h6>
+                <table class="table table-bordered table-sm text-center family-saint-table">
+                  <thead class="d-none">
+                    <tr><th>CN</th><th>Name</th><th>Province</th></tr>
+                  </thead>
+                  <tbody>
+                    ${entries.map(row => 
+                      <tr>
+                        <td>${row.codeNumber}</td>
+                        <td>${row.studentName}</td>
+                        <td>${row.province}</td>
+                      </tr>
+                    ).join('')}
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          ;
+
+          container.insertAdjacentHTML("beforeend", tableHtml);
+        }
+
+        // Apply DataTables to all rendered tables after slight delay
+        setTimeout(() => {
+          $('.family-saint-table').DataTable({
+            paging: false,
+            searching: false,
+            ordering: false,
+            info: false,
+            dom: 'Bfrtip',
+            buttons: ['copy', 'csv', 'excel', 'pdf', 'print']
+          });
+        }, 0);
+      })
+      .catch(err => console.error("Error loading family saint grid:", err));
+  });
+</script>
+
+<script>
+ document.addEventListener("DOMContentLoaded", function () {
+  fetch("/reports/family-saint-stats-grid")
+    .then(res => res.json())
+    .then(data => {
+      const container = document.getElementById("saintGridContainer");
+      const exportTableBody = document.querySelector("#exportFamilySaint tbody");
+      container.innerHTML = "";
+      exportTableBody.innerHTML = "";
+
+      for (const saint in data) {
+        const saintRows = data[saint];
+        const table = document.createElement("table");
+        table.className = "table table-bordered table-sm text-center";
+
+        table.innerHTML = `
+          <thead class="table-primary">
+            <tr><th colspan="3" class="text-center">${saint}</th></tr>
+            <tr><th style="width: 10%;">CN</th><th>Complete Name</th><th>Province</th></tr>
+          </thead>
+          <tbody>
+            ${saintRows.map(row => `
+              <tr>
+                <td>${row.codeNumber}</td>
+                <td>${row.studentName || ""}</td>
+                <td>${row.province || ""}</td>
+              </tr>
+            `).join("")}
+          </tbody>
+        `;
+
+        const col = document.createElement("div");
+        col.className = "col-md-2";
+        col.appendChild(table);
+        container.appendChild(col);
+
+        // Append to hidden export table
+        saintRows.forEach(row => {
+          const tr = document.createElement("tr");
+          tr.innerHTML = `
+            <td>${saint}</td>
+            <td>${row.codeNumber}</td>
+            <td>${row.studentName || ""}</td>
+            <td>${row.province || ""}</td>
+          `;
+          exportTableBody.appendChild(tr);
+        });
+      }
+
+      // Initialize DataTable export functionality on the hidden table
+      const exportTable = $('#exportFamilySaint').DataTable({
+        dom: 'Bfrtip',
+        paging: false,
+        searching: false,
+        ordering: false,
+        info: false,
+        buttons: ['copy', 'csv', 'excel', 'pdf', 'print']
+      });
+
+      // Bind export buttons
+      document.getElementById("exportCopy").onclick = () => exportTable.button('.buttons-copy').trigger();
+      document.getElementById("exportCSV").onclick = () => exportTable.button('.buttons-csv').trigger();
+      document.getElementById("exportExcel").onclick = () => exportTable.button('.buttons-excel').trigger();
+      document.getElementById("exportPDF").onclick = () => exportTable.button('.buttons-pdf').trigger();
+      document.getElementById("exportPrint").onclick = () => exportTable.button('.buttons-print').trigger();
+    })
+    .catch(err => console.error("Error loading family saint grid:", err));
+});
+
+  </script>
+  
+
     
+
+  
   
       
+
 
   </body>
 </html>

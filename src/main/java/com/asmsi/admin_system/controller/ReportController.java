@@ -143,6 +143,26 @@ public Map<String, List<Map<String, Object>>> getFamilySaintGrid() {
 }
 
 
+@GetMapping("/reports/family-saint-grid")
+@ResponseBody
+public Map<String, List<Map<String, Object>>> getFamilySaintGrid() {
+    List<AdmissionData> allData = admissionDataRepository.findAll();
+    Map<String, List<Map<String, Object>>> saintGrid = new HashMap<>();
+
+    for (AdmissionData data : allData) {
+        String saint = data.getFamilySaint();
+        saintGrid.putIfAbsent(saint, new ArrayList<>());
+
+        Map<String, Object> entry = new HashMap<>();
+        entry.put("codeNumber", data.getCodeNumber());
+        entry.put("studentName", data.getLastName() + ", " + data.getFirstName());
+        entry.put("province", data.getProvince());
+
+        saintGrid.get(saint).add(entry);
+    }
+
+    return saintGrid;
+}
 
 
     
