@@ -8,14 +8,12 @@ import java.util.List;
 @Repository
 public interface FinalStudentRepository extends JpaRepository<FinalStudent, Long> {
 
-    List<FinalStudent> findByFamilySaint(String familySaint);
+   
 
     // Custom query to find students by School Year
     List<FinalStudent> findBySchoolYear(String schoolYear);
 
-    // Custom query to get distinct Family Saints for the filter dropdown
-    @Query("SELECT DISTINCT f.familySaint FROM FinalStudent f")
-    List<String> findDistinctFamilySaints();
+    
 
     // Custom query to get distinct School Years for the filter dropdown
     @Query("SELECT DISTINCT f.schoolYear FROM FinalStudent f")
@@ -23,6 +21,10 @@ public interface FinalStudentRepository extends JpaRepository<FinalStudent, Long
 
     List<FinalStudent> findByFamilySaintAndSchoolYear(String familySaint, String schoolYear);
     List<FinalStudent> findBySchoolYearAndFamilySaint(String schoolYear, String familySaint);
+@Query("SELECT DISTINCT f.familySaint FROM FinalStudent f WHERE f.familySaint IS NOT NULL")
+List<String> findDistinctFamilySaints();
+
+List<FinalStudent> findByFamilySaint(String familySaint);
 
 
 }
