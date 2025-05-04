@@ -1,3 +1,7 @@
+<<<<<<< Updated upstream
+=======
+// src/main/java/com/asmsi/admin_system/dto/FamilySaintGridEntry.java
+>>>>>>> Stashed changes
 package com.asmsi.admin_system.dto;
 
 public class FamilySaintGridEntry {
@@ -5,6 +9,10 @@ public class FamilySaintGridEntry {
     private String studentName;
     private String province;
 
+<<<<<<< Updated upstream
+=======
+    // Getters and Setters
+>>>>>>> Stashed changes
     public int getCodeNumber() {
         return codeNumber;
     }

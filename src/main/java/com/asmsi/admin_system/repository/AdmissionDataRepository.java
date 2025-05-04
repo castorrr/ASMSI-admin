@@ -21,12 +21,11 @@ public interface AdmissionDataRepository extends JpaRepository<AdmissionData, Lo
 
     List<AdmissionData> findByFamilySaintAndSchoolYear(String familySaint, String schoolYear);
 
-    List<AdmissionData> findByFamilySaint(String familySaint);
+   
 
     List<AdmissionData> findBySchoolYear(String schoolYear);
 
-    @Query("SELECT DISTINCT a.familySaint FROM AdmissionData a")
-    List<String> findDistinctFamilySaints();
+
 
     @Query("SELECT DISTINCT a.schoolYear FROM AdmissionData a")
     List<String> findDistinctSchoolYears();
@@ -46,4 +45,11 @@ public interface AdmissionDataRepository extends JpaRepository<AdmissionData, Lo
         GROUP BY family_saint
     """, nativeQuery = true)
     List<Object[]> getFamilySaintStatsSummary();
+
+
+    @Query("SELECT DISTINCT a.familySaint FROM AdmissionData a WHERE a.familySaint IS NOT NULL ORDER BY a.familySaint")
+List<String> findDistinctFamilySaints();
+
+List<AdmissionData> findByFamilySaint(String familySaint);
+
 }
