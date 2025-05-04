@@ -185,36 +185,7 @@
               role="tabpanel"
               aria-labelledby="saint-tab"
             >
-            <div class="container mt-4">
-              <div class="row" th:each="entry : ${saintGrids}">
-                <div class="col-md-6 mb-4">
-                  <div class="card">
-                    <div class="card-header bg-primary text-white">
-                      <strong th:text="${entry.key}">Family Saint Name</strong>
-                    </div>
-                    <div class="card-body p-2">
-                      <table class="table table-sm table-bordered mb-0">
-                        <thead>
-                          <tr>
-                            <th>CN</th>
-                            <th>Name</th>
-                            <th>Province</th>
-                          </tr>
-                        </thead>
-                        <tbody>
-                          <tr th:each="row : ${entry.value}">
-                            <td th:text="${row.codeNumber}"></td>
-                            <td th:text="${row.studentName}"></td>
-                            <td th:text="${row.province}"></td>
-                          </tr>
-                        </tbody>
-                      </table>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-            
+
             </div>
             <div
               class="tab-pane fade"
