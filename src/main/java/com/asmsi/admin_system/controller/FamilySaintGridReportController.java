@@ -35,7 +35,8 @@ public class FamilySaintGridReportController {
                         .orElse(null);
 
                 FamilySaintGridEntry entry = new FamilySaintGridEntry();
-                entry.setCodeNumber(i);
+                entry.setCodeNumber(String.valueOf(code));  // ✅ FIXED
+
                 entry.setStudentName(match != null ? match.getLastName() + ", " + match.getFirstName() : "");
                 entry.setProvince(match != null ? match.getProvince() : "");
                 rows.add(entry);

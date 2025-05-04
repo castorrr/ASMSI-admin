@@ -1,15 +1,23 @@
 package com.asmsi.admin_system.dto;
 
 public class FamilySaintGridEntry {
-    private int codeNumber;
+    private String codeNumber;
     private String studentName;
     private String province;
 
-    public int getCodeNumber() {
+    public FamilySaintGridEntry() {}
+
+    public FamilySaintGridEntry(String codeNumber, String studentName, String province) {
+        this.codeNumber = codeNumber;
+        this.studentName = studentName;
+        this.province = province;
+    }
+
+    public String getCodeNumber() {
         return codeNumber;
     }
 
-    public void setCodeNumber(int codeNumber) {
+    public void setCodeNumber(String codeNumber) {
         this.codeNumber = codeNumber;
     }
 
