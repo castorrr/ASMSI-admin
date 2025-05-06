@@ -442,5 +442,26 @@
         .querySelectorAll('[data-bs-toggle="tooltip"]')
         .forEach((el) => new bootstrap.Tooltip(el));
     </script>
+
+<script>
+  let deleteUserId = null;
+
+  function openDeleteModal(button) {
+    deleteUserId = button.getAttribute('data-user-id');
+    const modal = new bootstrap.Modal(document.getElementById('confirmDeleteModal'));
+    modal.show();
+  }
+
+  document.getElementById('confirmDeleteBtn').addEventListener('click', function () {
+    if (deleteUserId) {
+      const form = document.getElementById('deleteForm-' + deleteUserId);
+      if (form) {
+        document.getElementById('deleteSpinner').classList.remove('d-none');
+        form.submit();
+      }
+    }
+  });
+</script>
+
   </body>
 </html>

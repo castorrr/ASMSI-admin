@@ -73,31 +73,33 @@
         <div class="col-md-9 p-4">
             <!--MAIN CONTENT HERE-->        
           <h1>Welcome to the Admission Page</h1>
+<!-- Aligned & wider input -->
+<!-- 🟢 Clean Search Bar Placement -->
+<form id="searchForm" class="mb-4" onsubmit="handleSearch(event)">
+  <div class="search px-0">
+    <div class="row g-2">
+      <div class="col-auto">
+        <select id="schoolYearSelect" name="schoolYear" class="form-select" required>
+          <option disabled value="">Select Year</option>
+          <option th:each="sy : ${schoolYears}" th:value="${sy}" th:text="${sy}" th:selected="${sy == schoolYear}"></option>
+        </select>
+      </div>
+      <div class="col-md-6">
+        <input type="text" id="idNumberSearch" class="form-control" placeholder="Enter Student ID Number" autofocus>
+      </div>
+    </div>
+  </div>
+</form>
 
-         <!-- ✅ MOVE this inside .container, above the first step -->
-         <div class="d-flex justify-content-end align-items-center gap-2 mb-4">
-         
-          <select id="schoolYearSelect" name="schoolYear" class="form-select w-auto" required>
-            <option disabled value="">Select Year</option>
-            <option th:each="sy : ${schoolYears}"
-                    th:value="${sy}"
-                    th:text="${sy}"
-                    th:selected="${sy == schoolYear}">
-            </option>
-          </select>
-          
         
-          <!-- ID Number Search -->
-          <input type="text" id="idNumberSearch" class="form-control" style="max-width: 250px;" placeholder="Enter Student ID Number">
-          <button class="btn btn-primary" onclick="searchStudent()">Search</button>
-        </div>
 
 
           
      
 
 
-            <div class="container">
+        <div class="container" style="margin-left: 1; padding-left: 5;">
+
               <form id="admissionForm" action="/submit" method="POST">
                 <input type="hidden" name="schoolYear" id="hiddenSchoolYear">
               
@@ -646,7 +648,12 @@
     }
   });
 </script>
-
+<script>
+  function handleSearch(event) {
+    event.preventDefault(); // ⛔ Prevent page reload
+    searchStudent();        // ✅ Same as old search button
+  }
+</script>
 
 
 

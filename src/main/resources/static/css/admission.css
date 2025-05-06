@@ -259,6 +259,8 @@ table th {
   padding: 8px;
 }
 
+
+
 table td:first-child,
 table th:first-child {
   text-align: left;
@@ -266,13 +268,13 @@ table th:first-child {
 
   .container {
     max-width: 90%;
-    margin-left: 250px;
+    margin-left: 70px;
     width: 100%;
     
     background: rgb(210, 219, 252);
     padding: 40px;
     border-radius: 20px;
-    box-shadow: 0 0 25px rgba(0, 0, 0, 0.3);
+  
     
     box-sizing: border-box;
     display: flex;
@@ -591,3 +593,35 @@ table th:first-child {
 
 
 
+.search {
+  margin-bottom: 1rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-left: 70px;
+}
+
+.search select,
+.search input {
+  font-size: 0.9rem;
+  padding: 0.4rem 0.6rem;
+  border-radius: 0.25rem;
+  border: 1px solid #ccc;
+}
+
+.search input {
+  flex: 1;
+  min-width: 500px;
+}
+
+@media (max-width: 576px) {
+  .search {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .search input,
+  .search select {
+    width: 100%;
+  }
+}

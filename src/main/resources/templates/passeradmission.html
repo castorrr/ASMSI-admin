@@ -9,20 +9,13 @@
   <!-- Bootstrap + Icons -->
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" />
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" />
-
-  <!-- App CSS -->
   <link rel="stylesheet" th:href="@{/css/header.css}" />
   <link rel="stylesheet" th:href="@{/css/sidebar.css}" />
   <link rel="stylesheet" href="/css/admission.css" />
+  <link rel="stylesheet" href="https://cdn.datatables.net/1.13.4/css/jquery.dataTables.min.css" />
+  <link rel="stylesheet" href="https://cdn.datatables.net/buttons/2.4.2/css/buttons.dataTables.min.css" />
 
-  <!-- DataTables CSS -->
-  <link rel="stylesheet" href="https://cdn.datatables.net/1.13.4/css/jquery.dataTables.min.css">
-  <link rel="stylesheet" href="https://cdn.datatables.net/buttons/2.4.2/css/buttons.dataTables.min.css">
-
-  <!-- SweetAlert2 -->
-  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-
-  <!-- jQuery + DataTables + Export -->
+  <!-- jQuery + DataTables -->
   <script src="https://code.jquery.com/jquery-3.7.0.min.js"></script>
   <script src="https://cdn.datatables.net/1.13.4/js/jquery.dataTables.min.js"></script>
   <script src="https://cdn.datatables.net/buttons/2.4.2/js/dataTables.buttons.min.js"></script>
@@ -30,17 +23,11 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.0/jszip.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.36/pdfmake.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.36/vfs_fonts.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 
   <style>
-    h2 {
-      font-weight: bold;
-      color: #0d6efd;
-    }
-
-    .card {
-      background-color: #fff;
-    }
-
+    h2 { font-weight: bold; color: #0d6efd; }
+    .card { background-color: #fff; }
     .dt-buttons .dt-button {
       background-color: #0d6efd !important;
       color: white !important;
@@ -49,11 +36,7 @@
       padding: 6px 12px;
       margin-right: 10px;
     }
-
-    .dt-button:hover {
-      background-color: #0b5ed7 !important;
-    }
-
+    .dt-button:hover { background-color: #0b5ed7 !important; }
     .dataTables_filter input {
       width: 300px !important;
       margin-left: 10px;
@@ -61,31 +44,15 @@
       border-radius: 4px;
       border: 1px solid #ccc;
     }
-
-    table.dataTable tbody tr.table-success {
-      background-color: #d1e7dd !important;
-    }
-
-    .table-striped > tbody > tr:nth-of-type(odd) {
-      background-color: #f4f6f9;
-    }
-
-    .table th,
-    .table td {
-      vertical-align: middle;
-      text-align: center;
-    }
-
-    /* Ensure buttons and search stay aligned */
+    table.dataTable tbody tr.table-success { background-color: #d1e7dd !important; }
+    .table-striped > tbody > tr:nth-of-type(odd) { background-color: #f4f6f9; }
+    .table th, .table td { vertical-align: middle; text-align: center; }
     .dataTables_wrapper .row:first-child {
       display: flex;
       justify-content: space-between;
       align-items: center;
     }
-
-    .dataTables_wrapper .row {
-      margin-bottom: 10px;
-    }
+    .dataTables_wrapper .row { margin-bottom: 10px; }
   </style>
 </head>
 
@@ -113,6 +80,7 @@
                 <th>Family Saint</th>
                 <th>Status</th>
                 <th>Timestamp</th>
+                <th>Actions</th>
               </tr>
             </thead>
             <tbody>
@@ -128,6 +96,22 @@
                 <td th:text="${student.familySaint}"></td>
                 <td><span class="badge bg-success" th:text="${student.status}"></span></td>
                 <td th:text="${student.timestamp}"></td>
+                <td>
+                  <button class="btn btn-sm btn-primary"
+        th:attr="onclick=|printIdCard({
+          idNum: '${student.idNum}',
+          firstName: '${student.firstName}',
+          lastName: '${student.lastName}',
+          familySaint: '${student.familySaint}',
+          buildingName: '${student.buildingName}',
+          motherSister: '${student.motherSister}'
+        })|">
+  <i class="bi bi-printer"></i> Print ID
+</button>
+
+          
+
+                </td>
               </tr>
             </tbody>
           </table>
@@ -136,22 +120,141 @@
     </div>
   </div>
 
-  <script>
-    $(document).ready(function () {
-      $('#passerTable').DataTable({
-        dom:
-          "<'row mb-3'" +
-          "<'col-md-6 d-flex align-items-center'B>" +
-          "<'col-md-6 d-flex justify-content-end'f>" +
-          ">" +
-          "<'row'<'col-sm-12'tr>>" +
-          "<'row'<'col-sm-5'i><'col-sm-7'p>>",
-        buttons: ['excelHtml5', 'pdfHtml5'],
-        responsive: true,
-        pageLength: 10 // default rows per page
-      });
-    });
-  </script>
-</body>
+<!-- Print Style -->
+<style>
+  @media print {
+    body * {
+      visibility: hidden !important;
+    }
+  
+    #idCardPreview, #idCardPreview * {
+      visibility: visible !important;
+    }
+  
+    #idCardPreview {
+      position: fixed !important;
+      top: 0 !important;
+      left: 0 !important;
+      z-index: 9999 !important;
+      width: 3.125in !important;
+      height: 5.375in !important;
+      padding: 0 !important;
+      border: none !important;
+      background-image: url('/images/templateid.jpg') !important;
+      background-size: cover !important;
+      background-position: center !important;
+      background-repeat: no-repeat !important;
+      box-shadow: none !important;
+      -webkit-print-color-adjust: exact !important; /* Chrome, Safari */
+      print-color-adjust: exact !important;         /* Firefox */
+      page-break-before: avoid !important;
+    page-break-after: avoid !important;
+    page-break-inside: avoid !important;
+  }
+  
+    .modal-footer,
+    .modal-backdrop {
+      display: none !important;
+    }
+  }
+  </style>
+  
+  
+  
+  <!-- ID Preview Modal -->
+<div class="modal fade" id="idPreviewModal" tabindex="-1" aria-labelledby="idPreviewModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered" style="max-width: 4.125in">
+    <div id="idCardPreview" class="modal-content text-center p-2"
+         style="width: 3.125in; height: 5.375in;
+                background-image: url('/images/templateid.jpg');
+                background-size: cover;
+                background-position: center;
+                border: none;
+                box-shadow: none;
+                display: flex;
+                flex-direction: column;
+                justify-content: center;
+                align-items: center;">
 
+      <!-- Photo -->
+       
+      <!-- Photo -->
+<!-- Spacer above photo to push it down -->
+<div style="height: 0.5in;"></div>
+
+<!-- Photo -->
+<img src="/images/1x1 template.jpg" alt="1x1 Photo"
+     class="rounded border"
+     style="width: 1in; height: 1in; object-fit: cover;" />
+<small class="text-muted">(1x1)</small>
+
+<!-- Spacer below photo -->
+<div style="height: 0.3in;"></div>
+
+<div class="fw-bold text-primary" id="previewIdNum" style="font-size: 1rem; line-height: 1;"></div>
+<small class="text-muted d-block" style="margin-bottom: 4px; line-height: 1;">ID Number</small>
+<div style="height: 0.05in;"></div>
+
+<div class="fw-bold" id="previewFullName" style="font-size: 1rem; line-height: 1;"></div>
+<small class="text-muted d-block" style="margin-bottom: 4px; line-height: 1;">Complete Name</small>
+<div style="height: 0.05in;"></div>
+
+<div class="text-uppercase fw-semibold" id="previewFamilySaint" style="font-size: 1rem; line-height: 1;"></div>
+<small class="text-muted d-block" style="margin-bottom: 4px; line-height: 1;">Family Saint</small>
+<div style="height: 0.05in;"></div>
+
+<div class="fw-semibold" id="previewBuilding" style="font-size: 1rem; line-height: 1;"></div>
+<small class="text-muted d-block" style="margin-bottom: 4px; line-height: 1;">Building Name</small>
+<div style="height: 0.05in;"></div>
+
+<div class="text-uppercase fw-semibold" id="previewMotherSister" style="font-size: 1rem; line-height: 1;"></div>
+<small class="text-muted d-block" style="line-height: 1;">Mother Sister</small>
+<div style="height: 0.05in;"></div>
+
+      <!-- Buttons -->
+      <div class="modal-footer justify-content-center mt-2">
+        <button class="btn btn-sm btn-secondary" data-bs-dismiss="modal">Close</button>
+        <button class="btn btn-sm btn-primary" onclick="window.print()">Print</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  $(document).ready(function () {
+    $('#passerTable').DataTable({
+      dom:
+        "<'row mb-3'" +
+        "<'col-md-6 d-flex align-items-center'B>" +
+        "<'col-md-6 d-flex justify-content-end'f>" +
+        ">" +
+        "<'row'<'col-sm-12'tr>>" +
+        "<'row'<'col-sm-5'i><'col-sm-7'p>>",
+      buttons: ['excelHtml5', 'pdfHtml5'],
+      responsive: true,
+      pageLength: 10
+    });
+  });
+
+  function printIdCard(student) {
+  document.getElementById('previewIdNum').innerText = student.idNum;
+  document.getElementById('previewFullName').innerText = `${student.lastName}, ${student.firstName}`;
+  document.getElementById('previewFamilySaint').innerText = student.familySaint;
+  document.getElementById('previewBuilding').innerText = student.buildingName;
+  document.getElementById('previewMotherSister').innerText = student.motherSister;
+
+  const modalEl = document.getElementById('idPreviewModal');
+  const modal = new bootstrap.Modal(modalEl);
+  modal.show();
+
+  // Delay to ensure DOM is fully rendered
+  setTimeout(() => {
+    window.print();
+  }, 500);
+}
+
+
+</script>
+
+</body>
 </html>

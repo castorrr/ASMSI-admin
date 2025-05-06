@@ -48,4 +48,6 @@ public interface AdmissionDataRepository extends JpaRepository<AdmissionData, Lo
     List<Object[]> getFamilySaintStatsSummary();
 
     List<AdmissionData> findAll(); // Optional if already inherited
+
+    
 }

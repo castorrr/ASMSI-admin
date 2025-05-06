@@ -26,6 +26,7 @@ public class UserController {
 
         model.addAttribute("approvedUsers", userService.getApprovedUsers());
         model.addAttribute("unapprovedUsers", userService.getUnapprovedUsers());
+        
 
         return "user-management";
     }
