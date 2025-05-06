@@ -21,7 +21,7 @@ import com.asmsi.admin_system.repository.UserRepository;
 
 @Controller
 @RequiredArgsConstructor
-@Slf4j // <--- This adds the logger instance
+@Slf4j // Adds SLF4J logging support
 public class AuthController {
 
     private final UserService userService;

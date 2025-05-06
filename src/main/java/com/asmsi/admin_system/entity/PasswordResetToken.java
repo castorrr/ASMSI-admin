@@ -25,4 +25,17 @@ public class PasswordResetToken {
 
     @Column(name = "expiry_date", nullable = false)
     private LocalDateTime expiryDate;
+
+    // Explicit getter methods if needed by other code (optional if Lombok works)
+    public String getToken() {
+        return token;
+    }
+
+    public User getUser() {
+        return user;
+    }
+
+    public LocalDateTime getExpiryDate() {
+        return expiryDate;
+    }
 }
