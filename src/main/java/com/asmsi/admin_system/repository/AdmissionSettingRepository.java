@@ -3,6 +3,7 @@ package com.asmsi.admin_system.repository;
 import com.asmsi.admin_system.entity.AdmissionSaint;
 import com.asmsi.admin_system.entity.AdmissionSetting;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
@@ -25,6 +26,19 @@ List<AdmissionSaint> findSaintsBySchoolYear(@Param("schoolYear") String schoolYe
 
 @Query("SELECT a FROM AdmissionSetting a WHERE a.schoolYear = :schoolYear")
 AdmissionSetting findBySchoolYear(String schoolYear);
+
+@Modifying
+@Query(value = "DELETE FROM admission_saints WHERE setting_id = :settingId", nativeQuery = true)
+void deleteSaintsBySettingId(@Param("settingId") Long settingId);
+
+@Modifying
+@Query(value = "DELETE FROM admission_mother_sisters WHERE setting_id = :settingId", nativeQuery = true)
+void deleteMotherSistersBySettingId(@Param("settingId") Long settingId);
+
+@Modifying
+@Query(value = "DELETE FROM admission_buildings WHERE setting_id = :settingId", nativeQuery = true)
+void deleteBuildingsBySettingId(@Param("settingId") Long settingId);
+
 
 
 }
