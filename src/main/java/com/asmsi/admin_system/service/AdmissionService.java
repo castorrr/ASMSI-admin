@@ -18,6 +18,8 @@ public class AdmissionService {
         admissionDataRepository.save(admissionData);
     }
 
+    
+
     // ✅ Save a list of admission records (used in XML upload)
     public void saveAll(List<AdmissionData> dataList) {
         admissionDataRepository.saveAll(dataList);

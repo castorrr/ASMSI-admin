@@ -16,6 +16,12 @@ public class FamilySaint {
     @Column(name = "saint_name")
     private String saintName;
 
+    @Column(name = "mother_sister")
+    private String motherSister;
+
+    @Column(name = "building_name")
+    private String buildingName;
+
     // Constructors
     public FamilySaint() {}
 
@@ -34,4 +40,14 @@ public class FamilySaint {
     public String getSaintName() { return saintName; }
 
     public void setSaintName(String saintName) { this.saintName = saintName; }
-} 
+
+   
+
+
+    public String getMotherSister() { return motherSister; }
+public void setMotherSister(String motherSister) { this.motherSister = motherSister; }
+
+public String getBuildingName() { return buildingName; }
+public void setBuildingName(String buildingName) { this.buildingName = buildingName; }
+
+}

@@ -1,11 +1,13 @@
 package com.asmsi.admin_system.controller;
 
+import com.asmsi.admin_system.dto.FamilySaintDTO;
 import com.asmsi.admin_system.entity.AdmissionData;
 import com.asmsi.admin_system.entity.AdmissionSaint;
 import com.asmsi.admin_system.entity.AdmissionSetting;
 import com.asmsi.admin_system.entity.FinalStudent;
 import com.asmsi.admin_system.repository.AdmissionDataRepository;
 import com.asmsi.admin_system.repository.AdmissionSettingRepository;
+import com.asmsi.admin_system.repository.FamilySaintRepository;
 import com.asmsi.admin_system.repository.FinalStudentRepository;
 import com.asmsi.admin_system.service.AdmissionService;
 import com.asmsi.admin_system.service.UploadService;
@@ -13,6 +15,8 @@ import com.asmsi.admin_system.service.XmlParserHelper;
 import org.springframework.security.web.csrf.CsrfToken;
 import org.springframework.dao.DataIntegrityViolationException;
 import com.asmsi.admin_system.repository.AdmissionDataRepository;
+import com.asmsi.admin_system.dto.FamilySaintGroupDTO;
+
 
 
 
@@ -32,7 +36,9 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
+import java.util.ArrayList;
 import java.util.Collections;
+import java.util.LinkedHashMap;
 
 
 @Controller
@@ -141,6 +147,9 @@ public String submitForm(
     @RequestParam String schoolYear,
     @RequestParam String familySaint,
     @RequestParam String codeNumber,
+    @RequestParam String motherSister,
+@RequestParam String buildingName,
+
     RedirectAttributes redirectAttributes,
     Model model // ✅ Add this
 ) {
@@ -191,6 +200,8 @@ public String submitForm(
         admissionData.setSchoolYear(schoolYear);
         admissionData.setFamilySaint(familySaint);
         admissionData.setCodeNumber(Integer.parseInt(codeNumber));
+        admissionData.setMotherSister(motherSister); // ✅ newly added
+admissionData.setBuildingName(buildingName); // ✅ newly added
         admissionData.setStatus(status);
         admissionData.setTimestamp(timestamp);
 
@@ -250,16 +261,23 @@ public List<String> getSchoolYears() {
 }
 
 
+@Autowired
+private FamilySaintRepository familySaintRepository;
+
 @GetMapping("/family-saint-settings/api")
 @ResponseBody
-public List<Map<String, String>> getSaintsByYear(@RequestParam("schoolYear") String schoolYear) {
-    AdmissionSetting setting = admissionSettingRepository.findBySchoolYear(schoolYear);
-    if (setting == null || setting.getAdmissionSaints() == null) return Collections.emptyList();
-
-    return setting.getAdmissionSaints().stream()
-        .map(s -> Map.of("saintName", s.getSaintName()))
+public List<FamilySaintDTO> getSaintsBySchoolYear(@RequestParam String schoolYear) {
+    return familySaintRepository.findSaintsWithDetails(schoolYear)
+        .stream()
+        .map(row -> new FamilySaintDTO(
+            row[0] != null ? row[0].toString() : "",
+            row[1] != null ? row[1].toString() : "",
+            row[2] != null ? row[2].toString() : ""
+        ))
         .collect(Collectors.toList());
 }
+
+
 @GetMapping("/api/admission/used-codes")
 @ResponseBody
 public List<Integer> getUsedCodesForSaint(@RequestParam("schoolYear") String schoolYear,

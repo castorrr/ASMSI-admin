@@ -232,6 +232,7 @@
     <span>BOYSTOWN CREDENTIALS</span>
   </div>
 
+  
   <table class="table table-bordered mt-4">
     <thead>
       <tr>
@@ -320,6 +321,9 @@
 
 
     </div>
+
+    <input type="hidden" name="motherSister" id="motherSisterHidden">
+    <input type="hidden" name="buildingName" id="buildingNameHidden">
 
     <!-- Code Number -->
     <div class="col-md-4 text-center">
@@ -547,19 +551,40 @@
 
     // Populate Family Saints for selected school year
     function loadFamilySaints(year) {
-      fetch(`/family-saint-settings/api?schoolYear=${year}`)
-        .then(res => res.json())
-        .then(data => {
-          familySaintSelect.innerHTML = '<option selected disabled value="">Select Family Saint</option>';
-          data.forEach(saint => {
-            const option = document.createElement("option");
-            option.value = saint.saintName;
-            option.textContent = saint.saintName;
-            familySaintSelect.appendChild(option);
-          });
-        })
-        .catch(err => console.error("Failed to load family saints:", err));
-    }
+  fetch(`/family-saint-settings/api?schoolYear=${year}`)
+    .then(res => res.json())
+    .then(data => {
+      familySaintSelect.innerHTML = '<option selected disabled value="">Select Family Saint</option>';
+      
+      data.forEach(saint => {
+        const option = document.createElement("option");
+        option.value = saint.saintName;
+        option.textContent = saint.saintName;
+        option.setAttribute("data-mother", saint.motherSister);
+        option.setAttribute("data-building", saint.buildingName);
+        familySaintSelect.appendChild(option);
+      });
+
+      // ✅ Attach the event listener once, AFTER options are added
+      familySaintSelect.addEventListener("change", function () {
+  const selectedOption = this.options[this.selectedIndex];
+  const mother = selectedOption.getAttribute("data-mother");
+  const building = selectedOption.getAttribute("data-building");
+
+  console.log("Selected Mother Sister:", mother);
+  console.log("Selected Building Name:", building);
+
+  document.getElementById("motherSisterHidden").value = mother;
+  document.getElementById("buildingNameHidden").value = building;
+
+  fetchUsedCodesAndStyle();
+});
+
+    })
+    .catch(err => console.error("Failed to load family saints:", err));
+}
+
+    
 
     // Apply red color and label to used codes
     function fetchUsedCodesAndStyle() {

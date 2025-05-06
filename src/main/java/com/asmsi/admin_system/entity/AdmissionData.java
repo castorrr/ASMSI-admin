@@ -22,6 +22,7 @@ public class AdmissionData {
     private String brgy;
     private String municipality;
     private String province;
+    
 
     @JsonFormat(pattern = "yyyy-MM-dd")
     private LocalDate birthDate;
@@ -60,8 +61,20 @@ public class AdmissionData {
     private String medicalrecordstatus;
     private String familySaint;
     private Integer codeNumber;
+    private String motherSister;
+    private String buildingName;
+    
+
 
     // Getters and Setters
+
+    public String getMotherSister() { return motherSister; }
+    public void setMotherSister(String motherSister) { this.motherSister = motherSister; }
+    
+    public String getBuildingName() { return buildingName; }
+    public void setBuildingName(String buildingName) { this.buildingName = buildingName; }
+    
+
     public Long getId() { return id; }
     public void setId(Long id) { this.id = id; }
 

@@ -17,6 +17,26 @@ public class AdmissionSaint {
     @JoinColumn(name = "setting_id", nullable = false)
     private AdmissionSetting setting;
 
+    private String motherSister;
+private String buildingName;
+
+public String getMotherSister() {
+    return motherSister;
+}
+
+public void setMotherSister(String motherSister) {
+    this.motherSister = motherSister;
+}
+
+public String getBuildingName() {
+    return buildingName;
+}
+
+public void setBuildingName(String buildingName) {
+    this.buildingName = buildingName;
+}
+
+
     // Getters and Setters
     public Long getId() {
         return id;
