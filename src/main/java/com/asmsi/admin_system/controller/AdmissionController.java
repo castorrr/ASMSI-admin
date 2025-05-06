@@ -4,6 +4,7 @@ import com.asmsi.admin_system.entity.AdmissionData;
 import com.asmsi.admin_system.entity.AdmissionSaint;
 import com.asmsi.admin_system.entity.AdmissionSetting;
 import com.asmsi.admin_system.entity.FinalStudent;
+import com.asmsi.admin_system.repository.AdmissionDataRepository;
 import com.asmsi.admin_system.repository.AdmissionSettingRepository;
 import com.asmsi.admin_system.repository.FinalStudentRepository;
 import com.asmsi.admin_system.service.AdmissionService;
@@ -11,6 +12,8 @@ import com.asmsi.admin_system.service.UploadService;
 import com.asmsi.admin_system.service.XmlParserHelper;
 import org.springframework.security.web.csrf.CsrfToken;
 import org.springframework.dao.DataIntegrityViolationException;
+import com.asmsi.admin_system.repository.AdmissionDataRepository;
+
 
 
 
@@ -267,6 +270,17 @@ public List<Integer> getUsedCodesForSaint(@RequestParam("schoolYear") String sch
                    .distinct()
                    .collect(Collectors.toList());
 }
+@Autowired
+
+private AdmissionDataRepository admissionDataRepository;
+@GetMapping("/studentpasser")
+public String viewPasserAdmission(Model model) {
+    List<AdmissionData> passerList = admissionDataRepository.findAll();
+    model.addAttribute("passerList", passerList);
+    return "passeradmission"; // must match your HTML filename (e.g., passeradmission.html)
+}
+
+
 
     
 }

@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Admission</title>
+
+  <!-- Bootstrap + Icons -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" />
+
+  <!-- App CSS -->
+  <link rel="stylesheet" th:href="@{/css/header.css}" />
+  <link rel="stylesheet" th:href="@{/css/sidebar.css}" />
+  <link rel="stylesheet" href="/css/admission.css" />
+
+  <!-- DataTables CSS -->
+  <link rel="stylesheet" href="https://cdn.datatables.net/1.13.4/css/jquery.dataTables.min.css">
+  <link rel="stylesheet" href="https://cdn.datatables.net/buttons/2.4.2/css/buttons.dataTables.min.css">
+
+  <!-- SweetAlert2 -->
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+  <!-- jQuery + DataTables + Export -->
+  <script src="https://code.jquery.com/jquery-3.7.0.min.js"></script>
+  <script src="https://cdn.datatables.net/1.13.4/js/jquery.dataTables.min.js"></script>
+  <script src="https://cdn.datatables.net/buttons/2.4.2/js/dataTables.buttons.min.js"></script>
+  <script src="https://cdn.datatables.net/buttons/2.4.2/js/buttons.html5.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.0/jszip.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.36/pdfmake.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.36/vfs_fonts.js"></script>
+
+  <style>
+    h2 {
+      font-weight: bold;
+      color: #0d6efd;
+    }
+
+    .card {
+      background-color: #fff;
+    }
+
+    .dt-buttons .dt-button {
+      background-color: #0d6efd !important;
+      color: white !important;
+      border: none !important;
+      border-radius: 4px;
+      padding: 6px 12px;
+      margin-right: 10px;
+    }
+
+    .dt-button:hover {
+      background-color: #0b5ed7 !important;
+    }
+
+    .dataTables_filter input {
+      width: 300px !important;
+      margin-left: 10px;
+      padding: 6px;
+      border-radius: 4px;
+      border: 1px solid #ccc;
+    }
+
+    table.dataTable tbody tr.table-success {
+      background-color: #d1e7dd !important;
+    }
+
+    .table-striped > tbody > tr:nth-of-type(odd) {
+      background-color: #f4f6f9;
+    }
+
+    .table th,
+    .table td {
+      vertical-align: middle;
+      text-align: center;
+    }
+
+    /* Ensure buttons and search stay aligned */
+    .dataTables_wrapper .row:first-child {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .dataTables_wrapper .row {
+      margin-bottom: 10px;
+    }
+  </style>
+</head>
+
+<body>
+  <div th:replace="fragments/header :: header(${username})"></div>
+
+  <div class="container-fluid">
+    <div class="row">
+      <div th:replace="fragments/sidebar :: sidebar(role=${role})"></div>
+
+      <div class="col-md-9 p-4">
+        <h2 class="mb-4">List of Passers</h2>
+
+        <div class="card shadow-sm border-0 rounded p-4">
+          <table id="passerTable" class="table table-bordered table-hover table-striped align-middle nowrap w-100">
+            <thead class="table-dark text-center">
+              <tr>
+                <th>ID Number</th>
+                <th>Last Name</th>
+                <th>First Name</th>
+                <th>Middle Name</th>
+                <th>Exam Place</th>
+                <th>Guardian Contact</th>
+                <th>Code Number</th>
+                <th>Family Saint</th>
+                <th>Status</th>
+                <th>Timestamp</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr th:each="student : ${passerList}"
+                  th:classappend="${student.status} == 'Arrived' ? 'table-success'">
+                <td th:text="${student.idNum}"></td>
+                <td th:text="${student.lastName}"></td>
+                <td th:text="${student.firstName}"></td>
+                <td th:text="${student.middleName}"></td>
+                <td th:text="${student.examPlace}"></td>
+                <td th:text="${student.guardianContact}"></td>
+                <td th:text="${student.codeNumber}"></td>
+                <td th:text="${student.familySaint}"></td>
+                <td><span class="badge bg-success" th:text="${student.status}"></span></td>
+                <td th:text="${student.timestamp}"></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    $(document).ready(function () {
+      $('#passerTable').DataTable({
+        dom:
+          "<'row mb-3'" +
+          "<'col-md-6 d-flex align-items-center'B>" +
+          "<'col-md-6 d-flex justify-content-end'f>" +
+          ">" +
+          "<'row'<'col-sm-12'tr>>" +
+          "<'row'<'col-sm-5'i><'col-sm-7'p>>",
+        buttons: ['excelHtml5', 'pdfHtml5'],
+        responsive: true,
+        pageLength: 10 // default rows per page
+      });
+    });
+  </script>
+</body>
+
+</html>

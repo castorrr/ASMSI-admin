@@ -46,4 +46,6 @@ public interface AdmissionDataRepository extends JpaRepository<AdmissionData, Lo
         GROUP BY family_saint
     """, nativeQuery = true)
     List<Object[]> getFamilySaintStatsSummary();
+
+    List<AdmissionData> findAll(); // Optional if already inherited
 }
